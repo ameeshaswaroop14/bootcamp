@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport">
+    <title>form</title>
+    <link rel="stylesheet" type="text/css" href="regstyle.css">
+</head>
+<body>
+<!-- header start -->
+<div class="header">
+    <font color="CYAN"><a href="#contact">TO THE NEW</a href="#contact"></font>
+    <div class="header-right">
+        <a href="#home">HOME</a>
+        <a href="#quickhelp">QUICK HELP</a>
+    </div>
+</div>
+<div class="reducing-width">
+    <hr class="line">
+</div>
+<!-- header end -->
+
+
+<!-- form start -->
+
+<div class="formss">
+    <div class="try">
+        <font color="white"><h1>Bug Report</h1></font>
+
+    </div>
+    <form action="/action_page.php">
+        <br>
+        <label for="title" class="evry">Title:*</label>
+        <input type="text" id="fname" name="title">
+    <br><br>
+        <label for="Description" class="evry">Description:*</label>
+        <textarea id="ta" rows="4" cols="80"></textarea>
+        <br><br>
+        <label for="os" class="evry">Operating System:</label>
+        <select class="gr" id="os"  name="os" >
+            <option value="Windows">Windows</option>
+            <option value="Ubuntu">Ubuntu</option>
+
+        </select>
+        <br><br>
+        <label for="os" class="evry">Product:*</label>
+        <select class="gr" id="os"  name="os">
+            <option value="Windows 8">Windows 8</option>
+            <option value="Windows 10">Windows 10</option>
+            <option value="Ubuntu 12.04">Ubuntu 12.04</option>
+            <option value="Ubuntu 18.04">Ubuntu 18.04</option>
+
+        </select>
+        <br><br>
+        <label for="os" class="evry">Version:*</label><br>
+       <input type="text"  name="version" style="width: 200px;">
+
+
+        <br><br>
+        <label for="os" class="evry">License:</label>
+        <br>
+
+
+        <br>
+
+        <label for="os" class="evry">Free</label>
+        <input type="radio" name="free">
+
+        <label for="os" class="tap">Business</label>
+        <input class="tap" type="radio" name="free"><br>
+
+        <br>
+
+        <label for="os" class="evry">Severity:</label>
+        <select class="gr" id="os"  name="os">
+            <option value="Critical">Critical</option>
+            <option value="Normal">Normal</option>
+
+        </select>
+
+        <br>
+        <br>
+
+
+        <label for="os" class="evry">Attachments:</label><br>
+
+              <input type="file" name="chooseFile" id="chooseFile">
+
+
+        <br>
+        <br>
+
+        <div class="try">
+
+            <input type="submit" value="Submit">
+        </div>
+
+    </form>
+</div>
+<!-- form end -->
+
+</body>
+</html>
