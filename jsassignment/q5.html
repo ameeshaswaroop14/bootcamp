@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>employee</title>
+
+	<script>
+		var list=[
+			{
+				name: "ankit",
+				age: 26,
+				salary: 20000,
+				dob: "02 jul"
+			},
+
+			{
+				name: "sagar",
+				age: 16,
+				salary: 200000,
+				dob: "03 jul"
+			},
+
+			{
+				name: "arora",
+				age: 22,
+				salary: 500,
+				dob: "03 jul"
+			},
+
+			{
+				name: "himanshu",
+				age: 25,
+				salary: 70000,
+				dob: "04 jul"
+			},
+
+			{
+				name: "neha",
+				age: 20,
+				salary: 5000,
+				dob: "05 jul"
+			}
+
+		];
+		document.write("<i>details of employees are: <br></i>");
+		for(var key in list){
+			document.write("<b>name:</b> "+list[key].name+" <b>age:</b> "+list[key].age+"    <b>salary</b> "+list[key].salary+"    <b>dob</b> "+list[key].dob);	
+			document.write("<br>")
+		}
+
+		var filterSalary=list.filter((e)=>(e.salary>5000))
+		document.write("<br><br>");
+		document.write("<i>details of employees salary > 5000 are: <br></i>");
+		for(var key in filterSalary){
+			document.write("<b>name:</b> "+filterSalary[key].name+" <b>age:</b> "+filterSalary[key].age+"    <b>salary</b> "+filterSalary[key].salary+"    <b>dob</b> "+filterSalary[key].dob);	
+			document.write("<br>")
+		}
+
+		filterSalary=list.filter((e)=>(e.age>0&&e.age<=20))
+		document.write("<br><br>");
+		document.write("<i>employees grouped under age 20 are: <br></i>");
+		for(var key in filterSalary){
+			document.write("<b>name:</b> "+filterSalary[key].name+" <b>age:</b> "+filterSalary[key].age+"    <b>salary</b> "+filterSalary[key].salary+"    <b>dob</b> "+filterSalary[key].dob);	
+			document.write("<br>")
+		}
+		
+		filterSalary=list.filter((e)=>(e.age>20&&e.age<=40))
+		document.write("<br><br>");
+		document.write("<i>employees grouped under age 40 are: <br></i>");
+		for(var key in filterSalary){
+			document.write("<b>name:</b> "+filterSalary[key].name+" <b>age:</b> "+filterSalary[key].age+"    <b>salary</b> "+filterSalary[key].salary+"    <b>dob</b> "+filterSalary[key].dob);	
+			document.write("<br>")
+		}
+
+		filterSalary=list.filter((e)=>(e.age>20&&e.salary<1000))
+		document.write("<br><br>");
+		document.write("<i>details of employees salary < 1000  and age > 20 are: <br></i>");
+		for(var key in filterSalary){
+			document.write("<b>name:</b> "+filterSalary[key].name+" <b>age:</b> "+filterSalary[key].age+"    <b>salary</b> "+filterSalary[key].salary+"    <b>dob</b> "+filterSalary[key].dob);	
+		}	
+			document.write("<br>")
+			document.write("<br>")
+		document.write("<i>after giving increment 5 times: <br></i>");
+		for(var key in filterSalary){
+
+			document.write("<b>name:</b> "+filterSalary[key].name+" <b>age:</b> "+filterSalary[key].age+"    <b>salary</b> "+(filterSalary[key].salary*5)+"    <b>dob</b> "+filterSalary[key].dob);	
+			document.write("<br>")
+		}
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

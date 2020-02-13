@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title></title>
+
+</head>
+	<body>
+		<script>
+	var obj3 = 
+	{
+	key1 : "aaa",
+	key2: {
+	       key3: "bbb"
+	       }
+	};
+	let deep = JSON.parse(JSON.stringify(obj3));
+	console.log("value of obj3");
+	console.log(obj3.key1);
+
+	deep.key1=5;
+    obj3.key2.key3 = 5;
+    	console.log(deep.key1);
+     console.log("value of deep");
+
+
+	
+</script>
+	
+        </body>
+        </html>
+		
+	
