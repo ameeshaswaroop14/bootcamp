@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<title>BOOTSTRAP FORM</title>
+
+
+<style type="text/css">
+  #y
+  {
+    width: 300px;
+  }
+</style>
+
+</head>
+
+
+<!-- ............................Header  Start ................... -->
+<header>
+  <nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">TO THE NEW</a>
+    </div>
+    
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+      <li><a href="#"> QuickHelp</a></li>
+    </ul>
+  </div>
+
+  <hr>
+  </nav>
+</header>
+
+<!-- ............................Header  End ................... -->
+
+
+
+<body>
+<div class="container">
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+ 
+          <div class="panel panel-default">
+          <div class="panel-heading" style="background-color: #d3d3d3"><b><font color="white"><h2>Bug Report</h2></font></b></div>
+        <div class="panel-body">
+    	
+
+
+<!-- ............................Form  Start ................... -->
+          <form>
+    	        <div class="form-group">
+    		          <label for="title">TITLE*:</label>
+    		          <input type="text" class="form-control" required="true">
+                  <label for="description">DESCRIPTION*:</label>
+    		          <textarea   class="form-control" required="true"></textarea>
+
+                 <div class="form-group"> <!-- ............... DropDown ................-->
+                    <label for="sel1">Operating System:</label>
+                      <select class="form-control" style="background-color: lightgreen">
+                       
+                       <option>Windows</option>
+                       <option>Ubuntu</option>
+                       <option>MAC</option>
+                       <option>Android</option>
+                      </select>
+                  </div>
+                  
+                  <div class="form-group"> <!-- ............... DropDown ................-->
+                    <label for="sel2">Product:</label>
+                      <select class="form-control" style="background-color: lightgreen">
+                       
+                       <option>Windows 10</option>
+                       <option>Ubuntu 16.04</option>
+                       <option>Ubuntu 18.04</option>
+                       <option>Android 10</option>
+                      </select>
+                  </div>
+                 
+
+                  <label for="ver">VERSION:*</label>
+                  <input type="text" class="form-control" required="true" id="y">
+
+                  <label for="lic">License</label><br> <!-- ............... RadioButtons ................-->
+                  <label class="radio-inline"><input type="radio" name="optradio" checked>Free</label>
+                  <label class="radio-inline"><input type="radio" name="optradio">Business</label><br><br>
+
+
+                 <div class="form-group"> <!-- ............... DropDown ................-->
+                    <label for="sel3">Severity</label>
+                      <select class="form-control" style="background-color: lightgreen">
+                       
+                       <option>Critical</option>
+                       <option>Normal</option>
+                      </select>
+                  </div>
+                 
+                 <div class="form-group">
+                  <label for="ControlFile">Attachements: </label>
+                  <input type="file" class="form-control-file">
+                 </div>
+
+
+
+              </div>
+          </form>
+
+
+          <!-- ............................Form End ................... -->
+
+        </div>
+    <div class="panel-footer clearfix" style="background-color: #d3d3d3">
+      <a href="#" class="btn btn-success" role="button" type="submit" style="float: right;">Send</a>
+       
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>
