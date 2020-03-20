@@ -1,0 +1,3 @@
+rootProject.name = 'SpringRestful2'
+include 'forGradle'
+
