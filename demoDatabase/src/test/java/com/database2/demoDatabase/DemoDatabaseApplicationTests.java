@@ -102,16 +102,18 @@ class DemoDatabaseApplicationTests {
 		Pageable pageable= PageRequest.of(0,2, Sort.Direction.DESC, "age");
 		employeeRepository.findAll(pageable).forEach(p-> System.out.println(p.getFirstname()));
 	}
+	
 	@Test
-	public void testFindByName()
+	public void testFindByFirstname()
 	{
-		List<Employee> employee=employeeRepository.findByName("Chandler");
-		employee.forEach(p-> System.out.println(p.getAge()));
+		List<Employee> employee=employeeRepository.findByFirstname("Chandler");
+		employee.forEach(employee1 -> System.out.println(employee1.getFirstname()));
 	}
+
 	@Test
 	public void testFindNameLike()
 	{
-		List<Employee> employee=employeeRepository.findByNameLike("A%");
+		List<Employee> employee=employeeRepository.findByLastnameLike("A%");
 		employee.forEach(p-> System.out.println(p.getFirstname()));
 	}
 
@@ -121,6 +123,7 @@ class DemoDatabaseApplicationTests {
 		List<Employee> employee=employeeRepository.findByAgeBetween(18,22);
 		employee.forEach(p-> System.out.println(p.getFirstname()));
 	}
+
 
 
 }
