@@ -1,0 +1,2 @@
+1)  By using @transactional spring handles lazy loading problem, it makes sure that the ACID property is followed
+2)  It is used to perform DML queries
