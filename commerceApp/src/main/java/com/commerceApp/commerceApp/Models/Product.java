@@ -1,17 +1,136 @@
 package com.commerceApp.commerceApp.Models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Product {
+public class Product  {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer PRODUCT_ID;
-    private String PRODUCT_NAME;
-    private String PRODUCT_DESCRIPTION;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
+    private String description;
+    private String brand;
+
+    private boolean isReturnable;
+    private boolean isCancelleable;
+    private boolean isActive;
+    private boolean isDeleted;
+
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID")
+    @JoinColumn(name = "seller_user_id")
+    private Seller seller;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<ProductVariation> variations;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductReview> reviews;
+
+    {
+        isActive = true;
+        isCancelleable = true;
+        isReturnable = true;
+        isDeleted = false;
+    }
+
+    public Product() {
+    }
+
+    public Product(String name, String description, String brand) {
+        this.name = name;
+        this.description = description;
+        this.brand = brand;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public boolean isReturnable() {
+        return isReturnable;
+    }
+
+    public void setReturnable(boolean returnable) {
+        isReturnable = returnable;
+    }
+
+    public boolean isCancelleable() {
+        return isCancelleable;
+    }
+
+    public void setCancelleable(boolean cancelleable) {
+        isCancelleable = cancelleable;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Set<ProductVariation> getVariations() {
+        return variations;
+    }
+
+    public void setVariations(Set<ProductVariation> variations) {
+        this.variations = variations;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -19,69 +138,52 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
-    private boolean IS_CANCELLABLE;
-    private boolean IS_RETURNABLE;
-    private String BRAND;
-    private boolean IS_ACTIVE;
 
-
-
-    public Integer getPRODUCT_ID() {
-        return PRODUCT_ID;
+    public List<ProductReview> getReviews() {
+        return reviews;
     }
 
-    public void setPRODUCT_ID(Integer PRODUCT_ID) {
-        this.PRODUCT_ID = PRODUCT_ID;
+    public void setReviews(List<ProductReview> reviews) {
+        this.reviews = reviews;
     }
 
-    public String getPRODUCT_NAME() {
-        return PRODUCT_NAME;
+    public void addVariation(ProductVariation variation) {
+        if (variation != null) {
+            if (variations == null)
+                variations = new HashSet<>();
+
+            variations.add(variation);
+            variation.setProduct(this);
+        }
     }
 
-    public void setPRODUCT_NAME(String PRODUCT_NAME) {
-        this.PRODUCT_NAME = PRODUCT_NAME;
+    public void addReview(ProductReview review) {
+        if (review != null) {
+            if (reviews == null)
+                reviews = new ArrayList<>();
+
+            reviews.add(review);
+
+            review.setProduct(this);
+        }
     }
 
-    public String getPRODUCT_DESCRIPTION() {
-        return PRODUCT_DESCRIPTION;
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", brand='" + brand + '\'' +
+                ", isReturnable=" + isReturnable +
+                ", isCancelleable=" + isCancelleable +
+                ", isActive=" + isActive +
+                ", isDeleted=" + isDeleted +
+                ", seller=" + seller +
+                ", variations=" + variations +
+                ", category=" + category +
+                ", reviews=" + reviews +
+                '}';
     }
-
-    public void setPRODUCT_DESCRIPTION(String PRODUCT_DESCRIPTION) {
-        this.PRODUCT_DESCRIPTION = PRODUCT_DESCRIPTION;
-    }
-
-
-
-    public boolean isIS_CANCELLABLE() {
-        return IS_CANCELLABLE;
-    }
-
-    public void setIS_CANCELLABLE(boolean IS_CANCELLABLE) {
-        this.IS_CANCELLABLE = IS_CANCELLABLE;
-    }
-
-    public boolean isIS_RETURNABLE() {
-        return IS_RETURNABLE;
-    }
-
-    public void setIS_RETURNABLE(boolean IS_RETURNABLE) {
-        this.IS_RETURNABLE = IS_RETURNABLE;
-    }
-
-    public String getBRAND() {
-        return BRAND;
-    }
-
-    public void setBRAND(String BRAND) {
-        this.BRAND = BRAND;
-    }
-
-    public boolean isIS_ACTIVE() {
-        return IS_ACTIVE;
-    }
-
-    public void setIS_ACTIVE(boolean IS_ACTIVE) {
-        this.IS_ACTIVE = IS_ACTIVE;
-    }
-
 }
+
+

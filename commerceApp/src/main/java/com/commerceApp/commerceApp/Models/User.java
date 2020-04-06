@@ -1,92 +1,210 @@
 package com.commerceApp.commerceApp.Models;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
+@Table(name = "USER")
 @Entity
-public  class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer USER_ID;
-    private String EMAIL;
-    private String FIRST_NAME;
-    private String MIDDLE_NAME;
-    private String LAST_NAME;
-    private String PASSWORD;
-    private boolean IS_DELETED;
-    private boolean IS_ACTIVE;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Role> roleList;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    public Integer getUSER_ID() {
-        return USER_ID;
-    }
+    @Column(unique = true)
+    private String email;
+    private String firstName;
+    private String middleName;
+    private String lastName;
 
-    public void setUSER_ID(Integer USER_ID) {
-        this.USER_ID = USER_ID;
-    }
+    private String password;
 
+    private boolean isDeleted = false;
+    private boolean isActive = false;
+    private boolean isExpired = false;
+    private boolean isLocked = false;
+
+    private Integer loginStatus=0;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "User",referencedColumnName = "USER_ID"),
-            inverseJoinColumns =@JoinColumn(name = "Role",referencedColumnName = "ROLE_ID"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Address> addresses;
 
 
-
-
-    public String getEMAIL() {
-        return EMAIL;
+    public User() {
     }
 
-    public void setEMAIL(String EMAIL) {
-        this.EMAIL = EMAIL;
+    public User(String email, String firstName, String middleName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
     }
 
-    public String getFIRST_NAME() {
-        return FIRST_NAME;
+    public Long getId() {
+        return id;
     }
 
-    public void setFIRST_NAME(String FIRST_NAME) {
-        this.FIRST_NAME = FIRST_NAME;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getMIDDLE_NAME() {
-        return MIDDLE_NAME;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMIDDLE_NAME(String MIDDLE_NAME) {
-        this.MIDDLE_NAME = MIDDLE_NAME;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getLAST_NAME() {
-        return LAST_NAME;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setLAST_NAME(String LAST_NAME) {
-        this.LAST_NAME = LAST_NAME;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getPASSWORD() {
-        return PASSWORD;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setPASSWORD(String PASSWORD) {
-        this.PASSWORD = PASSWORD;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
-    public boolean isIS_DELETED() {
-        return IS_DELETED;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setIS_DELETED(boolean IS_DELETED) {
-        this.IS_DELETED = IS_DELETED;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public boolean isIS_ACTIVE() {
-        return IS_ACTIVE;
+    public String getPassword() {
+        return password;
     }
 
-    public void setIS_ACTIVE(boolean IS_ACTIVE) {
-        this.IS_ACTIVE = IS_ACTIVE;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public boolean getExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id + "\n" +
+                ", username='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", password='" + password + '\'' + "\n" +
+                ", isDeleted=" + isDeleted +
+                ", isActive=" + isActive +
+                ", isExpired=" + isExpired +
+                ", isLocked=" + isLocked + "\n" +
+                '}';
+    }
+
+    public void addAddress(Address address){
+        if(address!=null){
+            if(addresses == null)
+                addresses = new HashSet<Address>();
+
+            System.out.println("address added");
+            address.setUser(this);
+            addresses.add(address);
+        }
+    }
+
+    public void addRole(Role role){
+        if(roles==null)
+            roles = new HashSet<>();
+
+        roles.add(role);
+    }
+
+    public void setLoginStatus(boolean success){
+        if(success) {
+            loginStatus = 1;
+            this.setLocked(false);
+        }
+        else {
+            loginStatus--;
+            if(loginStatus <= -2){
+                setLocked(true);
+            }
+        }
+    }
+
+    public Integer getLoginStatus() {
+        return loginStatus;
+    }
 }
