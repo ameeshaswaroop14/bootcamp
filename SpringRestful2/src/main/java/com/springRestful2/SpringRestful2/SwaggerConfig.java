@@ -20,7 +20,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    public static final Contact DEFAULT_CONTACT = new Contact("Ankit", "", "");
+    public static final Contact DEFAULT_CONTACT = new Contact("Ameesha", "", "");
     public static final ApiInfo DEFAULT = new ApiInfo("My API DOCUMENTATION", "My Api Documentation", "1.0", "urn:tos",
             DEFAULT_CONTACT, "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<VendorExtension>());
 
