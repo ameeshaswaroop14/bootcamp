@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c7cb5c87-6c50-48b6-b16f-7b7ae9d8e5dd" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="178" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1YshjYjbkEvEyLUoz5zaud0CEb1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.SpringAssign.demoSpring" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.DemoSpringApplication">
+    <configuration name="DemoSpringApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.SpringAssign.demoSpring.DemoSpringApplication" />
+      <module name="demoSpring.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.SpringAssign.demoSpring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LooselyCoupled" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.SpringAssign.demoSpring.LooselyCoupled" />
+      <module name="demoSpring.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.SpringAssign.demoSpring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TightlyCoupled" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.SpringAssign.demoSpring.TightlyCoupled" />
+      <module name="demoSpring.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.SpringAssign.demoSpring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tightlyCoupled" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.SpringAssign.demoSpring.tightlyCoupled" />
+      <module name="demoSpring.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.SpringAssign.demoSpring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DemoSpringApplication" />
+        <item itemvalue="Application.LooselyCoupled" />
+        <item itemvalue="Application.tightlyCoupled" />
+        <item itemvalue="Application.TightlyCoupled" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c7cb5c87-6c50-48b6-b16f-7b7ae9d8e5dd" name="Default Changelist" comment="" />
+      <created>1583737344291</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583737344291</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="523" y="108" width="546" height="577" key="#com.intellij.ide.util.MemberChooser" timestamp="1583750145421">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="523" y="108" width="546" height="577" key="#com.intellij.ide.util.MemberChooser/67.27.1299.741@67.27.1299.741" timestamp="1583750145421" />
+    <state x="448" y="144" width="526" height="504" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1583743678220">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="448" y="144" width="526" height="504" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/67.27.1299.741@67.27.1299.741" timestamp="1583743678220" />
+    <state x="498" y="153" width="426" height="486" key="FileChooserDialogImpl" timestamp="1584101464057">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="498" y="153" width="426" height="486" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1584101464057" />
+    <state width="1251" height="225" key="GridCell.Tab.0.bottom" timestamp="1584100174244">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1251" height="225" key="GridCell.Tab.0.bottom/67.27.1299.741@67.27.1299.741" timestamp="1584100174244" />
+    <state width="1251" height="225" key="GridCell.Tab.0.center" timestamp="1584100174243">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1251" height="225" key="GridCell.Tab.0.center/67.27.1299.741@67.27.1299.741" timestamp="1584100174243" />
+    <state width="1251" height="225" key="GridCell.Tab.0.left" timestamp="1584100174242">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1251" height="225" key="GridCell.Tab.0.left/67.27.1299.741@67.27.1299.741" timestamp="1584100174242" />
+    <state width="1251" height="225" key="GridCell.Tab.0.right" timestamp="1584100174244">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state width="1251" height="225" key="GridCell.Tab.0.right/67.27.1299.741@67.27.1299.741" timestamp="1584100174244" />
+    <state x="371" y="223" key="com.intellij.ide.util.TipDialog" timestamp="1583922106467">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="371" y="223" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1583922106467" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/demoSpring$DemoSpringApplication.ic" NAME="DemoSpringApplication Coverage Results" MODIFIED="1583923276760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.SpringAssign.demoSpring.*</FILTER>
+    </SUITE>
+  </component>
+</project>
