@@ -27,6 +27,7 @@ public class User {
     private boolean isExpired = false;
     private boolean isLocked = false;
 
+
     private Integer loginStatus=0;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -47,7 +48,9 @@ public class User {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-    }
+            }
+
+
 
     public Long getId() {
         return id;
