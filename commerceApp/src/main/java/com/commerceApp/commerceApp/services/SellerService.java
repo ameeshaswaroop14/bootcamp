@@ -24,6 +24,8 @@ public class SellerService {
 
        @Autowired
        ModelMapper modelMapper;
+       @Autowired
+       MailService mailService;
 
     public Seller toSeller(SellerRegistrationDto sellerRegistrationDto) {
         Seller seller = modelMapper.map(sellerRegistrationDto, Seller.class);
@@ -49,5 +51,54 @@ public class SellerService {
         AdminSellerDto adminSellerDto=toadminSellerDto(seller);
         return adminSellerDto;
     }
+    public boolean isEmailUnique(String email){
+        Seller seller = sellerRepository.findByEmail(email);
+        if(seller != null)
+            return false;
+
+        return true;
+    }
+    public boolean isGSTUnique(String GST){
+        Seller seller = sellerRepository.findByGST(GST);
+        if(seller != null)
+            return false;
+
+        return true;
+    }
+    public boolean isCompanyNameUnique(String name){
+        Seller seller = sellerRepository.findByCompanyName(name);
+        if(seller != null)
+            return false;
+
+        return true;
+    }
+    public String checkIfUnique(SellerRegistrationDto sellerRegistrationDto){
+        if(!isEmailUnique(sellerRegistrationDto.getEmail())){
+            return "Email already exits";
+        }
+        else if(!isGSTUnique(sellerRegistrationDto.getGST())){
+            return "GST already exists";
+        }
+        else if(!isCompanyNameUnique(sellerRegistrationDto.getCompanyName())){
+            return "Comapny name already exits ";
+        }
+        else{
+            return "unique";
+        }
+    }
+    public void acknowledgementEmail(String email){
+        String subject="Registration confirmation";
+        String text="Your account is awaited for confirmation";
+        mailService.sendEmail(email,subject,text);
+    }
+    public AdminSellerDto getSellerByEmaiId(String email){
+        Seller seller=sellerRepository.findByEmail(email);
+        if(email==null){
+            return null;
+        }
+        AdminSellerDto adminSellerDto=toadminSellerDto(seller);
+        return adminSellerDto;
+    }
+
 
 }

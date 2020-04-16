@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity
@@ -52,21 +53,25 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/admin/home").hasAnyRole("ADMIN")
-                .antMatchers("/seller/home").hasAnyRole("ADMIN", "SELLER")
-                .antMatchers("/customer/home").hasAnyRole("ADMIN", "CUSTOMER")
-                .antMatchers("/doLogout").hasAnyRole("ADMIN", "CUSTOMER", "SELLER")
+                .antMatchers("/seller/home").hasAnyRole("ADMIN","SELLER")
+                .antMatchers("/customer/home").hasAnyRole("ADMIN","CUSTOMER")
+                .antMatchers("/activate/customer").anonymous()
                 .antMatchers("/activate/{id}").hasAnyRole("ADMIN")
                 .antMatchers("/deactivate/{id}").hasAnyRole("ADMIN")
                 .antMatchers("/register/*").anonymous()
-                .antMatchers("/activate/*").anonymous()
                 .antMatchers("/resend-activation-link/customer").anonymous()
-                .antMatchers("/customers").hasAnyRole("ADMIN","CUSTOMER")
+                .antMatchers("/customers").hasAnyRole("ADMIN")
                 .antMatchers("/sellers").hasAnyRole("ADMIN")
+                .antMatchers("/forgot-password", "/reset-password", "/change-password").hasAnyRole("CUSTOMER", "SELLER")
+                .antMatchers("/customer/profile").hasAnyRole("CUSTOMER", "ADMIN")
+                .antMatchers("/seller/profile").hasAnyRole("SELLER", "ADMIN")
+                .antMatchers("/customer/addresses/*").hasAnyRole("CUSTOMER", "ADMIN")
+                .antMatchers("/seller/addresses/*").hasAnyRole("SELLER", "ADMIN")
+                .antMatchers("/doLogout").hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable();
-    }    }
-
-
+    }
+}

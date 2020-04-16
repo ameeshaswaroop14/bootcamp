@@ -1,8 +1,6 @@
 package com.commerceApp.commerceApp.dtos;
 
 
-import com.commerceApp.commerceApp.validators.ValidGST;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,19 +8,18 @@ import javax.validation.constraints.Size;
 public class SellerRegistrationDto extends UserRegistrationDto {
 
 
-   // @NotNull
-    //@NotEmpty
-    //@Size(min = 15, max = 15)
-    //@ValidGST
+    @NotNull
+    @NotEmpty
+    @Size(min = 15, max = 15)
     private String GST;
 
-   // @NotNull
-    //@NotEmpty
+   @NotNull
+   @NotEmpty
     private String companyName;
 
-   // @NotNull
-    //@NotEmpty
-    //@Size(min = 10, max = 10)
+   @NotNull
+    @NotEmpty
+    @Size(min = 10, max = 10)
     private String companyContact;
 
 

@@ -47,18 +47,14 @@ public class AdminController {
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity activateUser(@PathVariable Long id, WebRequest webRequest){
-        return userService.activateById(id,webRequest);
-    }
-
-    @PutMapping("deactivate{id}")
-    public ResponseEntity deActivateUser(@PathVariable Long id,WebRequest webRequest){
-       return userService.deActivateById(id,webRequest);
+    public String activateUser(@PathVariable Long id, WebRequest webRequest){
+        return userService.activateUserById(id, webRequest);
     }
 
 
-
-
-
+    @PutMapping("/deactivate/{id}")
+    public String deactivateUser(@PathVariable Long id, WebRequest request){
+        return userService.deactivateUserById(id, request);
+    }
 
 }

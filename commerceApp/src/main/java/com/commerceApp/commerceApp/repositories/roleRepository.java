@@ -4,4 +4,5 @@ import com.commerceApp.commerceApp.Models.Role;
 import org.springframework.data.repository.CrudRepository;
 
 public interface roleRepository extends CrudRepository<Role,Integer> {
+    Role findByAuthority(String Authority);
 }

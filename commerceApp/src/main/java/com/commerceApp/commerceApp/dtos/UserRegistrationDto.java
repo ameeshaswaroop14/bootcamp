@@ -1,36 +1,29 @@
 package com.commerceApp.commerceApp.dtos;
 
-import com.commerceApp.commerceApp.validators.PasswordMatches;
-import com.commerceApp.commerceApp.validators.ValidEmail;
-import com.commerceApp.commerceApp.validators.ValidPassword;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 public class UserRegistrationDto {
 
-    //@NotNull
-    //@NotEmpty
+    @NotNull
+    @NotEmpty
     private String firstName;
 
     private String middleName;
 
-    //@NotNull
-    //@NotEmpty
+    @NotNull
+    @NotEmpty
     private String lastName;
 
-   // @NotNull
-    //@NotEmpty
-    //@ValidEmail
-    private String email;
+   @NotNull
+    @NotEmpty
+   private String email;
 
-   // @NotNull
-    //@NotEmpty
-    //@ValidPassword
-    private String password;
+   @NotNull
+    @NotEmpty
+   private String password;
 
-    //@NotNull
-    //@NotEmpty
+    @NotNull
+    @NotEmpty
     private String confirmPassword;
 
 

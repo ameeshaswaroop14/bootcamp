@@ -4,9 +4,11 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+
 @Entity
-public class VerificationToken{
-    private static final Integer EXPIRATION = 24*60;
+public class ForgotPasswordToken {
+
+    private static final Integer EXPIRATION = 24 * 60;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,18 +19,17 @@ public class VerificationToken{
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+
     private Date expiryDate;
-    public VerificationToken(){
+
+    public ForgotPasswordToken() {
     }
 
-    public VerificationToken(String token, User user) {
+    public ForgotPasswordToken(String token, User user) {
         this.token = token;
         this.user = user;
         this.expiryDate = this.calculateExpiryDate(EXPIRATION);
-    }
 
-    public static Integer getEXPIRATION() {
-        return EXPIRATION;
     }
 
     public Long getId() {
@@ -62,6 +63,11 @@ public class VerificationToken{
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
+
+    public static Integer getEXPIRATION() {
+        return EXPIRATION;
+    }
+
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));
@@ -71,7 +77,7 @@ public class VerificationToken{
 
     @Override
     public String toString() {
-        return "VerificationToken{" +
+        return "ForgotPasswordToken{" +
                 "id=" + id +
                 ", token='" + token + '\'' +
                 ", user=" + user +
@@ -79,3 +85,4 @@ public class VerificationToken{
                 '}';
     }
 }
+

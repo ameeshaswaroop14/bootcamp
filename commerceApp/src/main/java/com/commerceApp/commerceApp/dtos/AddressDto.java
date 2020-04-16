@@ -1,43 +1,16 @@
-package com.commerceApp.commerceApp.Models;
+package com.commerceApp.commerceApp.dtos;
 
-import javax.persistence.*;
-@Entity
-public class Address {
+import javax.validation.constraints.Size;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+public class AddressDto {
     private String addressLine;
     private String city;
     private String state;
+
+    @Size(min = 6, max = 6, message = "Zipcode should be of length 6")
     private String zipCode;
     private String country;
     private String label;
-
-    private boolean isDeleted = false;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    public  Address(){}
-
-    public Address(String addressLine, String city, String state, String zipCode, String country, String label) {
-        this.addressLine = addressLine;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.country = country;
-        this.label = label;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getAddressLine() {
         return addressLine;
@@ -86,34 +59,26 @@ public class Address {
     public void setLabel(String label) {
         this.label = label;
     }
+    public AddressDto(){}
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public AddressDto(String addressLine, String city, String state, @Size(min = 6, max = 6, message = "Zipcode should be of length 6") String zipCode, String country, String label) {
+        this.addressLine = addressLine;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.country = country;
+        this.label = label;
     }
 
     @Override
     public String toString() {
-        return "Address{" +
-                "id=" + id +
+        return "AddressDto{" +
+                "addressLine='" + addressLine + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
-                ", country='" + country + '\'' +
-                ", address='" + addressLine + '\'' +
                 ", zipCode='" + zipCode + '\'' +
+                ", country='" + country + '\'' +
                 ", label='" + label + '\'' +
                 '}';
     }
-
 }

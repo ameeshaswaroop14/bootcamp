@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.Map;
-/*
+
 public class HashMapConverter implements AttributeConverter<Map<String, Object>, String> {
 
     private ObjectMapper objectMapper;
@@ -39,5 +39,4 @@ public class HashMapConverter implements AttributeConverter<Map<String, Object>,
 
         return customerInfo;
     }
-
-}*/
+}
