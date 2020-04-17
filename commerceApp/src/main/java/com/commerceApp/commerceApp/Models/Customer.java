@@ -1,28 +1,64 @@
 package com.commerceApp.commerceApp.Models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 
 @Entity
-public class Customer  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer CUSTOMER_USER_ID;
-    private Long CONTACT;
+@PrimaryKeyJoinColumn(name = "USER_ID")
+public class Customer extends User{
 
-    public Integer getCUSTOMER_USER_ID() {
-        return CUSTOMER_USER_ID;
+    private String contact;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<ProductReview> reviews;
+
+
+    public Customer(){
+        this.addRole(new Role(3, "ROLE_CUSTOMER"));
     }
 
-    public void setCUSTOMER_USER_ID(Integer CUSTOMER_USER_ID) {
-        this.CUSTOMER_USER_ID = CUSTOMER_USER_ID;
+    public Customer(String email, String firstName, String middleName, String lastName, String contact) {
+        super(email, firstName, middleName, lastName);
+        this.addRole(new Role(3, "ROLE_CUSTOMER"));
+        this.contact = contact;
     }
 
-    public Long getCONTACT() {
-        return CONTACT;
+    public String getContact() {
+        return contact;
     }
 
-    public void setCONTACT(Long CONTACT) {
-        this.CONTACT = CONTACT;
+    public void setContact(String contact) {
+        this.contact = contact;
     }
+
+    public List<ProductReview> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ProductReview> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(ProductReview review){
+        if(review != null){
+            if(reviews == null)
+                reviews = new ArrayList<>();
+
+            reviews.add(review);
+
+            review.setAuthor(this);
+        }
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Customer{" +
+//                super.toString() +
+//                "contact='" + contact + '\'' +
+//                '}';
+//    }
+
 }

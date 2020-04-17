@@ -1,53 +1,138 @@
 package com.commerceApp.commerceApp.Models;
 
 
-import javax.persistence.Entity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.persistence.*;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class ProductVariation {
-    private Integer PRODUCT_VARIATION_ID;
-    private Integer PRODUCT_ID;
-    private Integer QUANTITY_AVAILAIBLE;
-    private Double PRICE;
-    private String PRIMARY_IMAGE_NAME;
 
-    public Integer getPRODUCT_VARIATION_ID() {
-        return PRODUCT_VARIATION_ID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private Integer quantityAvailable;
+    private Double price;
+    private String primaryImageName;
+
+    @Convert(converter = HashMapConverter.class)
+    private Map<String, String> productAttributes;
+
+    private boolean isDeleted = false;
+    private boolean isActive = true;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setPRODUCT_VARIATION_ID(Integer PRODUCT_VARIATION_ID) {
-        this.PRODUCT_VARIATION_ID = PRODUCT_VARIATION_ID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Integer getPRODUCT_ID() {
-        return PRODUCT_ID;
+    public Integer getQuantityAvailable() {
+        return quantityAvailable;
     }
 
-    public void setPRODUCT_ID(Integer PRODUCT_ID) {
-        this.PRODUCT_ID = PRODUCT_ID;
+    public void setQuantityAvailable(Integer quantityAvailable) {
+        this.quantityAvailable = quantityAvailable;
     }
 
-    public Integer getQUANTITY_AVAILAIBLE() {
-        return QUANTITY_AVAILAIBLE;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setQUANTITY_AVAILAIBLE(Integer QUANTITY_AVAILAIBLE) {
-        this.QUANTITY_AVAILAIBLE = QUANTITY_AVAILAIBLE;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public Double getPRICE() {
-        return PRICE;
+    public String getPrimaryImageName() {
+        return primaryImageName;
     }
 
-    public void setPRICE(Double PRICE) {
-        this.PRICE = PRICE;
+    public void setPrimaryImageName(String primaryImageName) {
+        this.primaryImageName = primaryImageName;
     }
 
-    public String getPRIMARY_IMAGE_NAME() {
-        return PRIMARY_IMAGE_NAME;
+    public Map<String, String> getProductAttributes() {
+        return productAttributes;
     }
 
-    public void setPRIMARY_IMAGE_NAME(String PRIMARY_IMAGE_NAME) {
-        this.PRIMARY_IMAGE_NAME = PRIMARY_IMAGE_NAME;
+    public void setProductAttributes(Map<String, String> productAttributes) {
+        this.productAttributes = productAttributes;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Set<OrderProduct> getOrderedProducts() {
+        return orderedProducts;
+    }
+
+    public void setOrderedProducts(Set<OrderProduct> orderedProducts) {
+        this.orderedProducts = orderedProducts;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+
+    @OneToMany(mappedBy = "productVariation", fetch = FetchType.EAGER)
+    private Set<OrderProduct> orderedProducts;
+
+
+    public ProductVariation(Integer quantityAvailable, Double price) {
+        this.quantityAvailable = quantityAvailable;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductVariation{" +
+                "id=" + id +
+                ", quantityAvailable=" + quantityAvailable +
+                ", price=" + price +
+                ", primaryImageName='" + primaryImageName + '\'' +
+                ", productAttributes=" + productAttributes +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
+
+
+    public void addOrderProduct(OrderProduct orderProduct){
+        if(orderProduct != null){
+            if(orderedProducts == null)
+                orderedProducts = new LinkedHashSet<>();
+            orderedProducts.add(orderProduct);
+        }
     }
 }
+
+
