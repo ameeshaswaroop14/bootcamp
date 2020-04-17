@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 
@@ -24,10 +26,14 @@ public class ForgotPasswordService {
     UserRepository userRepository;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    TokenStore tokenStore;
 
 
     public ResponseEntity <String> initiatePasswordReset(String email, WebRequest request){
         String message;
+        System.out.println(email);
+
         User user = userRepository.findByEmail(email);
         if(user==null)
             return new ResponseEntity<>("The given email does not exist",HttpStatus.NOT_FOUND);
@@ -53,7 +59,8 @@ public class ForgotPasswordService {
         mailService.sendEmail(email, subject, emailBody);
     }
 
-    public ResponseEntity<String> resetPassword(String token, ForgotPassword passwords, WebRequest request) {
+    public ResponseEntity<String> resetPassword(String token, ForgotPassword password, WebRequest request){
+
         ForgotPasswordToken forgotPasswordToken = tokenService.getForgotPasswordToken(token);
         if (forgotPasswordToken == null) {
             return new ResponseEntity<>("Invalid token", HttpStatus.BAD_REQUEST);
@@ -65,14 +72,31 @@ public class ForgotPasswordService {
 
             String appUrl = request.getContextPath();
             tokenService.deleteForgotToken(token);
-            return new ResponseEntity<>("Token expired", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Token Expired", HttpStatus.BAD_REQUEST);
         }
-        user.setPassword(passwords.getPassword());
-        userRepository.save(user);
+
+        user.setPassword(password.getPassword());
+        tokenService.saveRegisteredUser(user);
         tokenService.deleteForgotToken(token);
-        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+
+        logoutUser(user.getEmail(), request);
+        sendPasswordResetConfirmationMail(user.getEmail());
+        return new ResponseEntity<>("Password changes successfully", HttpStatus.OK);
     }
 
+    public void logoutUser(String email, WebRequest request){
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null) {
+            String tokenValue = authHeader.replace("Bearer", "").trim();
+            OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
+            tokenStore.removeAccessToken(accessToken);
+        }
+    }
 
+    public void sendPasswordResetConfirmationMail(String email) {
+        String subject = "Password Reset Successfully";
+        String message = "the password for your account has been reset successfully";
+        mailService.sendEmail(email, subject, message);
+    }
 
 }

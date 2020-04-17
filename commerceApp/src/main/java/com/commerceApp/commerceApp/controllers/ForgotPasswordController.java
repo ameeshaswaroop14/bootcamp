@@ -16,11 +16,11 @@ public class ForgotPasswordController {
     public ResponseEntity<String> getResetPasswordToken(@RequestParam String email, WebRequest webRequest) {
         return forgotPasswordService.initiatePasswordReset(email,webRequest);
     }
-    /*
+
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestParam("token") String token, @Valid @RequestBody ForgotPassword passwords, WebRequest request) {
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @Valid @RequestBody ForgotPassword passwords, WebRequest request) {
         return forgotPasswordService.resetPassword(token, passwords, request);
     }
 
-     */
+
 }

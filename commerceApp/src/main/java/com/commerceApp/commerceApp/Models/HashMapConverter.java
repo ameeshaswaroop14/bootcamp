@@ -8,35 +8,34 @@ import javax.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.Map;
 
-public class HashMapConverter implements AttributeConverter<Map<String, Object>, String> {
+public class HashMapConverter implements AttributeConverter<Map<String, String>, String> {
 
-    private ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(Map<String, Object> customerInfo) {
+    public String convertToDatabaseColumn(Map<String, String> productVariationInfo) {
 
-        String customerInfoJson = null;
+        String productVariationInfoJson = null;
         try {
-            customerInfoJson = objectMapper.writeValueAsString(customerInfo);
+            productVariationInfoJson = objectMapper.writeValueAsString(productVariationInfo);
         } catch (final JsonProcessingException e) {
-            //logger.error("JSON writing error", e);
-            return null;
+            System.out.println(e);
         }
 
-        return customerInfoJson;
+        return productVariationInfoJson;
     }
 
     @Override
-    public Map<String, Object> convertToEntityAttribute(String customerInfoJSON) {
+    public Map<String, String> convertToEntityAttribute(String productVariationInfoJSON) {
 
-        Map<String, Object> customerInfo = null;
+        Map<String, String> productVariationInfo = null;
         try {
-            customerInfo = objectMapper.readValue(customerInfoJSON, Map.class);
+            productVariationInfo = objectMapper.readValue(productVariationInfoJSON, Map.class);
         } catch (final IOException e) {
-            //logger.error("JSON reading error", e);
-            return null;
+            System.out.println(e);
         }
 
-        return customerInfo;
+        return productVariationInfo;
     }
+
 }

@@ -23,17 +23,16 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/user/home")
-    public String userHome() {
-        String data = "user home";
-        return data;
-    }
-/*
-    @PutMapping("/change-password")
-    public String changePassword(@Valid @RequestBody ForgotPassword passwords, HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-        String username = principal.getName();
-        return userService.changePassword(username, passwords);
+    public ResponseEntity<String> userHome(){
+        return new ResponseEntity<>("User Home", HttpStatus.OK);
     }
 
- */
+    @PutMapping("/change-password")
+    public ResponseEntity changePassword(@Valid @RequestBody ForgotPassword forgotPassword, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+        String username = principal.getName();
+        return userService.changePassword(username, forgotPassword);
+    }
+
+
 }

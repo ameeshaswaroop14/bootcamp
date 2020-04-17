@@ -2,19 +2,19 @@ package com.commerceApp.commerceApp.services;
 
 import com.commerceApp.commerceApp.Models.Customer;
 import com.commerceApp.commerceApp.Models.Seller;
-import com.commerceApp.commerceApp.dtos.AdminCustomerDto;
-import com.commerceApp.commerceApp.dtos.AdminSellerDto;
-import com.commerceApp.commerceApp.dtos.CustomerRegistrationDto;
-import com.commerceApp.commerceApp.dtos.SellerRegistrationDto;
+import com.commerceApp.commerceApp.dtos.*;
 import com.commerceApp.commerceApp.repositories.SellerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,7 +26,8 @@ public class SellerService {
        ModelMapper modelMapper;
        @Autowired
        MailService mailService;
-
+       @Autowired
+       AddressService addressService;
     public Seller toSeller(SellerRegistrationDto sellerRegistrationDto) {
         Seller seller = modelMapper.map(sellerRegistrationDto, Seller.class);
         return seller;
@@ -99,6 +100,48 @@ public class SellerService {
         AdminSellerDto adminSellerDto=toadminSellerDto(seller);
         return adminSellerDto;
     }
+    public SellerViewProfileDto tosellerProfileDto(Seller seller) {
+        SellerViewProfileDto sellerViewProfileDto= modelMapper.map(seller, SellerViewProfileDto.class);
+        return sellerViewProfileDto;
+    }
+
+    public SellerViewProfileDto getUserProfile(String email) {
+        Seller seller = sellerRepository.findByEmail(email);
+        SellerViewProfileDto sellerViewProfileDto = tosellerProfileDto(seller);
+        return sellerViewProfileDto;
+    }
+
+
+    public ResponseEntity<String> updateUserProfile(String email, SellerViewProfileDto profileDto) {
+        Seller savedSeller = sellerRepository.findByEmail(email);
+
+        if(profileDto.getFirstName() != null)
+            savedSeller.setFirstName(profileDto.getFirstName());
+
+        if(profileDto.getLastName() != null)
+            savedSeller.setLastName(profileDto.getLastName());
+
+       // if(profileDto.getImage() != null)
+         //   savedSeller.setImage(profileDto.getImage());
+
+        if(profileDto.getActive() != null && !profileDto.getActive())
+            savedSeller.setActive(profileDto.getActive());
+
+        if(profileDto.getGST() != null)
+            savedSeller.setGST(profileDto.getGST());
+
+        if(profileDto.getCompanyContact() != null)
+            savedSeller.setCompanyContact(profileDto.getCompanyContact());
+
+        if(profileDto.getCompanyName() != null)
+            savedSeller.setCompanyName(profileDto.getCompanyName());
+
+        sellerRepository.save(savedSeller);
+
+        return new ResponseEntity("Your profile has been updated", HttpStatus.OK);
+    }
+
+
 
 
 }

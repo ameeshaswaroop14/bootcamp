@@ -51,6 +51,14 @@ public class UserViewDto {
     public UserViewDto() {
     }
 
+    public AddressDto getAddressDto() {
+        return addressDto;
+    }
+
+    public void setAddressDto(AddressDto addressDto) {
+        this.addressDto = addressDto;
+    }
+
     public UserViewDto(Long id, String firstName, String middleName, String lastName, Boolean isActive) {
         this.id = id;
         this.firstName = firstName;

@@ -1,7 +1,9 @@
 package com.commerceApp.commerceApp.services;
 
 import com.commerceApp.commerceApp.Models.*;
+import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.CustomerRegistrationDto;
+import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.dtos.SellerRegistrationDto;
 import com.commerceApp.commerceApp.exceptions.EmailAlreadyExistsException;
 import com.commerceApp.commerceApp.repositories.*;
@@ -10,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 
@@ -21,6 +24,11 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     MailService mailService;
+    @Autowired AddressRepository addressRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    ForgotPasswordService forgotPasswordService;
 
 
     public String activateUserById(Long id, WebRequest request) {
@@ -88,6 +96,55 @@ public class UserService {
             return false;
     }
 
+
+    private void sendAccountLockingMail(String email) {
+        String subject = "Account Locked";
+        String message = "your account has been locked due to multiple unsuccessful login attempts.";
+        mailService.sendEmail(email, subject, message);
+    }
+
+
+
+    public ResponseEntity<String>updateAddressById(String email, Long addressId, AddressDto addressDto) {
+        Optional<Address> address = addressRepository.findById(addressId);
+        User user = userRepository.findByEmail(email);
+
+        if(!address.isPresent()){
+            return new ResponseEntity<>("No address found with the given id;", HttpStatus.NOT_FOUND);
+        }
+        Address savedAddress = address.get();
+        if(!savedAddress.getUser().getEmail().equals(email)){
+            return new ResponseEntity<>("Invalid Operation", HttpStatus.CONFLICT);
+        }
+
+        if(addressDto.getAddressLine() != null)
+            savedAddress.setAddressLine(addressDto.getAddressLine());
+
+        if(addressDto.getCity() != null)
+            savedAddress.setCity(addressDto.getCity());
+
+        if(addressDto.getState() != null)
+            savedAddress.setState(addressDto.getState());
+
+        if(addressDto.getCountry() != null)
+            savedAddress.setCountry(addressDto.getCountry());
+
+        if(addressDto.getZipCode() != null)
+            savedAddress.setZipCode(addressDto.getZipCode());
+
+        if(addressDto.getLabel() != null)
+            savedAddress.setLabel(addressDto.getLabel());
+
+        return new ResponseEntity<>("Address Updated", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> changePassword(String email, ForgotPassword passwords){
+        User user = userRepository.findByEmail(email);
+        user.setPassword(passwordEncoder.encode(passwords.getPassword()));
+        userRepository.save(user);
+        forgotPasswordService.sendPasswordResetConfirmationMail(email);
+        return new ResponseEntity<>("Password Changed", HttpStatus.OK);
+    }
 
 
 }

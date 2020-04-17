@@ -210,4 +210,6 @@ public class User {
     public Integer getLoginStatus() {
         return loginStatus;
     }
+
+
 }

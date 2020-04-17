@@ -14,6 +14,7 @@ public class CustomerViewProfileDto extends UserViewDto {
         this.contact = contact;
     }
 
+
     public CustomerViewProfileDto(){}
 
     public CustomerViewProfileDto(@Size(min = 10, max = 10, message = "Contact number invalid") String contact) {
