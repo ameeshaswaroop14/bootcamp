@@ -1,6 +1,8 @@
 package com.commerceApp.commerceApp.security;
 
 import com.commerceApp.commerceApp.Models.*;
+import com.commerceApp.commerceApp.repositories.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
 import com.commerceApp.commerceApp.repositories.roleRepository;
 import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -11,12 +13,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class Bootstrap implements ApplicationRunner {
     @Autowired
     UserRepository userRepository;
     @Autowired
     roleRepository roleRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -56,6 +65,46 @@ public class Bootstrap implements ApplicationRunner {
             userRepository.save(seller1);
 
             System.out.println("Total users saved::" + userRepository.count());
+            Product product1 = new Product("Shirt", "Check based design", "Levi's");
+            Product product2 = new Product("Jeans", "slim fit", "Crimson club");
+            Product product3 = new Product("Shoes", "Light weight", "Sketchers");
+
+            product1.setId(100L);
+
+            Category fashion = new Category("fashion");
+            Category clothing = new Category("clothing");
+            fashion.addSubCategory(clothing);
+            Category men = new Category("men");
+            Category women = new Category("women");
+            clothing.addSubCategory(men);
+            clothing.addSubCategory(women);
+
+            categoryRepository.save(fashion);
+
+            System.out.println("total categories saved - " + categoryRepository.count());
+
+
+            ProductVariation mSize = new ProductVariation(5, 1500d);
+            Map<String, String> attributes1 = new HashMap<>();
+            attributes1.put("size", "M-Size");
+            attributes1.put("gender", "female");
+            mSize.setProductAttributes(attributes1);
+
+            ProductVariation lSize = new ProductVariation(3, 1600d);
+            Map<String, String> attributes2 = new HashMap<>();
+            attributes2.put("size", "L-Size");
+            attributes2.put("gender", "male");
+            lSize.setProductAttributes(attributes2);
+
+
+            product1.setCategory(men);
+            product1.addVariation(mSize);
+            product1.addVariation(lSize);
+
+            seller1.addProduct(product1);
+
+            productRepository.save(product1);
+
 
 
         }

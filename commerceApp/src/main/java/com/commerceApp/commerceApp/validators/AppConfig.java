@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import java.util.Locale;
 import java.util.Properties;
 
 @Configuration
@@ -21,7 +24,7 @@ public class AppConfig {
         javaMailSender.setPort(587);
 
         javaMailSender.setUsername("ameeshaswaroop@gmail.com");
-        javaMailSender.setPassword("Felixkjelberg14");
+        javaMailSender.setPassword("Felixkjelberg@14p");
 
         Properties props = javaMailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
@@ -30,6 +33,13 @@ public class AppConfig {
         props.put("mail.debug", "true");
 
         return javaMailSender;
+    }
+    @Bean
+    public LocaleResolver localeResolver()
+    {
+        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.US);
+        return localeResolver;
     }
 
 

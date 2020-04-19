@@ -19,13 +19,22 @@ public class ProductVariation {
 
     private Integer quantityAvailable;
     private Double price;
-    private String primaryImageName;
+   // private String primaryImageName;
 
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> productAttributes;
 
     private boolean isDeleted = false;
     private boolean isActive = true;
+
+    public ProductVariation(){}
+
+    public ProductVariation(Long id, Integer quantityAvailable, Double price, Map<String, String> productAttributes) {
+        this.id = id;
+        this.quantityAvailable = quantityAvailable;
+        this.price = price;
+        this.productAttributes = productAttributes;
+    }
 
     public Long getId() {
         return id;
@@ -51,13 +60,7 @@ public class ProductVariation {
         this.price = price;
     }
 
-    public String getPrimaryImageName() {
-        return primaryImageName;
-    }
 
-    public void setPrimaryImageName(String primaryImageName) {
-        this.primaryImageName = primaryImageName;
-    }
 
     public Map<String, String> getProductAttributes() {
         return productAttributes;
@@ -119,12 +122,13 @@ public class ProductVariation {
                 "id=" + id +
                 ", quantityAvailable=" + quantityAvailable +
                 ", price=" + price +
-                ", primaryImageName='" + primaryImageName + '\'' +
                 ", productAttributes=" + productAttributes +
                 ", isDeleted=" + isDeleted +
+                ", isActive=" + isActive +
+                ", product=" + product +
+                ", orderedProducts=" + orderedProducts +
                 '}';
     }
-
 
     public void addOrderProduct(OrderProduct orderProduct){
         if(orderProduct != null){
