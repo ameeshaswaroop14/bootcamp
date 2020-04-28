@@ -1,17 +1,12 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.*;
+import com.commerceApp.commerceApp.models.*;
 import com.commerceApp.commerceApp.dtos.AddressDto;
-import com.commerceApp.commerceApp.dtos.CustomerRegistrationDto;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
-import com.commerceApp.commerceApp.dtos.SellerRegistrationDto;
-import com.commerceApp.commerceApp.exceptions.EmailAlreadyExistsException;
 import com.commerceApp.commerceApp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
@@ -142,7 +137,7 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         user.setPassword(passwordEncoder.encode(passwords.getPassword()));
         userRepository.save(user);
-        forgotPasswordService.sendPasswordResetConfirmationMail(email);
+        mailService.sendPasswordResetConfirmationMail(email);
         return new ResponseEntity<>("Password Changed", HttpStatus.OK);
     }
 

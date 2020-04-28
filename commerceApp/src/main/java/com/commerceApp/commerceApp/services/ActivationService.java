@@ -1,9 +1,14 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.User;
-import com.commerceApp.commerceApp.Models.VerificationToken;
+import com.commerceApp.commerceApp.models.User;
+import com.commerceApp.commerceApp.models.tokens.VerificationToken;
 import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 
@@ -19,39 +24,45 @@ public class ActivationService {
     UserRepository userRepository;
 
 
-    public String activateUserByToken(String token, WebRequest webRequest) {
+
+    public ResponseEntity<BaseDto> activateUserByToken(String token, WebRequest request){
+        String message;
+        BaseDto response;
         VerificationToken verificationToken = tokenService.getVerificationToken(token);
         if (verificationToken == null) {
-            return "Invalid token";
+            response=new ErrorDto("Invalid Operation","No user found with the given token");
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
-        String message;
+
+        // if token is expired
         User user = verificationToken.getUser();
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 
-            message = "Your activation link has been expired. We have sent a net link to your " +
-                    "registered email.";
-            String appUrl = webRequest.getContextPath();
+            response=new ErrorDto("Token Expired","Your activation link has been expired. We have sent a net link to your " +
+                    "registered email.");
+
+            String appUrl = request.getContextPath();
             tokenService.deleteVerificationToken(token);
-            sendActivationLinkMail(appUrl, user, "Account Re-Activation Link");
+            mailService.sendActivationLinkMail(appUrl, user, "Account Activation Link");
 
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
+
+        if(user.isActive()){
+            message = "Your account is already active";
+            response = new ResponseDto<>(null, message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        }
+
         user.setActive(true);
-        userRepository.save(user);
+        tokenService.saveRegisteredUser(user);
         tokenService.deleteVerificationToken(token);
-        message = "Activated";
-        return message;
+        message = "you have been activated successfully";
+        response = new ResponseDto<>(null, message);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
-    public void sendActivationLinkMail(String appUrl, User user, String subject) {
 
-        String token = tokenService.createVerficationToken(user);
-
-        String email = user.getEmail();
-        String confirmationUrl = "http://localhost:8080" + appUrl +
-                "/activate/customer?token=" + token;
-        String message = "please activate your account \r\n" + confirmationUrl;
-        mailService.sendEmail(email, subject, message);
-    }
 
 }

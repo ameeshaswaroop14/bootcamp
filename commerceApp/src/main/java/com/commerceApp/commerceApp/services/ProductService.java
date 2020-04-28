@@ -1,20 +1,18 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.Category;
-import com.commerceApp.commerceApp.Models.Product;
-import com.commerceApp.commerceApp.Models.ProductVariation;
-import com.commerceApp.commerceApp.Models.Seller;
-import com.commerceApp.commerceApp.dtos.ProductAdminDto;
-import com.commerceApp.commerceApp.dtos.ProductCustomerDto;
-import com.commerceApp.commerceApp.dtos.ProductSellerDto;
-import com.commerceApp.commerceApp.dtos.ProductVariationDto;
+import com.commerceApp.commerceApp.models.category.Category;
+import com.commerceApp.commerceApp.models.product.Product;
+import com.commerceApp.commerceApp.models.Seller;
+import com.commerceApp.commerceApp.dtos.productDto.ProductAdminDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
 import com.commerceApp.commerceApp.exceptions.ProductAlreadyExists;
 import com.commerceApp.commerceApp.exceptions.ProductDoesNotExists;
 import com.commerceApp.commerceApp.exceptions.ProductNotActive;
 import com.commerceApp.commerceApp.repositories.CategoryRepository;
 import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.repositories.SellerRepository;
-import org.modelmapper.ModelMapper;
+import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +23,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.commerceApp.commerceApp.util.EntityDtoMapping.*;
+
 @Service
 public class ProductService {
 
-    @Autowired
-    ModelMapper modelMapper;
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
@@ -40,38 +38,6 @@ public class ProductService {
     MailService mailService;
     @Autowired
     CategoryService categoryService;
-
-    public Product toProduct(ProductSellerDto productSellerDto) {
-        if (productSellerDto == null)
-            return null;
-        return modelMapper.map(productSellerDto, Product.class);
-    }
-
-    public ProductSellerDto toProductSellerDto(Product product) {
-        if (product == null)
-            return null;
-        return modelMapper.map(product, ProductSellerDto.class);
-    }
-    public Product toProduct(ProductCustomerDto productCustomerDto) {
-        if (productCustomerDto == null)
-            return null;
-        return modelMapper.map(productCustomerDto, Product.class);
-    }
-    public ProductCustomerDto toproductCustomerDto(Product product) {
-        if (product == null)
-            return null;
-        return modelMapper.map(product, ProductCustomerDto.class);
-    }
-    public Product toProduct(ProductAdminDto productAdminDto) {
-        if (productAdminDto == null)
-            return null;
-        return modelMapper.map(productAdminDto, Product.class);
-    }
-    public ProductAdminDto toProductAdminDto(Product product) {
-        if (product == null)
-            return null;
-        return modelMapper.map(product, ProductAdminDto.class);
-    }
 
     public String validateProducts(String email, ProductSellerDto productSellerDto) {
         String message;
@@ -103,49 +69,17 @@ public class ProductService {
 
     public ResponseEntity<String> addProduct(String email, ProductSellerDto productSellerDto) {
         String message = validateProducts(email, productSellerDto);
-        if (!message.equalsIgnoreCase("Successful"))
+        if (!message.equalsIgnoreCase("Success"))
             return new ResponseEntity<>("Validation Failed", HttpStatus.BAD_REQUEST);
         Category category = categoryRepository.findById(productSellerDto.getCategoryId()).get();
         Seller seller = sellerRepository.findByEmail(email);
         Product product = toProduct(productSellerDto);
         product.setCategory(category);
         product.setSeller(seller);
-        sendProductCreationMail(email, product);
+        mailService.sendProductCreationMail(email, product);
         productRepository.save(product);
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
-    }
-
-    private void sendProductCreationMail(String email, Product product) {
-        String subject = "Product created";
-        String content = "A product with following details has been created - \n" +
-                "name - " + product.getName() + "\n" +
-                "category - " + product.getCategory().getName() + "\n" +
-                "brand - " + product.getBrand() + "\n" +
-                "description - " + product.getDescription();
-        mailService.sendEmail(email, subject, content);
-    }
-
-    public ProductVariation toProductVariation(ProductVariationDto variationDto) {
-        if (variationDto == null)
-            return null;
-        return modelMapper.map(variationDto, ProductVariation.class);
-    }
-
-    public ProductVariationDto toProductVariationSellerDto(ProductVariation variation) {
-        if (variation == null)
-            return null;
-        return modelMapper.map(variation, ProductVariationDto.class);
-    }
-
-    public String validateProductVariation(ProductVariationDto productVariationDto) {
-        Optional<Product> savedProduct = productRepository.findById(productVariationDto.getProductid());
-
-        if (!savedProduct.isPresent()) {
-            String message = "invalid product Id";
-        }
-        return null;
-        //idk
     }
 
     public ResponseEntity<String> activateProductById(Long id) {
@@ -157,25 +91,10 @@ public class ProductService {
             return new ResponseEntity<>("Product already activated", HttpStatus.BAD_REQUEST);
         product.setActive(true);
         String email = product.getSeller().getEmail();
-        sendProductActivationMail(email);
+        mailService.sendProductActivationMail(email);
         productRepository.save(product);
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
-    }
-
-    public void sendProductActivationMail(String email) {
-
-        mailService.sendEmail(email, "Product Activation", "Product activation successfully done");
-    }
-
-    public void sendProductDeactivationMail(String email, Product product) {
-        String subject = "product deactivation";
-        String content = "The product has been deleted. product details are as follows - \n" +
-                "name - " + product.getName() + "\n" +
-                "category - " + product.getCategory().getName() + "\n" +
-                "brand - " + product.getBrand() + "\n" +
-                "description - " + product.getDescription();
-        mailService.sendEmail(email, subject, content);
     }
 
     public ResponseEntity<String> deactivateproductById(Long id) {
@@ -187,7 +106,7 @@ public class ProductService {
             return new ResponseEntity<>("Already inactive", HttpStatus.BAD_REQUEST);
         product.setActive(false);
         String email = product.getSeller().getEmail();
-        sendProductDeactivationMail(email, product);
+        mailService.sendProductDeactivationMail(email, product);
         productRepository.save(product);
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
@@ -209,7 +128,7 @@ public class ProductService {
         }
 
         ProductSellerDto productSellerDto = toProductSellerDto(product);
-        productSellerDto.setCategoryDto(categoryService.toCategoryDto(product.getCategory()));
+        productSellerDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
         return productSellerDto;
     }
 
@@ -232,7 +151,7 @@ public class ProductService {
         List<ProductSellerDto> productDtos = new ArrayList<>();
         products.forEach(product -> {
             ProductSellerDto productSellerDto = toProductSellerDto(product);
-            productSellerDto.setCategoryDto(categoryService.toCategoryDto(product.getCategory()));
+            productSellerDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
             productDtos.add(productSellerDto);
         });
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
@@ -271,7 +190,7 @@ public class ProductService {
             throw new ProductNotActive("Product not active");
         }
         ProductCustomerDto productCustomerDto = toproductCustomerDto(product);
-        productCustomerDto.setCategoryDto(categoryService.toCategoryDto(product.getCategory()));
+        productCustomerDto.setCategoryDto(toCategoryDto(product.getCategory()));
         return new ResponseEntity<>(productCustomerDto,HttpStatus.OK);
     }
     public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(Long id){
@@ -291,7 +210,7 @@ public class ProductService {
             throw new ProductNotActive("Product not active");
         }
         ProductAdminDto productAdminDto= toProductAdminDto(product);
-        productAdminDto.setCategoryDto(categoryService.toCategoryDto(product.getCategory()));
+        productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
         return new ResponseEntity<>(productAdminDto,HttpStatus.OK);
     }
     public ResponseEntity<List> getAllProductsForAdmin(Long categoryId, String offset, String size, String sortByField, String order, String brand) {
@@ -313,7 +232,7 @@ public class ProductService {
         List<ProductAdminDto> productDtos = new ArrayList<>();
         products.forEach(product -> {
             ProductAdminDto productAdminDto = toProductAdminDto(product);
-            productAdminDto.setCategoryDto(categoryService.toCategoryDto(product.getCategory()));
+            productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
             productDtos.add(productAdminDto);
         });
         return new ResponseEntity<>(productDtos, HttpStatus.OK);

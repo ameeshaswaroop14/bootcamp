@@ -1,8 +1,5 @@
 package com.commerceApp.commerceApp.events;
 
-import com.commerceApp.commerceApp.Models.User;
-import org.springframework.context.ApplicationEvent;
-
 /*
 public class OnRegistrationSuccessEvent extends ApplicationEvent {
     private static final long serialVersionUID = 1L;

@@ -1,6 +1,6 @@
 package com.commerceApp.commerceApp.validators;
 
-import com.commerceApp.commerceApp.dtos.UserRegistrationDto;
+import com.commerceApp.commerceApp.dtos.registrationDtos.UserRegistrationDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

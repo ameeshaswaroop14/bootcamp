@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.controllers;
 
 import com.commerceApp.commerceApp.dtos.AddressDto;
-import com.commerceApp.commerceApp.dtos.SellerViewProfileDto;
+import com.commerceApp.commerceApp.dtos.profileDtos.SellerViewProfileDto;
 import com.commerceApp.commerceApp.services.SellerService;
 import com.commerceApp.commerceApp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

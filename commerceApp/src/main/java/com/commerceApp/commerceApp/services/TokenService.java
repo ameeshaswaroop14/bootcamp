@@ -1,8 +1,8 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.ForgotPasswordToken;
-import com.commerceApp.commerceApp.Models.User;
-import com.commerceApp.commerceApp.Models.VerificationToken;
+import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
+import com.commerceApp.commerceApp.models.User;
+import com.commerceApp.commerceApp.models.tokens.VerificationToken;
 import com.commerceApp.commerceApp.repositories.ForgotPasswordRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
 import com.commerceApp.commerceApp.repositories.VerificationTokenRepository;

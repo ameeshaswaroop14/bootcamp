@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.controllers;
 
 import com.commerceApp.commerceApp.dtos.AddressDto;
-import com.commerceApp.commerceApp.dtos.CustomerViewProfileDto;
+import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Locale;
 import java.util.Set;
 
 @RestController

@@ -1,6 +1,6 @@
 package com.commerceApp.commerceApp.repositories;
 
-import com.commerceApp.commerceApp.Models.Address;
+import com.commerceApp.commerceApp.models.Address;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

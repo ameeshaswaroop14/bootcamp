@@ -1,9 +1,9 @@
 package com.commerceApp.commerceApp.security;
 
 
-import com.commerceApp.commerceApp.Models.Address;
-import com.commerceApp.commerceApp.Models.Role;
-import com.commerceApp.commerceApp.Models.User;
+import com.commerceApp.commerceApp.models.Address;
+import com.commerceApp.commerceApp.models.Role;
+import com.commerceApp.commerceApp.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

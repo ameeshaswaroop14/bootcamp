@@ -1,6 +1,8 @@
 package com.commerceApp.commerceApp.controllers;
 
-import com.commerceApp.commerceApp.dtos.ProductSellerDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductAdminDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
 import com.commerceApp.commerceApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,34 @@ public class ProductController {
                                                         @RequestParam(required = false) String brand){
         return productService.getAllProductsForSeller(offset, size, sortByField, order, categoryId, brand);
     }
+
+    @GetMapping("/admin/product/{productId}")
+    public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(@PathVariable Long productId){
+        return productService.getProductByIdForAdmin(productId);
+    }
+    @GetMapping("/admin/products")
+    public ResponseEntity<List> listProductsForAdmin(@RequestParam(defaultValue = "0") String offset,
+                                                     @RequestParam(defaultValue = "10") String size,
+                                                     @RequestParam(defaultValue = "id") String sortByField,
+                                                     @RequestParam(defaultValue = "ascending") String order,
+                                                     @RequestParam(required = false) Long categoryId,
+                                                     @RequestParam(required = false) String brand){
+        return productService.getAllProductsForAdmin(categoryId, offset, size, sortByField, order, brand);
+    }
+    @PutMapping("/product/activate/{id}")
+    public ResponseEntity<String> activateProduct(@PathVariable Long id){
+        return productService.activateProductById(id);
+    }
+
+    @PutMapping("/product/deactivate/{id}")
+    public ResponseEntity<String> deactivateProduct(@PathVariable Long id){
+        return productService.deactivateproductById(id);
+    }
+    @GetMapping("/customer/product/{productId}")
+    public ResponseEntity<ProductCustomerDto> getProductForCustomer(@PathVariable Long productId){
+        return productService.getProductByIdForCustomer(productId);
+    }
+
 
 
 

@@ -1,16 +1,11 @@
 package com.commerceApp.commerceApp.controllers;
 
-import com.commerceApp.commerceApp.Models.Customer;
-import com.commerceApp.commerceApp.Models.Seller;
-import com.commerceApp.commerceApp.dtos.CustomerRegistrationDto;
-import com.commerceApp.commerceApp.dtos.SellerRegistrationDto;
+import com.commerceApp.commerceApp.dtos.registrationDtos.CustomerRegistrationDto;
+import com.commerceApp.commerceApp.dtos.registrationDtos.SellerRegistrationDto;
 
-import com.commerceApp.commerceApp.exceptions.EmailAlreadyExistsException;
-import com.commerceApp.commerceApp.repositories.CustomerRepository;
-import com.commerceApp.commerceApp.repositories.SellerRepository;
 import com.commerceApp.commerceApp.services.*;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -35,7 +30,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/activate/customer")
-    public String activateCustomer(@RequestParam("token") String token, WebRequest webRequest){
+    public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token, WebRequest webRequest){
        return activationService.activateUserByToken(token,webRequest);
     }
 

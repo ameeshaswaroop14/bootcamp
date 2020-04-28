@@ -1,8 +1,7 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.User;
+import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.repositories.UserRepository;
-import jdk.internal.net.http.common.ImmutableExtendedSSLSession;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -54,10 +53,8 @@ public class LoginService {
 
     public Map createToken(String clientId, String clientSecret, String email, String password) {
 
-
         RestTemplate restTemplate = new RestTemplate();
 
-        // According OAuth documentation we need to send the client id and secret key in the header for authentication
         String credentials = clientId + ":" + clientSecret;
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 

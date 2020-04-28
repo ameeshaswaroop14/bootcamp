@@ -1,15 +1,15 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.Address;
-import com.commerceApp.commerceApp.Models.Customer;
-import com.commerceApp.commerceApp.Models.User;
+import com.commerceApp.commerceApp.models.Address;
+import com.commerceApp.commerceApp.models.Customer;
+import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.AdminCustomerDto;
-import com.commerceApp.commerceApp.dtos.CustomerRegistrationDto;
-import com.commerceApp.commerceApp.dtos.CustomerViewProfileDto;
+import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.repositories.AddressRepository;
 import com.commerceApp.commerceApp.repositories.CustomerRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.commerceApp.commerceApp.util.EntityDtoMapping.*;
+
 
 @Service
 public class CustomerService {
@@ -30,35 +32,9 @@ public class CustomerService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    AddressService addressService;
-    @Autowired
     AddressRepository addressRepository;
     @Autowired
     UserRepository userRepository;
-
-
-    public Customer toCustomer(CustomerRegistrationDto customerRegistrationDto) {
-        Customer customer = modelMapper.map(customerRegistrationDto, Customer.class);
-        return customer;
-    }
-
-    public AdminCustomerDto toCustomerDto(Customer customer) {
-        AdminCustomerDto adminCustomerDto = modelMapper.map(customer, AdminCustomerDto.class);
-        adminCustomerDto.setFirstName(customer.getFirstName());
-        adminCustomerDto.setMiddleName(customer.getMiddleName());
-        adminCustomerDto.setLastName(customer.getLastName());
-        return adminCustomerDto;
-    }
-
-    public Customer toCustomer(CustomerViewProfileDto customerViewProfileDto) {
-        Customer customer = modelMapper.map(customerViewProfileDto, Customer.class);
-        return customer;
-    }
-
-    public CustomerViewProfileDto tocustomerViewProfileDto(Customer customer) {
-        CustomerViewProfileDto customerViewProfileDto = modelMapper.map(customer, CustomerViewProfileDto.class);
-        return customerViewProfileDto;
-    }
 
     public List<AdminCustomerDto> getAllCustomers(String offset, String size, String field) {
         Integer pageNo = Integer.parseInt(offset);
@@ -105,7 +81,7 @@ public class CustomerService {
         Set<Address> addresses = customer.getAddresses();
 
         addresses.forEach(
-                (a) -> addressDtos.add(addressService.toAddressDto(a))
+                (a) -> addressDtos.add(toAddressDto(a))
         );
         return addressDtos;
 
@@ -113,7 +89,7 @@ public class CustomerService {
 
     public ResponseEntity<String> addNewAddress(String email, AddressDto addressDto) {
         Customer customer = customerRepository.findByEmail(email);
-        Address newAddress = addressService.toAddress(addressDto);
+        Address newAddress =EntityDtoMapping.toAddress(addressDto);
         customer.addAddress(newAddress);
         customerRepository.save(customer);
         String message = "Address added successfully";

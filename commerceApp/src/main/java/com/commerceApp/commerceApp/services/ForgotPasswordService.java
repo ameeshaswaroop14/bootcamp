@@ -1,22 +1,18 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.Models.ForgotPasswordToken;
-import com.commerceApp.commerceApp.Models.User;
+import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
+import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
-import com.commerceApp.commerceApp.repositories.CustomerRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 @Service
 public class ForgotPasswordService {
@@ -43,21 +39,10 @@ public class ForgotPasswordService {
         }
 
         String token =tokenService.createForgotPasswordToken(user);
-        sendForgotPasswordInitiationMail(user, token);
+        mailService.sendForgotPasswordInitiationMail(user, token);
         return new ResponseEntity<>("An email has been sent to your registered user account", HttpStatus.OK);
     }
 
-    public void sendForgotPasswordInitiationMail(User user, String token){
-
-        String email = user.getEmail();
-        String subject = "Password Reset Link";
-        String passwordResetUrl = "http://localhost:8080" + "/reset-password?token=" + token;
-        String emailMessage = "please click on this link to reset your password";
-        String emailBody = emailMessage + "\r\n" + passwordResetUrl;
-        System.out.println(passwordResetUrl);
-
-        mailService.sendEmail(email, subject, emailBody);
-    }
 
     public ResponseEntity<String> resetPassword(String token, ForgotPassword password, WebRequest request){
 
@@ -80,8 +65,8 @@ public class ForgotPasswordService {
         tokenService.deleteForgotToken(token);
 
         logoutUser(user.getEmail(), request);
-        sendPasswordResetConfirmationMail(user.getEmail());
-        return new ResponseEntity<>("Password changes successfully", HttpStatus.OK);
+        mailService.sendPasswordResetConfirmationMail(user.getEmail());
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 
     public void logoutUser(String email, WebRequest request){
@@ -93,10 +78,6 @@ public class ForgotPasswordService {
         }
     }
 
-    public void sendPasswordResetConfirmationMail(String email) {
-        String subject = "Password Reset Successfully";
-        String message = "the password for your account has been reset successfully";
-        mailService.sendEmail(email, subject, message);
-    }
+
 
 }

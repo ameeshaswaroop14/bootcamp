@@ -1,6 +1,6 @@
 package com.commerceApp.commerceApp.repositories;
 
-import com.commerceApp.commerceApp.Models.Customer;
+import com.commerceApp.commerceApp.models.Customer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,6 +1,6 @@
 package com.commerceApp.commerceApp.security;
 
-import com.commerceApp.commerceApp.Models.User;
+import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

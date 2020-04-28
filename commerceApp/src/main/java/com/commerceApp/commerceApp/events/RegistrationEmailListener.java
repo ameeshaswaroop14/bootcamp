@@ -1,14 +1,5 @@
 package com.commerceApp.commerceApp.events;
 
-import com.commerceApp.commerceApp.Models.User;
-import com.commerceApp.commerceApp.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 /*
 @Component
 public class RegistrationEmailListener implements ApplicationListener<OnRegistrationSuccessEvent> {

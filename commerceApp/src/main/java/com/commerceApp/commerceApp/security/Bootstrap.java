@@ -1,11 +1,13 @@
 package com.commerceApp.commerceApp.security;
 
-import com.commerceApp.commerceApp.Models.*;
+import com.commerceApp.commerceApp.models.*;
+import com.commerceApp.commerceApp.models.category.Category;
+import com.commerceApp.commerceApp.models.product.Product;
+import com.commerceApp.commerceApp.models.product.ProductVariation;
 import com.commerceApp.commerceApp.repositories.CategoryRepository;
 import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
 import com.commerceApp.commerceApp.repositories.roleRepository;
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
