@@ -28,6 +28,11 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.0.Final'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    compile 'io.springfox:springfox-swagger-ui:2.4.0'
+    compile 'io.springfox:springfox-swagger2:2.4.0'
+
+//	for patch request purpose.
+    compile group: 'com.github.java-json-tools', name: 'json-patch', version: '1.12'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

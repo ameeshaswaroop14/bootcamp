@@ -22,6 +22,10 @@ public class CategoryMetadataFieldValues {
         this.value = value;
     }
 
+    public CategoryMetadataFieldValues() {
+
+    }
+
     public CategoryMetadataFieldValuesId getId() {
         return id;
     }

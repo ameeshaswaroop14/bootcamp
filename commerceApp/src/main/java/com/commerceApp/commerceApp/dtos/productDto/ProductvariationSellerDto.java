@@ -14,6 +14,15 @@ public class ProductvariationSellerDto{
     private Double price;
     @NotNull
     private Map<String,String> attributes=new LinkedHashMap<>();
+    private ProductSellerDto productDto;
+
+    public ProductSellerDto getProductDto() {
+        return productDto;
+    }
+
+    public void setProductDto(ProductSellerDto productDto) {
+        this.productDto = productDto;
+    }
 
     public Long getId() {
         return id;

@@ -4,12 +4,15 @@ package com.commerceApp.commerceApp.services;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValuesDto;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
+import com.commerceApp.commerceApp.models.category.CategoryMetadataFieldValues;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryAdminResponseDto;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryDto;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldDto;
 import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
+import com.commerceApp.commerceApp.repositories.CategoryMetadataFieldValueRepo;
 import com.commerceApp.commerceApp.repositories.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.util.*;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
@@ -36,6 +39,10 @@ public class CategoryService {
     CategoryMetadataFieldService categoryMetadataFieldService;
     @Autowired
     CategoryFieldRepository categoryFieldRepository;
+    @Autowired
+    CategoryMetadataFieldValueRepo categoryMetadataFieldValueRepo;
+    @Autowired
+    ProductRepository productRepository;
 
 
     public String validateNewCategory(String categoryName, Long parentId) {
@@ -269,6 +276,55 @@ public class CategoryService {
         message="success";
         return message;
     }
+    public ResponseEntity<BaseDto> createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto){
+        String message=validateMetadataFieldValues(categoryMetadataFieldValuesDto);
+        BaseDto response;
+        if(!message.equalsIgnoreCase("success")){
+            response=new ErrorDto("Validation failed",message);
+            return new ResponseEntity<BaseDto>(response,HttpStatus.BAD_REQUEST);
+        }
+        Category category = categoryRepository.findById(categoryMetadataFieldValuesDto.getCategoryId()).get();
+        CategoryMetadataFieldValues categoryFieldValues = new CategoryMetadataFieldValues();
+        CategoryMetadataField categoryField;
+
+        for(CategoryMetadataFieldDto fieldValuePair : categoryMetadataFieldValuesDto.getFieldValues()){
+
+            categoryField = categoryFieldRepository.findById(fieldValuePair.getId()).get();
+            String values = StringToSetParser.toCommaSeparatedString(fieldValuePair.getValues());
+
+            categoryFieldValues.setValue(values);
+            categoryFieldValues.setCategory(category);
+            categoryFieldValues.setCategoryMetadataField(categoryField);
+            categoryMetadataFieldValueRepo.save(categoryFieldValues);
+
+        }
+        response = new ResponseDto<>("Success", null);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+    }
+/*
+    public Set<String> getAllBrandsForCategory(Long categoryId) {
+        Optional<Category> savedCategory = categoryRepository.findById(categoryId);
+        if(!savedCategory.isPresent())
+            return null;
+
+        Set<String> brands = new HashSet<>();
+        Category category = savedCategory.get();
+
+        if(category.getSubCategories()==null || category.getSubCategories().isEmpty()){
+            brands.addAll(productRepository.findByBrand(categoryId));
+        }
+        else{
+            category.getSubCategories().forEach(child->{
+                brands.addAll(getAllBrandsForCategory(child.getId()));
+            });
+        }
+        return brands;
+    }
+
+ */
+
+
+
 
 }
 

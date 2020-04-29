@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.models.category;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -43,6 +44,15 @@ public class CategoryMetadataField {
 
     public void setFieldValues(Set<CategoryMetadataFieldValues> fieldValues) {
         this.fieldValues = fieldValues;
+    }
+    public void addFieldValues(CategoryMetadataFieldValues fieldValue){
+        if(fieldValue != null){
+            if(fieldValues==null)
+                fieldValues = new HashSet<>();
+
+            fieldValues.add(fieldValue);
+            fieldValue.setCategoryMetadataField(this);
+        }
     }
 
     @Override

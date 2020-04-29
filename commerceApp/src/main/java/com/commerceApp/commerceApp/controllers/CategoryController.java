@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.controllers;
 
+import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValuesDto;
 import com.commerceApp.commerceApp.services.CategoryMetadataFieldService;
 import com.commerceApp.commerceApp.services.CategoryService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
@@ -73,6 +74,12 @@ public class CategoryController {
     public ResponseEntity<BaseDto> getAllCategories(@RequestParam(required = false) Long id){
         return categoryService.getAllCategoriesForCustomer(id);
     }
+    @PostMapping("/metadata-field-values")
+    public ResponseEntity<BaseDto> addMetadataFieldValues(@RequestBody CategoryMetadataFieldValuesDto fieldValueDtos){
+        return categoryService.createCategoryMetadataFieldValues(fieldValueDtos);
+    }
+
+
 
 
 
