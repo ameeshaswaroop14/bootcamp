@@ -24,7 +24,7 @@ public class RegistrationController {
 
 
     @PostMapping("/register/customer")
-    public String registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
+    public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
 
         return registrationService.registerCustomer(customerRegistrationDto,webRequest);
     }

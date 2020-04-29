@@ -2,13 +2,13 @@ package com.commerceApp.commerceApp.dtos.categoryDtos;
 
 import java.util.List;
 
-public class CategoryMetadataFieldPairDto {
+public class CategoryMetadataFieldValuesDto {
     private Long categoryId;
     private List<CategoryMetadataFieldDto> fieldValues;
 
-    public CategoryMetadataFieldPairDto(){}
+    public CategoryMetadataFieldValuesDto(){}
 
-    public CategoryMetadataFieldPairDto(Long categoryId, List<CategoryMetadataFieldDto> fieldValues) {
+    public CategoryMetadataFieldValuesDto(Long categoryId, List<CategoryMetadataFieldDto> fieldValues) {
         this.categoryId = categoryId;
         this.fieldValues = fieldValues;
     }

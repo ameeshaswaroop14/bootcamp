@@ -44,7 +44,7 @@ public class ActivationService {
 
             String appUrl = request.getContextPath();
             tokenService.deleteVerificationToken(token);
-            mailService.sendActivationLinkMail(appUrl, user, "Account Activation Link");
+            mailService.sendActivationLinkMail(appUrl, user, "Account Activation Link",request.getLocale());
 
             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }

@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+
 @Async
 @Service
 public class MailService {
@@ -25,7 +27,7 @@ public class MailService {
 
         javaMailSender.send(mailMessage);
     }
-    public void sendActivationLinkMail(String appUrl, User user, String subject) {
+    public void sendActivationLinkMail(String appUrl, User user, String subject, Locale locale) {
 
         String token = tokenService.createVerficationToken(user);
 

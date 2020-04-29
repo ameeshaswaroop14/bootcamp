@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldPairDto;
+
+import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValuesDto;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.models.product.Product;
@@ -37,7 +38,6 @@ public class CategoryService {
     CategoryFieldRepository categoryFieldRepository;
 
 
-
     public String validateNewCategory(String categoryName, Long parentId) {
         if (parentId == null) {
             Category preStored = categoryRepository.findByName(categoryName);
@@ -71,8 +71,8 @@ public class CategoryService {
         String message = validateNewCategory(categoryName, parentId);
         BaseDto response;
         if (!message.equals("valid")) {
-            response=new ErrorDto("Validation failed","Try again");
-            return new ResponseEntity<BaseDto>(response,HttpStatus.BAD_REQUEST);
+            response = new ErrorDto("Validation failed", "Try again");
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
 
         Category category = new Category(categoryName);
@@ -83,8 +83,8 @@ public class CategoryService {
         } else {
             Optional<Category> parentCategory = categoryRepository.findById(parentId);
             if (!parentCategory.isPresent()) {
-                response=new ErrorDto("Validation Failed","Parent Category Id does not exists");
-                return new ResponseEntity<BaseDto>(response,HttpStatus.CONFLICT);
+                response = new ErrorDto("Validation Failed", "Parent Category Id does not exists");
+                return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
             } else {
                 parent = parentCategory.get();
                 category.setParentCategory(parent);
@@ -134,20 +134,22 @@ public class CategoryService {
         }
         return categoryAdminResponseDto;
     }
-    public ResponseEntity<BaseDto>  getCategory(Long categoryId){
+
+    public ResponseEntity<BaseDto> getCategory(Long categoryId) {
         BaseDto response;
-        Optional<Category> pre=categoryRepository.findById(categoryId);
-        if(!pre.isPresent()){
-            response=new ErrorDto("Not found","Category with the given id does not exist");
-            return new ResponseEntity<BaseDto>(response,HttpStatus.NOT_FOUND);
+        Optional<Category> pre = categoryRepository.findById(categoryId);
+        if (!pre.isPresent()) {
+            response = new ErrorDto("Not found", "Category with the given id does not exist");
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
 
         CategoryAdminResponseDto categoryAdminResponseDto = toCategoryAdminResponse(pre.get());
 
-        response = new ResponseDto<>(null,categoryAdminResponseDto);
+        response = new ResponseDto<>(null, categoryAdminResponseDto);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
-    public ResponseEntity<BaseDto> getAllCategories(String offset, String size, String sortByField){
+
+    public ResponseEntity<BaseDto> getAllCategories(String offset, String size, String sortByField) {
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
 
@@ -155,11 +157,11 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll(pageable);
         List<CategoryAdminResponseDto> categoryDtos = new ArrayList<>();
 
-        categories.forEach((category)->{
+        categories.forEach((category) -> {
             categoryDtos.add(toCategoryAdminResponse(category));
         });
         BaseDto response;
-        response = new ResponseDto<>(null,categoryDtos);
+        response = new ResponseDto<>(null, categoryDtos);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
@@ -168,42 +170,44 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
         List<CategoryAdminResponseDto> categoryDtos = new ArrayList<>();
 
-        categories.forEach((category)->{
+        categories.forEach((category) -> {
             categoryDtos.add(toCategoryAdminResponse(category));
         });
 
-        response = new ResponseDto<>(null,categoryDtos);
+        response = new ResponseDto<>(null, categoryDtos);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
+
     public ResponseEntity<BaseDto> deleteCategoryById(Long id) {
         BaseDto response;
         Optional<Category> savedCategory = categoryRepository.findById(id);
-        if(!savedCategory.isPresent()){
-            response = new ErrorDto("Not found","Category does not exist");
+        if (!savedCategory.isPresent()) {
+            response = new ErrorDto("Not found", "Category does not exist");
             return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
 
         Category category = savedCategory.get();
 
-        if(!category.getProducts().isEmpty()){
-            response = new ErrorDto("Validation failed","This category is associated with other products");
+        if (!category.getProducts().isEmpty()) {
+            response = new ErrorDto("Validation failed", "This category is associated with other products");
             return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
         }
 
-        if(!category.getSubCategories().isEmpty()){
-            response =new ErrorDto("Validation failed","This category has child categories associated");
+        if (!category.getSubCategories().isEmpty()) {
+            response = new ErrorDto("Validation failed", "This category has child categories associated");
             return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
         }
         categoryRepository.deleteCategoryById(id);
 
-        response = new ResponseDto<>("Successfully deleted",null);
+        response = new ResponseDto<>("Successfully deleted", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
+
     public ResponseEntity<BaseDto> updateCategory(Long id, String name) {
         BaseDto response;
         Optional<Category> savedCategory = categoryRepository.findById(id);
-        if(!savedCategory.isPresent()){
-            response = new ErrorDto("Not found","Category does not exists");
+        if (!savedCategory.isPresent()) {
+            response = new ErrorDto("Not found", "Category does not exists");
             return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
 
@@ -211,23 +215,24 @@ public class CategoryService {
         category.setName(name);
         categoryRepository.save(category);
 
-        response = new ResponseDto<>("Successfully updated",null);
+        response = new ResponseDto<>("Successfully updated", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
+
     public ResponseEntity<BaseDto> getAllCategoriesForCustomer(Long id) {
         BaseDto response;
-        if(id==null) {
+        if (id == null) {
             List<Category> rootCategories = categoryRepository.findByParentIdIsNull();
             List<CategoryDto> categoryDtos = new ArrayList<>();
             rootCategories.forEach((e) -> {
                 categoryDtos.add(toCategoryDtoNonRecursive(e));
             });
-            response = new ResponseDto<>("Success",categoryDtos);
+            response = new ResponseDto<>("Success", categoryDtos);
             return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
         }
         Optional<Category> savedCategory = categoryRepository.findById(id);
-        if(!savedCategory.isPresent()){
-            response = new ErrorDto("Not Found","Category does not exists");
+        if (!savedCategory.isPresent()) {
+            response = new ErrorDto("Not Found", "Category does not exists");
             return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
 
@@ -235,23 +240,35 @@ public class CategoryService {
         Set<Category> subCategories = category.getSubCategories();
         List<CategoryDto> subCategoryDtos = new ArrayList<>();
 
-        subCategories.forEach((e)->{
+        subCategories.forEach((e) -> {
             subCategoryDtos.add(toCategoryDtoNonRecursive(e));
         });
-        response = new ResponseDto<>("success",subCategoryDtos);
+        response = new ResponseDto<>("success", subCategoryDtos);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
-   public  String validateMetadataFieldcategory(CategoryMetadataFieldPairDto categoryMetadataFieldPairDto){
-        Optional<Category> category=categoryRepository.findById(categoryMetadataFieldPairDto.getCategoryId());
+
+    public String validateMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {
+        Optional<Category> savedCategory = categoryRepository.findById(categoryMetadataFieldValuesDto.getCategoryId());
         String message;
-        if(category==null)
-            message="Category id invalid";
-      //  Optional<CategoryMetadataField> categoryMetadataField=categoryFieldRepository.findById(categoryMetadataFieldPairDto.g)
-           return null;
-   }
-
-
-
+        if (!savedCategory.isPresent()) {
+            message = "Category does not exist.";
+            return message;
+        }
+        Category category = savedCategory.get();
+        for (CategoryMetadataFieldDto preValues : categoryMetadataFieldValuesDto.getFieldValues()) {
+            Optional<CategoryMetadataField> field = categoryFieldRepository.findById(preValues.getId());
+            if (!field.isPresent()) {
+                message = "Field does not exist";
+                return message;
+            }
+            if (preValues.getValues().isEmpty()) {
+                message = "No field values provided to insert for field id ";
+                return message;
+            }
+        }
+        message="success";
+        return message;
+    }
 
 }
 

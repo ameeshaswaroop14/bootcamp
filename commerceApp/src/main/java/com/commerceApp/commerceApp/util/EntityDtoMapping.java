@@ -17,9 +17,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class EntityDtoMapping {
-    @Autowired
-    private static ModelMapper modelMapper;
 
+    static ModelMapper modelMapper=new ModelMapper();
     public static Address toAddress(AddressDto addressDto){
         if(addressDto != null)
             return modelMapper.map(addressDto, Address.class);
