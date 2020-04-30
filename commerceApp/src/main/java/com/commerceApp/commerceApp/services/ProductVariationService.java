@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.services;
 
+import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
 import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
@@ -18,6 +19,9 @@ import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import com.google.common.collect.Sets;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -155,6 +159,46 @@ public class ProductVariationService {
         variationDto.setProductDto(productDto);
 
         response = new ResponseDto<ProductvariationSellerDto>(null,variationDto);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+    }
+    public ResponseEntity<BaseDto> getAllProductVariationsByProductIdForSeller(String email, Long id, String offset, String size, String sortByField, String order) {
+        BaseDto response;
+        String message;
+
+        Optional<Product> savedProduct = productRepository.findById(id);
+        if(!savedProduct.isPresent()){
+            response = new ErrorDto("Validation failed", "Product with id not found");
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+        Product product = savedProduct.get();
+        if(!product.getSeller().getEmail().equalsIgnoreCase(email)){
+            message = "Product with id  does not belong to you.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+        if(product==null){
+            message = "Product does not exist.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        Integer pageNo = Integer.parseInt(offset);
+        Integer pageSize = Integer.parseInt(size);
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortByField).ascending());
+        List<ProductVariation> variations;
+        variations = productVariationRepository.findByProductId(id, pageable);
+
+        List<ProductvariationSellerDto> variationDtos = new ArrayList<>();
+        variations.forEach(variation -> {
+            ProductvariationSellerDto variationDto = toProductVariationSellerDto(variation);
+            ProductSellerDto productDto = toProductSellerDto(variation.getProduct());
+            productDto.setCategoryDto(toCategoryDto(variation.getProduct().getCategory()));
+            variationDto.setProductDto(productDto);
+            variationDtos.add(variationDto);
+        });
+
+        response = new ResponseDto<>(null, variationDtos);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
     
