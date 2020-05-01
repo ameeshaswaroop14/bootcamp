@@ -22,23 +22,21 @@ public class RegistrationController {
     RegistrationService registrationService;
 
 
-
     @PostMapping("/register/customer")
     public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
 
-        return registrationService.registerCustomer(customerRegistrationDto,webRequest);
+        return registrationService.registerCustomer(customerRegistrationDto, webRequest);
     }
 
     @GetMapping("/activate/customer")
-    public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token, WebRequest webRequest){
-       return activationService.activateUserByToken(token,webRequest);
+    public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token, WebRequest webRequest) {
+        return activationService.activateUserByToken(token, webRequest);
     }
 
     @PostMapping("/register/seller")
-    public String registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto){
+    public String registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto) {
         return registrationService.registerSeller(sellerRegistrationDto);
     }
-
 
 
 }

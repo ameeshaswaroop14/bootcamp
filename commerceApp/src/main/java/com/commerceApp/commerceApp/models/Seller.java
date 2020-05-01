@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.Product;
+import com.commerceApp.commerceApp.validators.ValidGST;
 
 import javax.persistence.*;
 import java.util.HashSet;

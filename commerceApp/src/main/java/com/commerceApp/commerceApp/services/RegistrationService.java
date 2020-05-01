@@ -81,11 +81,14 @@ public class RegistrationService {
 
     public String registerSeller(SellerRegistrationDto sellerRegistrationDto){
         String message= sellerValidations.checkIfUnique(sellerRegistrationDto);
-        if(!(message=="unique")){
+        if(!message.equals("unique")){
             return "Invalid data";
         }
         Seller seller=toSeller(sellerRegistrationDto);
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(repository.findByAuthority("ROLE_SELLER"));
+        seller.setRoles(roleSet);
         sellerRepository.save(seller);
         mailService.acknowledgementEmail(seller.getEmail());
         return  "Account created successfully. It will be activated after verification.";

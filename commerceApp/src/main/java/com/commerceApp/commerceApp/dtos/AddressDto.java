@@ -59,7 +59,9 @@ public class AddressDto {
     public void setLabel(String label) {
         this.label = label;
     }
-    public AddressDto(){}
+
+    public AddressDto() {
+    }
 
     public AddressDto(String addressLine, String city, String state, @Size(min = 6, max = 6, message = "Zipcode should be of length 6") String zipCode, String country, String label) {
         this.addressLine = addressLine;

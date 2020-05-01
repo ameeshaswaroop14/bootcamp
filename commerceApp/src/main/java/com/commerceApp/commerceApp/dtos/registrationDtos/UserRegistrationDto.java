@@ -1,7 +1,13 @@
 package com.commerceApp.commerceApp.dtos.registrationDtos;
 
+import com.commerceApp.commerceApp.validators.PasswordMatches;
+import com.commerceApp.commerceApp.validators.ValidEmail;
+
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+@PasswordMatches
 public class UserRegistrationDto {
 
     @NotNull
@@ -14,19 +20,26 @@ public class UserRegistrationDto {
     @NotEmpty
     private String lastName;
 
-   @NotNull
+    @NotNull
     @NotEmpty
-   private String email;
+    @ValidEmail
+    private String email;
 
-   @NotNull
-    @NotEmpty
-   private String password;
+
+    private String password;
 
     @NotNull
     @NotEmpty
     private String confirmPassword;
 
-
+    public UserRegistrationDto(@NotNull @NotEmpty String firstName, String middleName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String email, String password, @NotNull @NotEmpty String confirmPassword) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
 
     public String getFirstName() {
         return firstName;

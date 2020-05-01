@@ -24,6 +24,7 @@ public class Product  {
     private boolean isActive;
     private boolean isDeleted;
 
+
     @ManyToOne
     @JoinColumn(name = "seller_user_id")
     private Seller seller;

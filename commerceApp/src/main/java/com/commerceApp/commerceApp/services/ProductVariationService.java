@@ -2,16 +2,14 @@ package com.commerceApp.commerceApp.services;
 
 import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
 import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
+import com.commerceApp.commerceApp.dtos.productDto.ProductVariationUpdateDto;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.dtos.productDto.ProductvariationSellerDto;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
-import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
+import com.commerceApp.commerceApp.repositories.*;
 
-import com.commerceApp.commerceApp.repositories.CategoryMetadataFieldValueRepo;
-import com.commerceApp.commerceApp.repositories.ProductRepository;
-import com.commerceApp.commerceApp.repositories.ProductVariationRepository;
 import com.commerceApp.commerceApp.util.StringToSetParser;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
@@ -42,6 +40,8 @@ public class ProductVariationService {
     CategoryMetadataFieldValueRepo categoryMetadataFieldValueRepo;
     @Autowired
     ProductVariationRepository productVariationRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
 
     public String validateProductVariation(String email, ProductvariationSellerDto productVariationDto) {
@@ -87,11 +87,13 @@ public class ProductVariationService {
             return message;
         }
 
-        receivedFields.removeAll(actualFields);
+        /*receivedFields.removeAll(actualFields);
         if (!receivedFields.isEmpty()) {
             message = "Invalid fields found in the data.";
             return message;
         }
+
+         */
 
         List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
 
@@ -201,7 +203,212 @@ public class ProductVariationService {
         response = new ResponseDto<>(null, variationDtos);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
-    
+   public ProductCustomerDto getProductCustomerViewDto(Product product){
+        ProductSellerDto productDto = toProductSellerDto(product);
+        productDto.setCategoryDto(toCategoryDto(product.getCategory()));
+
+        Set<ProductvariationSellerDto> variationDtos = new HashSet<>();
+        product.getVariations().forEach((variation -> {
+            ProductvariationSellerDto variationDto = toProductVariationSellerDto(variation);
+            variationDto.setProductDto(null);
+            variationDtos.add(variationDto);
+        }));
+
+        ProductCustomerDto productCustomerViewDto = new ProductCustomerDto();
+
+        productCustomerViewDto.setVariations(variationDtos);
+
+        return productCustomerViewDto;
+    }
+    public Set<ProductCustomerDto> getAllProductCustomerViewDtosByCategory(Long categoryId, Pageable pageable){
+        Set<ProductCustomerDto> productCustomerViewDtos = new LinkedHashSet<>();
+
+        Category category = categoryRepository.findById(categoryId).get();
+
+        if(category.getSubCategories() == null || category.getSubCategories().isEmpty()){
+            List<Product> products = productRepository.findByCategoryId(categoryId, pageable);
+            for (Product product : products) {
+                productCustomerViewDtos.add(getProductCustomerViewDto(product));
+            }
+        }
+        else{
+            for(Category child : category.getSubCategories()){
+                productCustomerViewDtos.addAll(getAllProductCustomerViewDtosByCategory(child.getId(), pageable));
+            }
+        }
+        return productCustomerViewDtos;
+    }
+
+
+
+    public ResponseEntity<BaseDto> getAllSimilarProductsByProductId(Long id, String offset, String size, String sortByField, String order) {
+        BaseDto response;
+        String message;
+
+        Optional<Product> savedProduct = productRepository.findById(id);
+        if(!savedProduct.isPresent()){
+            message = "Product with id  not found";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+
+        Product product = savedProduct.get();
+
+        if(product.isDeleted()){
+            message = "Product with id "+id+ " not found";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+        if(!product.isActive()){
+            message = "Product is inactive.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        Category category = product.getCategory();
+
+        Integer pageNo = Integer.parseInt(offset);
+        Integer pageSize = Integer.parseInt(size);
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortByField).ascending());
+
+        Set<ProductCustomerDto> similarProducts = getAllProductCustomerViewDtosByCategory(category.getId(), pageable);
+        similarProducts.remove(getProductCustomerViewDto(product));
+
+        if(similarProducts.isEmpty()){
+            message = "No similar products found.";
+            response = new ResponseDto<Set>( message,similarProducts);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        }
+
+        response = new ResponseDto<Set>(null,similarProducts);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+    }
+    public ResponseEntity<BaseDto> validateProductVariationUpdate(Long id, String email, ProductVariationUpdateDto variationDto) {
+        BaseDto response;
+        String message;
+
+        Optional<ProductVariation> savedVariation = productVariationRepository.findById(id);
+        if(!savedVariation.isPresent()){
+            message = "Product variation with id "+id+ " not found";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+
+        ProductVariation variation = savedVariation.get();
+
+        if(variation.isDeleted()){
+            message = "Product variation does not exist.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+
+        if(!variation.getProduct().getSeller().getEmail().equalsIgnoreCase(email)){
+            message = "Product variation does not belong to you.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+
+        }
+        if( variationDto.getQuantityAvailable()!=null && variationDto.getQuantityAvailable()<=0){
+            message = "Quantity should be greater than 0.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+        if( variationDto.getPrice()!=null && variationDto.getPrice()<=0){
+            message = "Price should be greater than 0";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        // check if all the fields are actually related to the product category.
+        Map<String, String> attributes = variationDto.getAttributes();
+        if(attributes!=null){
+            Category category = variation.getProduct().getCategory();
+            List<String> receivedFields = new ArrayList<>(attributes.keySet());
+            List<String> actualFields = new ArrayList<>();
+            categoryMetadataFieldValueRepo.findAllFieldsOfCategoryById(category.getId())
+                    .forEach((e)->{
+                        actualFields.add(e[0].toString());
+                    });
+
+            receivedFields.removeAll(actualFields);
+            if(!receivedFields.isEmpty()){
+                message = "Invalid fields found in the data.";
+                response = new ErrorDto("Validation failed", message);
+                return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            // check validity of values of fields.
+            List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
+
+            for (String receivedField : receivedFieldsCopy) {
+
+                CategoryMetadataField field = categoryFieldRepository.findByName(receivedField);
+                List<Object> savedValues = categoryMetadataFieldValueRepo.findAllValuesOfCategoryField(category.getId(), field.getId());
+
+                String values = savedValues.get(0).toString();
+                Set<String> actualValueSet = StringToSetParser.toSetOfValues(values);
+
+                String receivedValues = attributes.get(receivedField);
+                Set<String> receivedValueSet = StringToSetParser.toSetOfValues(receivedValues);
+
+                if(!Sets.difference(receivedValueSet, actualValueSet).isEmpty()){
+                    message = "Invalid value found for field "+receivedField;
+                    response = new ErrorDto("Validation failed", message);
+                    return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+                }
+            }
+
+        }
+        return null;
+    }
+
+    public ResponseEntity<BaseDto> updateProductVariationById(Long id, String email, ProductVariationUpdateDto variationDto) {
+        BaseDto response;
+        String message;
+
+        ResponseEntity<BaseDto> validationResponse = validateProductVariationUpdate(id, email, variationDto);
+        if(validationResponse!=null)
+            return validationResponse;
+
+        ProductVariation variation = productVariationRepository.findById(id).get();
+
+        applyProductVariationUpdateDtoToProductVariation(variation, variationDto);
+        productVariationRepository.save(variation);
+
+        message = "success";
+        response = new ResponseDto<>(null, message);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+
+    }
+
+    private void applyProductVariationUpdateDtoToProductVariation(ProductVariation variation, ProductVariationUpdateDto variationDto) {
+
+        if(variationDto.getQuantityAvailable()!=null)
+            variation.setQuantityAvailable(variationDto.getQuantityAvailable());
+
+        if(variationDto.getPrice() != null)
+            variation.setPrice(variationDto.getPrice());
+
+        if(variationDto.getActive() != null)
+            variation.setActive(variationDto.getActive());
+
+        if(variationDto.getAttributes() != null){
+            Map<String, String> newAttributes = variationDto.getAttributes();
+            if(!newAttributes.isEmpty()){
+                Map<String, String> oldAttributes = variation.getProductAttributes();
+
+                for(String key : newAttributes.keySet()){
+                    String newValue = newAttributes.get(key);
+                    oldAttributes.put(key, newValue);
+                }
+            }
+        }
+    }
+
+
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.services;
 
+import com.commerceApp.commerceApp.dtos.productDto.ProductUpdateDto;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.models.Seller;
@@ -13,6 +14,9 @@ import com.commerceApp.commerceApp.repositories.CategoryRepository;
 import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.repositories.SellerRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -237,6 +241,78 @@ public class ProductService {
         });
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
+    public ResponseEntity<BaseDto> validateProductUpdate(Long id, String email, ProductUpdateDto productDto){
+        BaseDto response;
+        String message;
+
+        Optional<Product> savedProduct = productRepository.findById(id);
+        if(!savedProduct.isPresent()){
+            message = "Product with id "+id+ " not found";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+        }
+        Product product = savedProduct.get();
+        if(!product.getSeller().getEmail().equalsIgnoreCase(email)){
+            message = "Product with id does not belong to you.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+        if(product.isDeleted()){
+            message = "Product does not exist.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        if(productDto.getName() != null){
+            Product duplicateProduct = productRepository.findByName(productDto.getName());
+            if(duplicateProduct!=null){
+                if(duplicateProduct.getCategory().getId().equals(product.getCategory().getId())){
+                    if(duplicateProduct.getBrand().equalsIgnoreCase(product.getBrand())){
+                        if(duplicateProduct.getSeller().getEmail().equalsIgnoreCase(email)){
+                            message = "Product with similar details already exists.";
+                            response = new ErrorDto("Validation failed", message);
+                            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    public ResponseEntity<BaseDto> updateProductByProductId(Long id, String email, ProductUpdateDto productDto) {
+        BaseDto response;
+        String message;
+
+        ResponseEntity<BaseDto> validationResult = validateProductUpdate(id, email, productDto);
+        if(validationResult != null){
+            return validationResult;
+        }
+
+        Product product = productRepository.findById(id).get();
+        applyProductUpdateDtoToProduct(product, productDto);
+        productRepository.save(product);
+
+        response = new ResponseDto<>( "success", null);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+    }
+
+    public void applyProductUpdateDtoToProduct(Product product, ProductUpdateDto productDto) {
+
+        if(productDto.getName() != null)
+            product.setName(productDto.getName());
+
+        if(productDto.getDescription() != null)
+            product.setDescription(productDto.getDescription());
+
+        if(productDto.getReturnable() != null)
+            product.setReturnable(productDto.getReturnable());
+
+        if(productDto.getCancelleable() != null)
+            product.setCancelleable(productDto.getCancelleable());
+
+    }
+
+
 
 }
 

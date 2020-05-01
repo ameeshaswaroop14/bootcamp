@@ -1,9 +1,6 @@
 package com.commerceApp.commerceApp.controllers;
 
-import com.commerceApp.commerceApp.dtos.productDto.ProductAdminDto;
-import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
-import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
-import com.commerceApp.commerceApp.dtos.productDto.ProductvariationSellerDto;
+import com.commerceApp.commerceApp.dtos.productDto.*;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.ProductVariationService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
@@ -35,6 +32,13 @@ public class ProductController {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
         return productService.getProductByIdForSeller(id, email);
+    }
+
+    @PatchMapping("/seller/product/{productId}")
+    public ResponseEntity<BaseDto> updateProductById(@PathVariable Long productId, @RequestBody ProductUpdateDto productDto, HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String email = principal.getName();
+        return productService.updateProductByProductId(productId, email, productDto);
     }
 
     @DeleteMapping("/seller/product/{id}")
@@ -97,18 +101,38 @@ public class ProductController {
         String email = principal.getName();
         return productVariationService.getProductVariationByIdForSeller(email, id);
     }
+
     @GetMapping("/seller/product-variations/{productId}")
     public ResponseEntity<BaseDto> getAllProductVariationsByProductIdForSeller(@PathVariable Long productId,
-                                                                              @RequestParam(defaultValue = "0") String offset,
-                                                                              @RequestParam(defaultValue = "10") String size,
-                                                                              @RequestParam(defaultValue = "id") String sortByField,
-                                                                              @RequestParam(defaultValue = "ascending") String order,
-                                                                              HttpServletRequest request){
+                                                                               @RequestParam(defaultValue = "0") String offset,
+                                                                               @RequestParam(defaultValue = "10") String size,
+                                                                               @RequestParam(defaultValue = "id") String sortByField,
+                                                                               @RequestParam(defaultValue = "ascending") String order,
+                                                                               HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
         return productVariationService.getAllProductVariationsByProductIdForSeller(email, productId, offset, size, sortByField, order);
     }
 
+    @PatchMapping("/seller/product-variation/{variationId}")
+    public ResponseEntity<BaseDto> updateProductVariationById(
+            @PathVariable Long variationId,
+            @RequestBody ProductVariationUpdateDto variationDto,
+            HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String email = principal.getName();
+        return productVariationService.updateProductVariationById(variationId, email, variationDto);
+    }
+
+    @GetMapping("/customer/similar-products/{productId}")
+    public ResponseEntity<BaseDto> getSimilarProductsByProductIdForCustomer(@PathVariable Long productId,
+                                                                            @RequestParam(defaultValue = "0") String offset,
+                                                                            @RequestParam(defaultValue = "10") String size,
+                                                                            @RequestParam(defaultValue = "id") String sortByField,
+                                                                            @RequestParam(defaultValue = "ascending") String order) {
+
+        return productVariationService.getAllSimilarProductsByProductId(productId, offset, size, sortByField, order);
+    }
 
 
 }

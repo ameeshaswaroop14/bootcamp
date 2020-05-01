@@ -1,6 +1,9 @@
 package com.commerceApp.commerceApp.models;
 
+import com.commerceApp.commerceApp.validators.ValidEmail;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 @Table(name = "USER")
@@ -13,9 +16,12 @@ public class User {
     private Long id;
 
     @Column(unique = true)
+
     private String email;
+
     private String firstName;
     private String middleName;
+
     private String lastName;
 
     private String password;
