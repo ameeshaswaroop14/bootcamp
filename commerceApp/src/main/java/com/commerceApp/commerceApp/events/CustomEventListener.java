@@ -1,5 +1,5 @@
 package com.commerceApp.commerceApp.events;
-/*
+
 import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.models.UserAttempts;
 import com.commerceApp.commerceApp.repositories.UserAttemptsRepository;
@@ -34,7 +34,7 @@ public class CustomEventListener {
         for (UserAttempts userAttempts1 : userAttempts) {
             if (userAttempts1.getEmail().equals(username)) {
                 if (userAttempts1.getAttempts() >= 3) {
-                    User user = userRepository.findByUsername(username);
+                    User user = userRepository.findByEmail(username);
                     user.setLocked(true);
                     userRepository.save(user);
                     count++;
@@ -48,7 +48,7 @@ public class CustomEventListener {
         }
         if (count == 0) {
             UserAttempts userAttempts1 = new UserAttempts();
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByEmail(username);
             userAttempts1.setEmail(user.getEmail());
             userAttempts1.setAttempts(1);
             userAttemptsRepository.save(userAttempts1);
@@ -78,7 +78,9 @@ public class CustomEventListener {
     }
 }
 
- */
+
+
+
 
 
 

@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+import static jdk.vm.ci.aarch64.AArch64.v2;
+
 
 @Configuration
 @EnableResourceServer
@@ -46,12 +48,22 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configureGlobal(final AuthenticationManagerBuilder authenticationManagerBuilder) {
         authenticationManagerBuilder.authenticationProvider(authenticationProvider());
     }
+    private static final String[] AUTH_WHITELIST={
+     "/v2/api-docs",
+            "/swagger/resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/admin/home").hasAnyRole("ADMIN")
                 .antMatchers("/seller/home").hasAnyRole("ADMIN","SELLER")
                 .antMatchers("/customer/home").hasAnyRole("ADMIN","CUSTOMER")

@@ -5,6 +5,7 @@ import com.commerceApp.commerceApp.dtos.registrationDtos.SellerRegistrationDto;
 
 import com.commerceApp.commerceApp.services.*;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class RegistrationController {
     @Autowired
     RegistrationService registrationService;
 
-
+    @ApiOperation("to register a customer")
     @PostMapping("/register/customer")
     public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
 

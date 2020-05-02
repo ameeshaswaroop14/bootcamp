@@ -4,15 +4,20 @@ import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.validators.ValidGST;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "USER_ID")
 public class Seller extends User{
-
+    @ValidGST
     private String GST;
+    @NotNull
+    @NotEmpty
     private String companyName;
+    @NotNull
     private String companyContact;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
