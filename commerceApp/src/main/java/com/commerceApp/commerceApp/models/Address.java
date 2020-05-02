@@ -1,8 +1,11 @@
 package com.commerceApp.commerceApp.models;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 @Entity
-public class Address {
+@EntityListeners(AuditingEntityListener.class)
+public class Address extends AuditInformation{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,8 @@
 package com.commerceApp.commerceApp.models.category;
 
+import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.product.Product;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -8,7 +10,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "CATEGORY")
-public class Category {
+@EntityListeners(AuditingEntityListener.class)
+public class Category extends AuditInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -1,11 +1,15 @@
 package com.commerceApp.commerceApp.models.category;
 
+import com.commerceApp.commerceApp.models.AuditInformation;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class CategoryMetadataField {
+@EntityListeners(AuditingEntityListener.class)
+public class CategoryMetadataField extends AuditInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -1,9 +1,13 @@
 package com.commerceApp.commerceApp.models.category;
 
+import com.commerceApp.commerceApp.models.AuditInformation;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 
 @Entity
-public class CategoryMetadataFieldValues {
+@EntityListeners(AuditingEntityListener.class)
+public class CategoryMetadataFieldValues extends AuditInformation {
     @EmbeddedId
     private CategoryMetadataFieldValuesId id = new CategoryMetadataFieldValuesId();
 

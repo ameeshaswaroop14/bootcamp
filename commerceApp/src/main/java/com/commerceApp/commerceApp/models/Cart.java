@@ -1,12 +1,14 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.ProductVariation;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "CART")
-public class Cart {
+@EntityListeners(AuditingEntityListener.class)
+public class Cart extends AuditInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

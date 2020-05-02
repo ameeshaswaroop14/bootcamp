@@ -7,12 +7,15 @@ import com.commerceApp.commerceApp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.*;
-
+@Transactional
 @Service
 public class UserService {
     @Autowired
@@ -92,11 +95,6 @@ public class UserService {
     }
 
 
-    private void sendAccountLockingMail(String email) {
-        String subject = "Account Locked";
-        String message = "your account has been locked due to multiple unsuccessful login attempts.";
-        mailService.sendEmail(email, subject, message);
-    }
 
 
 
@@ -139,6 +137,18 @@ public class UserService {
         userRepository.save(user);
         mailService.sendPasswordResetConfirmationMail(email);
         return new ResponseEntity<>("Password Changed", HttpStatus.OK);
+    }
+    public String getCurrentLoggedInUser()
+    {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        }
+        else {
+            username = principal.toString();
+        }
+        return username;
     }
 
 

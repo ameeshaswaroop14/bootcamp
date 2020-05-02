@@ -13,7 +13,7 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
-
+/*
 @Component
 public class CustomEventListener {
     @Autowired
@@ -38,7 +38,7 @@ public class CustomEventListener {
                     user.setLocked(true);
                     userRepository.save(user);
                     count++;
-                    mailService.sendEmail(user.getEmail(), "Regarding account", "your account has been locked");
+
                 } else {
                     userAttempts1.setAttempts(userAttempts1.getAttempts() + 1);
                     userAttemptsRepository.save(userAttempts1);
@@ -77,6 +77,10 @@ public class CustomEventListener {
         }
     }
 }
+
+ */
+
+
 
 
 
