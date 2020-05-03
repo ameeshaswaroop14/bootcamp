@@ -1,12 +1,13 @@
 package com.commerceApp.commerceApp.dtos.profileDtos;
 
-import com.commerceApp.commerceApp.validators.ValidGST;
+
+import com.commerceApp.commerceApp.validators.ValidGst;
 
 import javax.validation.constraints.Size;
 
 public class SellerViewProfileDto extends UserViewDto {
 
-    @ValidGST
+    @ValidGst
     @Size(min = 15, max = 15)
     private String GST;
 

@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "USER")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@EntityListeners(AuditingEntityListener.class)
+
 public class User extends AuditInformation {
 
     @Id

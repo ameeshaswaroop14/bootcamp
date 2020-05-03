@@ -11,12 +11,14 @@ import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class CategoryMetadataFieldService {
     CategoryFieldRepository categoryFieldRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    MessageSource messageSource;
 
     CategoryMetadataField toCategoryMetadataField(CategoryMetadataFieldDto fieldDto){
         if(fieldDto == null)
@@ -39,11 +43,13 @@ public class CategoryMetadataFieldService {
         return modelMapper.map(field, CategoryMetadataFieldDto.class);
     }
 
-    public ResponseEntity<BaseDto> addNewMetadataField(String fieldName) {
+    public ResponseEntity<BaseDto> addNewMetadataField(String fieldName, WebRequest webRequest) {
         CategoryMetadataField savedField = categoryFieldRepository.findByName(fieldName);
         BaseDto response;
         if(savedField!=null){
-            response = new ErrorDto("Invalid Operation","Field already exists");
+            String error=messageSource.getMessage("message.addnewnetadatafield",null,webRequest.getLocale());
+            String message=messageSource.getMessage("message.fieldalreadyexists",null,webRequest.getLocale());
+            response = new ErrorDto(error,message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
         }
 

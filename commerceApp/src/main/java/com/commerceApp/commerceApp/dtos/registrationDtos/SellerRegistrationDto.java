@@ -1,14 +1,16 @@
 package com.commerceApp.commerceApp.dtos.registrationDtos;
 
 
-import com.commerceApp.commerceApp.validators.ValidGST;
+
+
+import com.commerceApp.commerceApp.validators.ValidGst;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class SellerRegistrationDto extends UserRegistrationDto {
-    @ValidGST
+
     private String GST;
     @NotNull
     @NotEmpty

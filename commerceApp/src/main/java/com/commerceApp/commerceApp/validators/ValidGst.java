@@ -11,12 +11,16 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
-@Target({TYPE, FIELD, ANNOTATION_TYPE})
-@Retention(RUNTIME)
-@Constraint(validatedBy = GSTValidator.class)
 @Documented
-public @interface ValidGST {
-    String message() default "Invalid GSTIN";
+@Constraint(validatedBy = GSTValidator.class)
+@Target({ TYPE, FIELD, ANNOTATION_TYPE })
+@Retention(RUNTIME)
+public @interface ValidGst {
+
+    String message() default "Invalid GST";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
 }

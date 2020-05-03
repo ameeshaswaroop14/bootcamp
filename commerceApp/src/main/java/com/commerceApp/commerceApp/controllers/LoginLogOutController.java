@@ -3,6 +3,7 @@ package com.commerceApp.commerceApp.controllers;
 import com.commerceApp.commerceApp.services.LoginService;
 import com.commerceApp.commerceApp.services.TokenService;
 import com.commerceApp.commerceApp.services.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class LoginLogOutController {
     }
 
     */
-
+    @ApiOperation("For logging out")
     @PostMapping("/doLogout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");

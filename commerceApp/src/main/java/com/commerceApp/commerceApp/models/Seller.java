@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.Product;
-import com.commerceApp.commerceApp.validators.ValidGST;
+import com.commerceApp.commerceApp.validators.ValidGst;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "USER_ID")
 public class Seller extends User{
-    @ValidGST
+
     private String GST;
     @NotNull
     @NotEmpty

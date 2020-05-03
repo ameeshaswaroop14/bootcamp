@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,11 @@ public class Bootstrap implements ApplicationRunner {
             admin1.addRole(seller);
             admin1.addAddress(new Address("541", "Allahabad", "U.P", "211002", "India", "home"));
             admin1.setActive(true);
+            admin1.setCreatedBy("AmeeshaSwaroop");
+           // admin1.setCreationTime(new ZonedDateTime());
+            //admin1.setModifiedDate(ZonedDateTime);
+            admin1.setModifiedBy("mees");
+
 
 
             Customer customer1 = new Customer("amus14119@gmail.com", "customer", "", "customer", "8368495191");

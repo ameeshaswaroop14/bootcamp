@@ -29,11 +29,13 @@ public class RegistrationController {
         return registrationService.registerCustomer(customerRegistrationDto, webRequest);
     }
 
+    @ApiOperation("Activate customer using token")
     @GetMapping("/activate/customer")
     public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token, WebRequest webRequest) {
         return activationService.activateUserByToken(token, webRequest);
     }
 
+    @ApiOperation("Register a seller")
     @PostMapping("/register/seller")
     public String registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto) {
         return registrationService.registerSeller(sellerRegistrationDto);

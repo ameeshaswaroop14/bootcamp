@@ -138,7 +138,7 @@ public class UserService {
         mailService.sendPasswordResetConfirmationMail(email);
         return new ResponseEntity<>("Password Changed", HttpStatus.OK);
     }
-    public String getCurrentLoggedInUser()
+  public String getCurrentLoggedInUser()
     {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
@@ -150,6 +150,8 @@ public class UserService {
         }
         return username;
     }
+
+
 
 
 
