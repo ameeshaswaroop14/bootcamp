@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @ControllerAdvice
@@ -43,6 +44,11 @@ public class CustomisedExceptionHandler {
     public final ResponseEntity<Object> handleAllProductNotActive(Exception ex, WebRequest request) throws Exception {
         ErrorDto errorDto = new ErrorDto(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity(errorDto, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(BadCredentialException.class)
+    public final ResponseEntity<Object> handleAllBadCredentials(Exception ex, HttpServletRequest httpServletRequest)throws Exception{
+        ErrorDto errorDto = new ErrorDto(ex.getMessage(), httpServletRequest.getPathInfo());
+        return new ResponseEntity(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -115,6 +115,18 @@ public class EntityDtoMapping {
         return modelMapper.map(variation, ProductvariationSellerDto.class);
     }
 
+  /*  public static AuditInfoResponseDto toAuditInfoResponseDto(AuditInformation auditInformation){
+        AuditInfoResponseDto auditInfoResponseDto=modelMapper.map(auditInformation,AuditInfoResponseDto.class);
+        return auditInfoResponseDto;
+    }
+    public static AuditInformation toAuditInfoEntity(AuditInfoResponseDto auditInfoResponseDto){
+        AuditInformation auditInformation=modelMapper.map(auditInfoResponseDto,AuditInformation.class);
+        return auditInformation;
+    }
+
+   */
+
+
 
 
 

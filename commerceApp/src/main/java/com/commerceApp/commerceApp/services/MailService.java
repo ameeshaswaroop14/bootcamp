@@ -83,7 +83,7 @@ public class MailService {
         sendEmail(email,subject,text);
     }
 
-    private void sendAccountLockingMail(String email) {
+    public void sendAccountLockingMail(String email) {
         String subject = "Account Locked";
         String message = "your account has been locked due to multiple unsuccessful login attempts.";
         sendEmail(email, subject, message);

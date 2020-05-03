@@ -32,9 +32,10 @@ public class User extends AuditInformation {
     private boolean isActive = false;
     private boolean isExpired = false;
     private boolean isLocked = false;
+    private boolean accountNotLocked=true;
 
 
-    private Integer loginStatus=0;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -45,9 +46,7 @@ public class User extends AuditInformation {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Address> addresses;
 
-    public void setLoginStatus(Integer loginStatus) {
-        this.loginStatus = loginStatus;
-    }
+
 
     public User() {
     }
@@ -169,6 +168,14 @@ public class User extends AuditInformation {
         this.addresses = addresses;
     }
 
+    public boolean isAccountNotLocked() {
+        return accountNotLocked;
+    }
+
+    public void setAccountNotLocked(boolean accountNotLocked) {
+        this.accountNotLocked = accountNotLocked;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -201,23 +208,6 @@ public class User extends AuditInformation {
             roles = new HashSet<>();
 
         roles.add(role);
-    }
-
-    public void setLoginStatus(boolean success){
-        if(success) {
-            loginStatus = 1;
-            this.setLocked(false);
-        }
-        else {
-            loginStatus--;
-            if(loginStatus <= -2){
-                setLocked(true);
-            }
-        }
-    }
-
-    public Integer getLoginStatus() {
-        return loginStatus;
     }
 
 

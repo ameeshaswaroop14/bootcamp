@@ -61,7 +61,7 @@ public class Bootstrap implements ApplicationRunner {
             customer1.addAddress(new Address("44", "Lucknow", "U.P", "778884", "india", "office"));
             customer1.setActive(true);
 
-            Seller seller1 = new Seller("ameesha.swaroop@tothenew.com", "seller", "", "seller", "bh7ht754r5", "pewds", "9455689412");
+            Seller seller1 = new Seller("ameesha.swaroop@tothenew.com", "seller", "", "seller", "18AABCT3518Q1ZV", "pewds", "9455689412");
             seller1.setPassword(passwordEncoder.encode("pass"));
             seller1.addAddress(new Address("62", "Noida", "U.P", "201302", "india", "home"));
             seller1.setActive(true);

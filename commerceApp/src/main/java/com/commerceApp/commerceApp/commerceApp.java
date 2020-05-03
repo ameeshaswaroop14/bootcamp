@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
 @EnableAsync
 
 public class commerceApp {
-   public static final Logger logger=LoggerFactory.getLogger(commerceApp.class);
+    public static final Logger logger = LoggerFactory.getLogger(commerceApp.class);
+
     public static void main(String[] args) {
         SpringApplication.run(commerceApp.class, args);
     }

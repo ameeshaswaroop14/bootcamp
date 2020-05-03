@@ -1,8 +1,11 @@
 package com.commerceApp.commerceApp.services;
 
+import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldDto;
 import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
+
+import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
@@ -47,6 +50,7 @@ public class CategoryMetadataFieldService {
         savedField = new CategoryMetadataField();
         savedField.setName(fieldName);
         categoryFieldRepository.save(savedField);
+
         response = new ResponseDto<>(null, null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
     }
