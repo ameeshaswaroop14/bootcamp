@@ -76,12 +76,17 @@ public class Bootstrap implements ApplicationRunner {
             Category clothing = new Category("clothing");
             fashion.addSubCategory(clothing);
             Category men = new Category("Men");
+
+
             Category women = new Category("Women");
             clothing.addSubCategory(men);
             clothing.addSubCategory(women);
             categoryRepository.save(fashion);
             Product shirt = new Product("Shirt", "Check based design", "Levi's");
+
+
             Product jeans = new Product("Jeans", "slim fit", "Crimson club");
+
             shirt.setId(100L);
             jeans.setId(101L);
             productRepository.save(shirt);

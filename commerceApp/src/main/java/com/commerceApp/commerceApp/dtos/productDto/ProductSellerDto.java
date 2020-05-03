@@ -1,12 +1,21 @@
 package com.commerceApp.commerceApp.dtos.productDto;
 
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryDto;
+import com.commerceApp.commerceApp.models.AuditInformation;
+import com.commerceApp.commerceApp.models.product.Product;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductSellerDto {
+
+public class ProductSellerDto  {
     private Long id;
 
     @NotNull
@@ -22,6 +31,10 @@ public class ProductSellerDto {
     private String description;
     private Boolean isReturnable = false;
     private Boolean isCancelleable = false;
+
+    private Product product;
+
+    ProductSellerDto(){}
 
     public Long getId() {
         return id;
@@ -86,4 +99,5 @@ public class ProductSellerDto {
     public void setCancelleable(Boolean cancelleable) {
         isCancelleable = cancelleable;
     }
+
 }

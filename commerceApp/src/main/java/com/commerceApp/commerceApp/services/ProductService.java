@@ -174,6 +174,8 @@ public class ProductService {
         if(product.isDeleted()){
             return new ResponseEntity<>("Product does not exist", HttpStatus.NOT_FOUND);
         }
+
+
         productRepository.deleteById(id);
         return new ResponseEntity<>("deleted", HttpStatus.OK);
     }

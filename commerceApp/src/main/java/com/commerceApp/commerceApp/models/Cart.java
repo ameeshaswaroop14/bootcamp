@@ -7,8 +7,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "CART")
-@EntityListeners(AuditingEntityListener.class)
-public class Cart extends AuditInformation {
+
+public class Cart{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class CategoryMetadataFieldValues extends AuditInformation {
+
+public class CategoryMetadataFieldValues extends AuditInformation  {
     @EmbeddedId
     private CategoryMetadataFieldValuesId id = new CategoryMetadataFieldValuesId();
 

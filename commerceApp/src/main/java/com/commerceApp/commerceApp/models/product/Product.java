@@ -3,16 +3,15 @@ package com.commerceApp.commerceApp.models.product;
 import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.models.category.Category;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+
 public class Product extends AuditInformation {
 
     @Id
@@ -42,6 +41,9 @@ public class Product extends AuditInformation {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductReview> reviews;
 
+
+
+
     {
         isActive = true;
         isCancelleable = true;
@@ -51,6 +53,7 @@ public class Product extends AuditInformation {
 
     public Product() {
     }
+
 
     public Product(String name, String description, String brand) {
         this.name = name;
@@ -175,22 +178,24 @@ public class Product extends AuditInformation {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", brand='" + brand + '\'' +
-                ", isReturnable=" + isReturnable +
-                ", isCancelleable=" + isCancelleable +
-                ", isActive=" + isActive +
-                ", isDeleted=" + isDeleted +
-                ", seller=" + seller +
-                ", variations=" + variations +
-                ", category=" + category +
-                ", reviews=" + reviews +
-                '}';
-    }
+
+
+    //    @Override
+//    public String toString() {
+//        return "Product{" +
+//                "name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", brand='" + brand + '\'' +
+//                ", isReturnable=" + isReturnable +
+//                ", isCancelleable=" + isCancelleable +
+//                ", isActive=" + isActive +
+//                ", isDeleted=" + isDeleted +
+//                ", seller=" + seller +
+//                ", variations=" + variations +
+//                ", category=" + category +
+//                ", reviews=" + reviews +
+//                '}';
+//    }
 }
 
 

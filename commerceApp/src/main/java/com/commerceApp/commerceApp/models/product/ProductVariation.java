@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.models.product;
 
 
-import com.commerceApp.commerceApp.models.AuditInformation;
+
 import com.commerceApp.commerceApp.util.HashMapConverter;
 import com.commerceApp.commerceApp.models.order.OrderProduct;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 
-public class ProductVariation extends AuditInformation {
+
+public class ProductVariation  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,9 +1,10 @@
 package com.commerceApp.commerceApp.dtos.categoryDtos;
 
+import com.commerceApp.commerceApp.models.AuditInformation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDto {
+public class CategoryDto  {
 
     private Long id;
     private String name;

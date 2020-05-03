@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.models;
 
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -7,21 +8,21 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.Date;
-@MappedSuperclass
 
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AuditInformation{
+public class AuditInformation {
 
     @Column(name = "created_date", updatable = false)
     @CreatedDate
-    @Temporal(TemporalType.DATE)
-    private Date createdDate;
+    private ZonedDateTime creationTime;
+
 
     @Column(name = "modified_date")
     @LastModifiedDate
-    @Temporal(TemporalType.DATE)
-    private Date modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     @Column(name = "created_by")
     @CreatedBy
@@ -31,19 +32,19 @@ public abstract class AuditInformation{
     @LastModifiedBy
     private String modifiedBy;
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public ZonedDateTime getCreationTime() {
+        return creationTime;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreationTime(ZonedDateTime creationTime) {
+        this.creationTime = creationTime;
     }
 
-    public Date getModifiedDate() {
+    public ZonedDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

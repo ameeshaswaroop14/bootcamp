@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.validators.ValidEmail;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,8 @@ import java.util.Set;
 @Table(name = "USER")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+@EntityListeners(AuditingEntityListener.class)
+public class User extends AuditInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,6 +45,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Address> addresses;
 
+    public void setLoginStatus(Integer loginStatus) {
+        this.loginStatus = loginStatus;
+    }
 
     public User() {
     }
