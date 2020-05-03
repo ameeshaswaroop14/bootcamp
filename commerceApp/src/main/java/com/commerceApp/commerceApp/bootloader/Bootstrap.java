@@ -8,6 +8,8 @@ import com.commerceApp.commerceApp.models.order.OrderProduct;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
 import com.commerceApp.commerceApp.repositories.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -19,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Component
 public class Bootstrap implements ApplicationRunner {
@@ -35,6 +38,9 @@ public class Bootstrap implements ApplicationRunner {
     @Autowired
     CategoryFieldRepository categoryFieldRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(Bootstrap.class);
+
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (userRepository.count() < 1) {
@@ -46,6 +52,7 @@ public class Bootstrap implements ApplicationRunner {
             roleRepository.save(admin);
             roleRepository.save(customer);
             roleRepository.save(seller);
+
 
 
             Admin admin1 = new Admin("ameeshaswaroop@gmail.com", "Ameesha", "", "Swaroop");
@@ -97,7 +104,8 @@ public class Bootstrap implements ApplicationRunner {
             jeans.setId(101L);
             productRepository.save(shirt);
             productRepository.save(jeans);
-            System.out.println("total categories saved - " + categoryRepository.count());
+          //  System.out.println("total categories saved - " + categoryRepository.count());
+            logger.info(String.valueOf(categoryRepository.count()));
 
 
             ProductVariation mSize = new ProductVariation(5, 1500d);
