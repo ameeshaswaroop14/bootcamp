@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.dtos;
+package com.commerceApp.commerceApp.dtos.categoryDtos;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +9,8 @@ public class CategoryFilteringDetailsDto {
     private Set<String> brands;
     private Double minPrice;
     private Double maxPrice;
-    CategoryFilteringDetailsDto(){}
+
+    public CategoryFilteringDetailsDto(){}
 
     public CategoryFilteringDetailsDto(Map<String, Set<String>> fieldValues, Set<String> brands, Double minPrice, Double maxPrice) {
         this.fieldValues = fieldValues;

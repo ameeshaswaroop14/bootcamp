@@ -8,6 +8,7 @@ import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.SellerService;
 import com.commerceApp.commerceApp.services.UserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class AdminController {
     AdminUnlockingService adminUnlockingService;
 
 
-    @ApiOperation("To get customers")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="Bearer") })
     @GetMapping("/customers")
     public List<AdminCustomerDto> getAllCustomers(@RequestParam(defaultValue = "0") String offset,
                                                   @RequestParam(defaultValue = "10") String size,

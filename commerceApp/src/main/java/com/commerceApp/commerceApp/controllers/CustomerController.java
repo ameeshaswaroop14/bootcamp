@@ -5,6 +5,7 @@ import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.UserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CustomerController {
     @Autowired
     UserService userService;
 
-    @ApiOperation("To get customer profile")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="Bearer") })
     @GetMapping("/customer/profile")
     public CustomerViewProfileDto getProfileDetails(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();

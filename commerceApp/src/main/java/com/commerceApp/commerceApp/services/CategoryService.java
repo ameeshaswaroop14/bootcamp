@@ -1,14 +1,13 @@
 package com.commerceApp.commerceApp.services;
 
 
-import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValuesDto;
+import com.commerceApp.commerceApp.bootloader.Bootstrap;
+import com.commerceApp.commerceApp.dtos.categoryDtos.*;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataFieldValues;
 import com.commerceApp.commerceApp.models.product.Product;
-import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryAdminResponseDto;
-import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryDto;
-import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldDto;
+import com.commerceApp.commerceApp.models.product.ProductVariation;
 import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
 import com.commerceApp.commerceApp.repositories.CategoryMetadataFieldValueRepo;
 import com.commerceApp.commerceApp.repositories.CategoryRepository;
@@ -18,13 +17,17 @@ import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.*;
 
@@ -43,6 +46,8 @@ public class CategoryService {
     CategoryMetadataFieldValueRepo categoryMetadataFieldValueRepo;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    MessageSource messageSource;
 
 
     public String validateNewCategory(String categoryName, Long parentId) {
@@ -273,21 +278,22 @@ public class CategoryService {
                 return message;
             }
         }
-        message="success";
+        message = "success";
         return message;
     }
-    public ResponseEntity<BaseDto> createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto){
-        String message=validateMetadataFieldValues(categoryMetadataFieldValuesDto);
+
+    public ResponseEntity<BaseDto> createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {
+        String message = validateMetadataFieldValues(categoryMetadataFieldValuesDto);
         BaseDto response;
-        if(!message.equalsIgnoreCase("success")){
-            response=new ErrorDto("Validation failed",message);
-            return new ResponseEntity<BaseDto>(response,HttpStatus.BAD_REQUEST);
+        if (!message.equalsIgnoreCase("success")) {
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
         Category category = categoryRepository.findById(categoryMetadataFieldValuesDto.getCategoryId()).get();
         CategoryMetadataFieldValues categoryFieldValues = new CategoryMetadataFieldValues();
         CategoryMetadataField categoryField;
 
-        for(CategoryMetadataFieldDto fieldValuePair : categoryMetadataFieldValuesDto.getFieldValues()){
+        for (CategoryMetadataFieldDto fieldValuePair : categoryMetadataFieldValuesDto.getFieldValues()) {
 
             categoryField = categoryFieldRepository.findById(fieldValuePair.getId()).get();
             String values = StringToSetParser.toCommaSeparatedString(fieldValuePair.getValues());
@@ -301,46 +307,61 @@ public class CategoryService {
         response = new ResponseDto<>("Success", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
     }
-/*
+
     public Set<String> getAllBrandsForCategory(Long categoryId) {
         Optional<Category> savedCategory = categoryRepository.findById(categoryId);
-        if(!savedCategory.isPresent())
+        if (!savedCategory.isPresent())
             return null;
 
         Set<String> brands = new HashSet<>();
         Category category = savedCategory.get();
 
-        if(category.getSubCategories()==null || category.getSubCategories().isEmpty()){
-            brands.addAll(productRepository.findByBrand(categoryId));
-        }
-        else{
-            category.getSubCategories().forEach(child->{
+        if (category.getSubCategories() == null || category.getSubCategories().isEmpty()) {
+            brands.addAll(productRepository.findAllBrandsByCategoryId(categoryId));
+        } else {
+            category.getSubCategories().forEach(child -> {
                 brands.addAll(getAllBrandsForCategory(child.getId()));
             });
         }
         return brands;
     }
 
- */
+    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+
+    public void getMinMaxPriceForCategory(Category category, Double minPrice, Double maxPrice) {
+        minPrice = 0.0;
+        maxPrice = 0.0;
+        if (category.getSubCategories() == null || category.getSubCategories().isEmpty()) {
+            if (category.getProducts() != null && category.getProducts().isEmpty() == false) {
+                Set<Product> products = category.getProducts();
+                for (Product product : products) {
+
+                    // if product has  variations
+                    if (product.getVariations() != null && product.getVariations().isEmpty() == false) {
+                        Set<ProductVariation> variations = product.getVariations();
+
+                        for (ProductVariation productVariation : variations) {
+                            if (productVariation.getPrice() < minPrice) {
+                                minPrice = productVariation.getPrice();
+                                logger.info(String.valueOf(minPrice));
+                            }
+                            if (productVariation.getPrice() > maxPrice) {
+                                maxPrice = productVariation.getPrice();
+                                logger.info(String.valueOf(maxPrice));
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            //  if category is a parent category
+            Set<Category> subCategories = category.getSubCategories();
+            for (Category subCategory : subCategories) {
+                getMinMaxPriceForCategory(subCategory, minPrice, maxPrice);
+
+            }
+        }
 
 
-
-
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
