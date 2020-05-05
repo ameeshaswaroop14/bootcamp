@@ -3,7 +3,9 @@ package com.commerceApp.commerceApp.controllers;
 import com.commerceApp.commerceApp.services.LoginService;
 import com.commerceApp.commerceApp.services.TokenService;
 import com.commerceApp.commerceApp.services.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +13,13 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.Map;
-
+@Api(value = "LoginLogOutController", description = "REST APIs related to Logout")
 @RestController
 public class LoginLogOutController {
     @Autowired
@@ -36,9 +39,9 @@ public class LoginLogOutController {
     }
 
     */
-    @ApiOperation("For logging out")
-    @PostMapping("/doLogout")
-    public ResponseEntity<String> logout(HttpServletRequest request) {
+   @ApiOperation(value = "To logout", authorizations = { @Authorization(value="Bearer") })
+    @PostMapping(value = "/doLogout",produces = "application/json")
+    public ResponseEntity<String> logout(@ApiIgnore HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null) {
             String tokenValue = authHeader.replace("Bearer", "").trim();

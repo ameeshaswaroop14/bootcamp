@@ -7,7 +7,9 @@ import com.commerceApp.commerceApp.services.AdminUnlockingService;
 import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.SellerService;
 import com.commerceApp.commerceApp.services.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Arrays;
 import java.util.List;
-
+@Api(value = "AdminController", description = "REST APIs related to admin")
 @RestController
 public class AdminController {
     @Autowired
@@ -28,9 +30,9 @@ public class AdminController {
     @Autowired
     AdminUnlockingService adminUnlockingService;
 
-
     @ApiOperation(value = "", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/customers")
+
+    @GetMapping(value = "/customers",produces = "application/json")
     public List<AdminCustomerDto> getAllCustomers(@RequestParam(defaultValue = "0") String offset,
                                                   @RequestParam(defaultValue = "10") String size,
                                                   @RequestParam(defaultValue = "id") String sortByField,
@@ -41,7 +43,7 @@ public class AdminController {
         return customerService.getAllCustomers(offset, size, sortByField);
     }
 
-    @PutMapping("/customers/{id}")
+    @PutMapping(value = "/customers/{id}",produces = "application/json")
     public void UnlockuserAccount(@PathVariable Long id) {
         adminUnlockingService.UnlockingService();
     }
@@ -58,13 +60,13 @@ public class AdminController {
     }
 
     @ApiOperation("To activate user by id")
-    @PutMapping("/activate/{id}")
+    @PutMapping(value = "/activate/{id}",produces = "application/json")
     public String activateUser(@PathVariable Long id, WebRequest webRequest) {
         return userService.activateUserById(id, webRequest);
     }
 
     @ApiOperation("To deactivate user by id")
-    @PutMapping("/deactivate/{id}")
+    @PutMapping(value = "/deactivate/{id}",produces = "application/json")
     public String deactivateUser(@PathVariable Long id, WebRequest request) {
         return userService.deactivateUserById(id, request);
     }

@@ -3,6 +3,7 @@ package com.commerceApp.commerceApp.controllers;
 
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.services.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Date;
-
+@Api(value = "UserController", description = "REST APIs related to User")
 @RestController
 public class UserController {
 

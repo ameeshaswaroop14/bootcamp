@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public class CustomerService {
         return adminCustomerDto;
     }
 
-    public CustomerViewProfileDto getUserProfile(String email) {
+    public CustomerViewProfileDto getUserProfile( String email) {
         Customer customer = customerRepository.findByEmail(email);
         CustomerViewProfileDto customerViewProfileDto = tocustomerViewProfileDto(customer);
         return customerViewProfileDto;

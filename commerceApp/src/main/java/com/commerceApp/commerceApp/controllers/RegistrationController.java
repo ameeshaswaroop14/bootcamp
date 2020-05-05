@@ -5,14 +5,17 @@ import com.commerceApp.commerceApp.dtos.registrationDtos.SellerRegistrationDto;
 
 import com.commerceApp.commerceApp.services.*;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-
+@Api(value = "RegistrationController", description = "REST APIs related to Registration")
 @RestController
 public class RegistrationController {
 
@@ -22,20 +25,22 @@ public class RegistrationController {
     @Autowired
     RegistrationService registrationService;
 
-    @ApiOperation("to register a customer")
+
+    @ApiOperation(value = "To register customer", authorizations = { @Authorization(value="Bearer") })
     @PostMapping("/register/customer")
-    public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
+    public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto,@ApiIgnore WebRequest webRequest) {
 
         return registrationService.registerCustomer(customerRegistrationDto, webRequest);
     }
 
-    @ApiOperation("Activate customer using token")
+    @ApiOperation(value = "To activate customer by token", authorizations = { @Authorization(value="Bearer") })
     @GetMapping("/activate/customer")
-    public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token, WebRequest webRequest) {
+    public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token,@ApiIgnore WebRequest webRequest) {
         return activationService.activateUserByToken(token, webRequest);
     }
 
-    @ApiOperation("Register a seller")
+
+    @ApiOperation(value = "To register seller", authorizations = { @Authorization(value="Bearer") })
     @PostMapping("/register/seller")
     public String registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto) {
         return registrationService.registerSeller(sellerRegistrationDto);

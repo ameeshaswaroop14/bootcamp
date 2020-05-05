@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.validators.ValidEmail;
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.util.Set;
 @Table(name = "USER")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-
+@ApiModel(description="All details about the user")
 public class User extends AuditInformation {
 
     @Id
