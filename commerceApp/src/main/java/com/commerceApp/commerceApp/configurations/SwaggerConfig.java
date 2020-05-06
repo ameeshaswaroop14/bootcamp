@@ -1,18 +1,32 @@
 package com.commerceApp.commerceApp.configurations;
 
 
+import com.commerceApp.commerceApp.security.AuthenticationManagerProvider;
+import com.commerceApp.commerceApp.security.AuthorizationServerConfiguration;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
+import org.aspectj.weaver.patterns.IToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-
 import java.util.*;
+
 
 @Configuration
 @EnableSwagger2
@@ -20,6 +34,7 @@ public class SwaggerConfig {
     public static final Contact DEFAULT_CONTACT = new Contact("Ameesha Swaroop", "www.tothenew.com", "ameesha.swaroop@tothenew.com");
     public static final ApiInfo DEFAULT = new ApiInfo("My API DOCUMENTATION", "My Api Documentation", "1.0", "urn:tos",
             DEFAULT_CONTACT, "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<VendorExtension>());
+
 
 
     @Bean
@@ -37,6 +52,4 @@ public class SwaggerConfig {
     }
 
 }
-
-
 

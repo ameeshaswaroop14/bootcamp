@@ -4,15 +4,24 @@ import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.models.UserAttempts;
 import com.commerceApp.commerceApp.repositories.UserAttemptsRepository;
 import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.security.AppUser;
 import com.commerceApp.commerceApp.services.MailService;
 import com.commerceApp.commerceApp.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -33,6 +42,7 @@ public class CustomEventListener
     @EventListener
     public void AuthenticationFailEvent(AuthenticationFailureBadCredentialsEvent event)
     {
+        AppUser appUser=new AppUser();
         String username = event.getAuthentication().getPrincipal().toString();
         Iterable<UserAttempts> userAttempts = userAttemptsRepository.findAll();
         int count=0;
@@ -44,7 +54,7 @@ public class CustomEventListener
                 {
                     User user = userRepository.findByEmail(username);
                     user.setLocked(true);
-                    user.setAccountNotLocked(false);
+                    appUser.isAccountNonLocked();
                     userRepository.save(user);
                     count++;
                     mailService.sendAccountLockingMail(username);

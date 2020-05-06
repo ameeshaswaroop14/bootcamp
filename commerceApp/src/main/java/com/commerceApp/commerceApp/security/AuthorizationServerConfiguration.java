@@ -84,5 +84,4 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         authorizationServerSecurityConfigurer.allowFormAuthenticationForClients();
     }
 
-
 }
