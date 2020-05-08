@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.services;
 
 
-import com.commerceApp.commerceApp.bootloader.Bootstrap;
+//import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.dtos.categoryDtos.*;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
@@ -11,6 +11,7 @@ import com.commerceApp.commerceApp.models.product.ProductVariation;
 import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
 import com.commerceApp.commerceApp.repositories.CategoryMetadataFieldValueRepo;
 import com.commerceApp.commerceApp.repositories.CategoryRepository;
+
 import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.util.*;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
@@ -34,8 +35,7 @@ import java.util.*;
 
 @Service
 public class CategoryService {
-    @Autowired
-    CategoryRepository categoryRepository;
+
     @Autowired
     ModelMapper modelMapper;
     @Autowired
@@ -48,6 +48,8 @@ public class CategoryService {
     ProductRepository productRepository;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    CategoryRepository categoryRepository;
 
 
     public String validateNewCategory(String categoryName, Long parentId) {

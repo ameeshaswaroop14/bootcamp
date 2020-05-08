@@ -30,9 +30,9 @@ public class PersistenceConfig {
     @Autowired
     UserRepository userRepository;
 
-    @Bean
+   @Bean
     AuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
+      return new AuditorAwareImpl();
     }
 
 
@@ -46,3 +46,5 @@ public class PersistenceConfig {
         return new CurrentTimeDateTimeService();
     }
 }
+
+

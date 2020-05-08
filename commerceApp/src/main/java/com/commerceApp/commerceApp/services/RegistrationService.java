@@ -94,5 +94,7 @@ public class RegistrationService {
         return  "Account created successfully. It will be activated after verification.";
 
     }
+    
+
 
 }

@@ -40,7 +40,7 @@ public class ProductVariationService {
     CategoryMetadataFieldValueRepo categoryMetadataFieldValueRepo;
     @Autowired
     ProductVariationRepository productVariationRepository;
-    @Autowired
+   @Autowired
     CategoryRepository categoryRepository;
 
 

@@ -6,9 +6,7 @@ import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.AdminCustomerDto;
 import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
-import com.commerceApp.commerceApp.repositories.AddressRepository;
-import com.commerceApp.commerceApp.repositories.CustomerRepository;
-import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.repositories.*;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +27,17 @@ import static com.commerceApp.commerceApp.util.EntityDtoMapping.*;
 public class CustomerService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+   private CustomerRepository customerRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     AddressRepository addressRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CustomCustomerRepoImpl customCustomerRepo;
+    @Autowired
+    AddressRepositoryCustom addressRepositoryCustom;
 
     public List<AdminCustomerDto> getAllCustomers(String offset, String size, String field) {
         Integer pageNo = Integer.parseInt(offset);
@@ -52,19 +54,19 @@ public class CustomerService {
     }
 
     public AdminCustomerDto getCustomerByEmail(String email) {
-        Customer customer = customerRepository.findByEmail(email);
-        AdminCustomerDto adminCustomerDto = toCustomerDto(customer);
+        Customer customer =  customCustomerRepo.findByEmail(email);
+       AdminCustomerDto adminCustomerDto = toCustomerDto(customer);
         return adminCustomerDto;
     }
 
     public CustomerViewProfileDto getUserProfile( String email) {
-        Customer customer = customerRepository.findByEmail(email);
+        Customer customer = customCustomerRepo.findByEmail(email);
         CustomerViewProfileDto customerViewProfileDto = tocustomerViewProfileDto(customer);
         return customerViewProfileDto;
     }
 
     public ResponseEntity<String> updateProfile(String email, CustomerViewProfileDto customerViewProfileDto) {
-        Customer customer = customerRepository.findByEmail(email);
+        Customer customer = customCustomerRepo.findByEmail(email);
         if (customerViewProfileDto.getFirstName() != null)
             customer.setFirstName(customerViewProfileDto.getFirstName());
         if (customerViewProfileDto.getMiddleName() != null)
@@ -77,7 +79,7 @@ public class CustomerService {
     }
 
     public Set getCustomerAddresses(String email) {
-        Customer customer = customerRepository.findByEmail(email);
+        Customer customer = customCustomerRepo.findByEmail(email);
         Set<AddressDto> addressDtos = new HashSet<>();
         Set<Address> addresses = customer.getAddresses();
 
@@ -89,7 +91,7 @@ public class CustomerService {
     }
 
     public ResponseEntity<String> addNewAddress(String email, AddressDto addressDto) {
-        Customer customer = customerRepository.findByEmail(email);
+        Customer customer = customCustomerRepo.findByEmail(email);
         Address newAddress =EntityDtoMapping.toAddress(addressDto);
         customer.addAddress(newAddress);
         customerRepository.save(customer);
@@ -104,14 +106,17 @@ public class CustomerService {
         }
         Address savedAddress = addressOptional.get();
         if (savedAddress.getUser().getEmail().equals(email)) {
-            addressRepository.deleteAddressById(id);
+            addressRepository.deleteById(id);
+            savedAddress.setDeleted(true);
+
+
             return new ResponseEntity<>("Address successfully deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Invalid Operation", HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<String> updateCustomerAddress(String username, AddressDto addressDto, Long id) {
-        Optional<Address> address = addressRepository.findById(id);
+        Optional<Address> address = Optional.ofNullable(addressRepositoryCustom.findAdressById(id));
         if (!address.isPresent())
             return new ResponseEntity<>("Address not found",HttpStatus.NOT_FOUND);
         Address savedAddress = address.get();
@@ -133,6 +138,8 @@ public class CustomerService {
         addressRepository.save(savedAddress);
          return new ResponseEntity<>("Success",HttpStatus.OK);
     }
+
+
 
 }
 

@@ -1,5 +1,5 @@
 package com.commerceApp.commerceApp.util;
-/*
+
 import com.commerceApp.commerceApp.models.AuditInformation;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -43,7 +43,7 @@ public class AuditInfoResponseDto {
         this.modifiedDate = modifiedDate;
     }
 
-    public AuditInformation getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
@@ -60,4 +60,4 @@ public class AuditInfoResponseDto {
     }
 }
 
- */
+

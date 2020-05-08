@@ -27,6 +27,8 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     @Autowired
     ForgotPasswordService forgotPasswordService;
+    @Autowired
+    AddressRepositoryCustom addressRepositoryCustom;
 
 
     public String activateUserById(Long id, WebRequest request) {
@@ -99,7 +101,7 @@ public class UserService {
 
 
     public ResponseEntity<String>updateAddressById(String email, Long addressId, AddressDto addressDto) {
-        Optional<Address> address = addressRepository.findById(addressId);
+        Optional<Address> address = Optional.ofNullable(addressRepositoryCustom.findAdressById(addressId));
         User user = userRepository.findByEmail(email);
 
         if(!address.isPresent()){
@@ -150,6 +152,8 @@ public class UserService {
         }
         return username;
     }
+
+
 
 
 

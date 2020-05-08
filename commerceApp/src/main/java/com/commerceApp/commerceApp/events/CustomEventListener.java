@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
-
+/*
 @Component
 public class CustomEventListener
 {
@@ -43,6 +43,7 @@ public class CustomEventListener
     public void AuthenticationFailEvent(AuthenticationFailureBadCredentialsEvent event)
     {
         AppUser appUser=new AppUser();
+        UserDetails userDetails;
         String username = event.getAuthentication().getPrincipal().toString();
         Iterable<UserAttempts> userAttempts = userAttemptsRepository.findAll();
         int count=0;
@@ -99,5 +100,8 @@ public class CustomEventListener
         }
     }
 }
+
+ */
+
 
 

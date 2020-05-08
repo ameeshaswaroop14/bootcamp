@@ -42,6 +42,10 @@ public class AdminController {
 
         return customerService.getAllCustomers(offset, size, sortByField);
     }
+    @GetMapping(value = "/customer")
+    public AdminCustomerDto getone(@RequestParam(required = true)String email){
+       return customerService.getCustomerByEmail(email);
+    }
 
     @PutMapping(value = "/customers/{id}",produces = "application/json")
     public void UnlockuserAccount(@PathVariable Long id) {

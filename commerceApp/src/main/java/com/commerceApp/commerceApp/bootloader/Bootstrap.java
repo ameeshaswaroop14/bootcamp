@@ -22,14 +22,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/*
 @Component
 public class Bootstrap implements ApplicationRunner {
     @Autowired
     UserRepository userRepository;
     @Autowired
     roleRepository roleRepository;
-    @Autowired
+   @Autowired
     CategoryRepository categoryRepository;
     @Autowired
     ProductRepository productRepository;
@@ -167,4 +167,6 @@ public class Bootstrap implements ApplicationRunner {
         }
     }
 }
+
+ */
 

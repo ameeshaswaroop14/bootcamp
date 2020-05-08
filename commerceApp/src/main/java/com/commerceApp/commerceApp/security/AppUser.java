@@ -72,7 +72,7 @@ public class AppUser implements UserDetails {
 
         @Override
         public boolean isAccountNonLocked() {
-                return true;
+                return !isLocked;
         }
 
         @Override
@@ -83,5 +83,93 @@ public class AppUser implements UserDetails {
         @Override
         public boolean isEnabled() {
                 return true;
+        }
+
+        public Long getId() {
+                return id;
+        }
+
+        public void setId(Long id) {
+                this.id = id;
+        }
+
+        public void setUsername(String username) {
+                this.username = username;
+        }
+
+        public String getFirstName() {
+                return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+                this.firstName = firstName;
+        }
+
+        public String getMiddleName() {
+                return middleName;
+        }
+
+        public void setMiddleName(String middleName) {
+                this.middleName = middleName;
+        }
+
+        public String getLastName() {
+                return lastName;
+        }
+
+        public void setLastName(String lastName) {
+                this.lastName = lastName;
+        }
+
+        public void setPassword(String password) {
+                this.password = password;
+        }
+
+        public boolean isDeleted() {
+                return isDeleted;
+        }
+
+        public void setDeleted(boolean deleted) {
+                isDeleted = deleted;
+        }
+
+        public boolean isActive() {
+                return isActive;
+        }
+
+        public void setActive(boolean active) {
+                isActive = active;
+        }
+
+        public boolean isExpired() {
+                return isExpired;
+        }
+
+        public void setExpired(boolean expired) {
+                isExpired = expired;
+        }
+
+        public boolean isLocked() {
+                return isLocked;
+        }
+
+        public void setLocked(boolean locked) {
+                isLocked = locked;
+        }
+
+        public Set<Role> getRoles() {
+                return roles;
+        }
+
+        public void setRoles(Set<Role> roles) {
+                this.roles = roles;
+        }
+
+        public Set<Address> getAddresses() {
+                return addresses;
+        }
+
+        public void setAddresses(Set<Address> addresses) {
+                this.addresses = addresses;
         }
 }
