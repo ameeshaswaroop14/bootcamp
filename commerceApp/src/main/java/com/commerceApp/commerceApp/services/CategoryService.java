@@ -8,11 +8,8 @@ import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataFieldValues;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
-import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
-import com.commerceApp.commerceApp.repositories.CategoryMetadataFieldValueRepo;
-import com.commerceApp.commerceApp.repositories.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.*;
 
-import com.commerceApp.commerceApp.repositories.ProductRepository;
 import com.commerceApp.commerceApp.util.*;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
@@ -50,6 +47,8 @@ public class CategoryService {
     MessageSource messageSource;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    CustomCategoryRepository customCategoryRepository;
 
 
     public String validateNewCategory(String categoryName, Long parentId) {
@@ -211,7 +210,7 @@ public class CategoryService {
             response = new ErrorDto("Validation failed", "This category has child categories associated");
             return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
         }
-        categoryRepository.deleteCategoryById(id);
+        customCategoryRepository.deleteCategoryById(id);
 
         response = new ResponseDto<>("Successfully deleted", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);

@@ -4,7 +4,6 @@ package com.commerceApp.commerceApp.models.product;
 
 import com.commerceApp.commerceApp.util.HashMapConverter;
 import com.commerceApp.commerceApp.models.order.OrderProduct;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -25,14 +24,14 @@ public class ProductVariation  {
    // private String primaryImageName;
 
     @Convert(converter = HashMapConverter.class)
-    private Map<String, String> productAttributes;
+    private Map<String, Object> productAttributes;
 
     private boolean isDeleted = false;
     private boolean isActive = true;
 
     public ProductVariation(){}
 
-    public ProductVariation(Long id, Integer quantityAvailable, Double price, Map<String, String> productAttributes) {
+    public ProductVariation(Long id, Integer quantityAvailable, Double price, Map<String, Object> productAttributes) {
         this.id = id;
         this.quantityAvailable = quantityAvailable;
         this.price = price;
@@ -65,11 +64,11 @@ public class ProductVariation  {
 
 
 
-    public Map<String, String> getProductAttributes() {
+    public Map<String, Object> getProductAttributes() {
         return productAttributes;
     }
 
-    public void setProductAttributes(Map<String, String> productAttributes) {
+    public void setProductAttributes(Map<String, Object> productAttributes) {
         this.productAttributes = productAttributes;
     }
 
