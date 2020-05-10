@@ -7,6 +7,9 @@ import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.AdminCustomerDto;
 import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.repositories.*;
+import com.commerceApp.commerceApp.repositories.userRepos.CustomCustomerRepoImpl;
+import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.*;
 

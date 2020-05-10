@@ -3,7 +3,7 @@ package com.commerceApp.commerceApp.services;
 import com.commerceApp.commerceApp.dtos.profileDtos.SellerViewProfileDto;
 import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.dtos.*;
-import com.commerceApp.commerceApp.repositories.SellerRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -10,9 +10,9 @@ import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
 import com.commerceApp.commerceApp.exceptions.ProductAlreadyExists;
 import com.commerceApp.commerceApp.exceptions.ProductDoesNotExists;
 import com.commerceApp.commerceApp.exceptions.ProductNotActive;
-import com.commerceApp.commerceApp.repositories.CategoryRepository;
-import com.commerceApp.commerceApp.repositories.ProductRepository;
-import com.commerceApp.commerceApp.repositories.SellerRepository;
+import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.productRepos.ProductRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
@@ -43,24 +43,26 @@ public class ProductService {
     @Autowired
     CategoryService categoryService;
 
-    public String validateProducts(String email, ProductSellerDto productSellerDto) {
+    public String validateNewProduct(String email, ProductSellerDto productDto){
+        BaseDto response;
         String message;
-        Optional<Category> savedCategory = categoryRepository.findById(productSellerDto.getCategoryId());
-        if (!savedCategory.isPresent()) {
-            message = "Category does not exist";
+
+        Optional<Category> savedCategory = categoryRepository.findById(productDto.getCategoryId());
+        if(!savedCategory.isPresent()){
+            message = "Category does not exist.";
             return message;
         }
         Category category = savedCategory.get();
-        if (!(category.getSubCategories() == null)) {
-            message = "Not a leaf node";
+        if(!(category.getSubCategories() == null || category.getSubCategories().isEmpty())){
+            message = "Category is not a leaf category.";
             return message;
         }
 
-        Product savedProduct = productRepository.findByName(productSellerDto.getName());
-        if (savedProduct != null) {
-            if (savedProduct.getCategory().getId().equals(productSellerDto.getCategoryId())) {
-                if (savedProduct.getBrand().equalsIgnoreCase(productSellerDto.getBrand())) {
-                    if (savedProduct.getSeller().getEmail().equalsIgnoreCase(email)) {
+        Product savedProduct = productRepository.findByName(productDto.getName());
+        if(savedProduct!=null){
+            if(savedProduct.getCategory().getId().equals(productDto.getCategoryId())){
+                if(savedProduct.getBrand().equalsIgnoreCase(productDto.getBrand())){
+                    if(savedProduct.getSeller().getEmail().equalsIgnoreCase(email)){
                         message = "Product with similar details already exists.";
                         return message;
                     }
@@ -71,20 +73,28 @@ public class ProductService {
         return message;
     }
 
-    public ResponseEntity<String> addProduct(String email, ProductSellerDto productSellerDto) {
-        String message = validateProducts(email, productSellerDto);
-        if (!message.equalsIgnoreCase("Success"))
-            return new ResponseEntity<>("Validation Failed", HttpStatus.BAD_REQUEST);
-        Category category = categoryRepository.findById(productSellerDto.getCategoryId()).get();
+    public ResponseEntity<BaseDto> saveNewProduct(String email, ProductSellerDto productDto) {
+        BaseDto response;
+        String message = validateNewProduct(email, productDto);
+        if(!message.equalsIgnoreCase("success")){
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        Category category = categoryRepository.findById(productDto.getCategoryId()).get();
+
+        Product product = toProduct(productDto);
         Seller seller = sellerRepository.findByEmail(email);
-        Product product = toProduct(productSellerDto);
         product.setCategory(category);
         product.setSeller(seller);
-        mailService.sendProductCreationMail(email, product);
         productRepository.save(product);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
 
+        mailService.sendProductCreationMail(email, product);
+
+        response = new ResponseDto<>(null, "Success");
+        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<String> activateProductById(Long id) {
         Optional<Product> savedproduct = productRepository.findById(id);
@@ -121,7 +131,7 @@ public class ProductService {
 
         Optional<Product> savedProduct = productRepository.findById(id);
         if (!savedProduct.isPresent()) {
-            throw new ProductAlreadyExists("Product already exists");
+            throw new ProductAlreadyExists("Product does not exists");
         }
         Product product = savedProduct.get();
         if (!product.getSeller().getEmail().equalsIgnoreCase(email)) {

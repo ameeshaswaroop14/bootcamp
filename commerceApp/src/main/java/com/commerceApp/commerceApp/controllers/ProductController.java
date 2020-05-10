@@ -26,13 +26,13 @@ public class ProductController {
 
     @ApiOperation(value = "To create product", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/seller/products",produces = "application/json")
-    public ResponseEntity<String> createProduct(@RequestBody ProductSellerDto productSellerDto,@ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto> createProduct(@RequestBody ProductSellerDto productSellerDto,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return productService.addProduct(username, productSellerDto);
+        return productService.saveNewProduct(username, productSellerDto);
     }
 
-    @ApiOperation(value = "To get seller for product by id", authorizations = { @Authorization(value="Bearer") })
+    @ApiOperation(value = "To get product for seller by id", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/seller/product/{id}",produces = "application/json")
     public ProductSellerDto getProductForSeller(@PathVariable Long id,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();

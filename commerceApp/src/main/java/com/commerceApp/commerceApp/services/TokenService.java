@@ -3,9 +3,9 @@ package com.commerceApp.commerceApp.services;
 import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
 import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.models.tokens.VerificationToken;
-import com.commerceApp.commerceApp.repositories.ForgotPasswordRepository;
-import com.commerceApp.commerceApp.repositories.UserRepository;
-import com.commerceApp.commerceApp.repositories.VerificationTokenRepository;
+import com.commerceApp.commerceApp.repositories.tokenRepos.ForgotPasswordRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
+import com.commerceApp.commerceApp.repositories.tokenRepos.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

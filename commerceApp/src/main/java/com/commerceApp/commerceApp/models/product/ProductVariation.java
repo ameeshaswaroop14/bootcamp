@@ -1,7 +1,7 @@
 package com.commerceApp.commerceApp.models.product;
 
 
-
+import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.util.HashMapConverter;
 import com.commerceApp.commerceApp.models.order.OrderProduct;
 
@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 
 
-public class ProductVariation  {
+public class ProductVariation extends AuditInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,20 +21,23 @@ public class ProductVariation  {
 
     private Integer quantityAvailable;
     private Double price;
-   // private String primaryImageName;
+    // private String primaryImageName;
 
-    @Convert(converter = HashMapConverter.class)
-    private Map<String, Object> productAttributes;
+      @Convert(converter = HashMapConverter.class)
+     private Map<String, String> productAttributes;
+
 
     private boolean isDeleted = false;
     private boolean isActive = true;
 
-    public ProductVariation(){}
+    public ProductVariation() {
+    }
 
-    public ProductVariation(Long id, Integer quantityAvailable, Double price, Map<String, Object> productAttributes) {
-        this.id = id;
-        this.quantityAvailable = quantityAvailable;
-        this.price = price;
+    public Map<String, String> getProductAttributes() {
+        return productAttributes;
+    }
+
+    public void setProductAttributes(Map<String, String> productAttributes) {
         this.productAttributes = productAttributes;
     }
 
@@ -60,16 +63,6 @@ public class ProductVariation  {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-
-
-    public Map<String, Object> getProductAttributes() {
-        return productAttributes;
-    }
-
-    public void setProductAttributes(Map<String, Object> productAttributes) {
-        this.productAttributes = productAttributes;
     }
 
     public boolean isDeleted() {
@@ -132,9 +125,9 @@ public class ProductVariation  {
                 '}';
     }
 
-    public void addOrderProduct(OrderProduct orderProduct){
-        if(orderProduct != null){
-            if(orderedProducts == null)
+    public void addOrderProduct(OrderProduct orderProduct) {
+        if (orderProduct != null) {
+            if (orderedProducts == null)
                 orderedProducts = new LinkedHashSet<>();
             orderedProducts.add(orderProduct);
         }

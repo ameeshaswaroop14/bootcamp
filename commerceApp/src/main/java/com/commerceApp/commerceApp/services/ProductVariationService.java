@@ -1,21 +1,24 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.dtos.productDto.ProductCustomerDto;
-import com.commerceApp.commerceApp.dtos.productDto.ProductSellerDto;
-import com.commerceApp.commerceApp.dtos.productDto.ProductVariationUpdateDto;
+import com.commerceApp.commerceApp.dtos.productDto.*;
+import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.models.product.Product;
-import com.commerceApp.commerceApp.dtos.productDto.ProductvariationSellerDto;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
-import com.commerceApp.commerceApp.repositories.*;
 
+import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryFieldRepository;
+import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryMetadataFieldValueRepo;
+import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.categoryRepos.CustomCategoryMetadataFieldValueRepo;
+import com.commerceApp.commerceApp.repositories.productRepos.ProductRepository;
+import com.commerceApp.commerceApp.repositories.productRepos.ProductVariationRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.util.StringToSetParser;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import com.google.common.collect.Sets;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,19 +46,45 @@ public class ProductVariationService {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    CategoryMetadataFieldValueRepoCustom categoryMetadataFieldValueRepoCustom;
+    CustomCategoryMetadataFieldValueRepo customCategoryMetadataFieldValueRepo;
+    @Autowired
+    SellerRepository sellerRepository;
+    @Autowired
+    CurrentUserService currentUserService;
 
+    public ResponseEntity<BaseDto> saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
 
-    public String validateProductVariation(String email, ProductvariationSellerDto productVariationDto) {
-        Optional<Product> savedProduct = productRepository.findById(productVariationDto.getProductId());
+        BaseDto response;
+        String message = validateNewProductVariation(email, variationDto);
+
+        if (!message.equalsIgnoreCase("success")) {
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        // now we can save the product variation.
+        ProductVariation newVariation = toProductVariation(variationDto);
+        productVariationRepository.save(newVariation);
+
+        message = "success";
+        response = new ResponseDto<>(null, message);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+    }
+
+    public String validateNewProductVariation(String email, ProductvariationSellerDto variationDto) {
+        BaseDto response;
         String message;
 
+        Optional<Product> savedProduct = productRepository.findById(variationDto.getProductId());
         if (!savedProduct.isPresent()) {
-            return "invalid product Id";
+            message = "Parent product does not exist.";
+            return message;
         }
+
         Product parentProduct = savedProduct.get();
         Category category = parentProduct.getCategory();
-        Map<String, String> attributes = productVariationDto.getAttributes();
+        Map<String, String> attributes = variationDto.getAttributes();
+
 
         if (parentProduct.isDeleted()) {
             message = "Parent product does not exist.";
@@ -69,19 +98,22 @@ public class ProductVariationService {
             message = "Parent product does not belong to you.";
             return message;
         }
-        if (productVariationDto.getQuantity() <= 0) {
+        if (variationDto.getQuantity() <= 0) {
             message = "Quantity should be greater than 0.";
             return message;
         }
-        if (productVariationDto.getPrice() <= 0) {
+        if (variationDto.getPrice() <= 0) {
             message = "Price should be greater than 0";
             return message;
         }
-        List<String> receivedFields = new ArrayList<>(attributes.keySet());
+        /*
+
+        // check if all the fields are actually related to the product category.
+       List<String> receivedFields = new ArrayList<>(attributes.keySet());
         List<String> actualFields = new ArrayList<>();
-        categoryMetadataFieldValueRepoCustom.findAllFieldsOfCategoryById(category.getId()).forEach(categoryMetadataField -> actualFields.add(categoryMetadataField.toString()));
-               // .forEach((e) -> {
-                 //   actualFields.add(e,toString());
+        customCategoryMetadataFieldValueRepo.findAllFieldsOfCategoryById(category.getId())
+                .forEach((categoryMetadataField) -> {
+                    actualFields.add(categoryMetadataField[0].toString());
                 //});
 
         if (receivedFields.size() < actualFields.size()) {
@@ -89,16 +121,19 @@ public class ProductVariationService {
             return message;
         }
 
-        /*receivedFields.removeAll(actualFields);
+        receivedFields.removeAll(actualFields);
         if (!receivedFields.isEmpty()) {
             message = "Invalid fields found in the data.";
             return message;
         }
 
-         */
-
+        // check validity of values of fields.
         List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
 
+
+       */
+
+        List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
         for (String receivedField : receivedFieldsCopy) {
 
             CategoryMetadataField field = categoryFieldRepository.findByName(receivedField);
@@ -118,24 +153,8 @@ public class ProductVariationService {
         return "success";
     }
 
-    public ResponseEntity<BaseDto> saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
 
-        BaseDto response;
-        String message = validateProductVariation(email, variationDto);
 
-        if (!message.equalsIgnoreCase("success")) {
-            response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        // now we can save the product variation.
-        ProductVariation newVariation = toProductVariation(variationDto);
-        productVariationRepository.save(newVariation);
-
-        message = "success";
-        response = new ResponseDto<>(message, null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
-    }
 
     public ResponseEntity<BaseDto> getProductVariationByIdForSeller(String email, Long id) {
         BaseDto response;
@@ -307,7 +326,11 @@ public class ProductVariationService {
             response = new ErrorDto("Validation failed", message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
-
+        if (!variation.getProduct().isActive()) {
+            message = "Parent product is inactive.";
+            response = new ErrorDto("Validation failed", message);
+            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+        }
         if (!variation.getProduct().getSeller().getEmail().equalsIgnoreCase(email)) {
             message = "Product variation does not belong to you.";
             response = new ErrorDto("Validation failed", message);
@@ -325,25 +348,31 @@ public class ProductVariationService {
             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
 
-        // check if all the fields are actually related to the product category.
+      /*  // check if all the fields are actually related to the product category.
         Map<String, String> attributes = variationDto.getAttributes();
-        if (attributes != null) {
+        if(attributes!=null){
             Category category = variation.getProduct().getCategory();
             List<String> receivedFields = new ArrayList<>(attributes.keySet());
             List<String> actualFields = new ArrayList<>();
-            categoryMetadataFieldValueRepo.findAllFieldsOfCategoryById(category.getId())
-                    .forEach((e) -> {
+           customCategoryMetadataFieldValueRepo .findAllFieldsOfCategoryById(category.getId())
+                    .forEach((e)->{
                         actualFields.add(e[0].toString());
                     });
 
             receivedFields.removeAll(actualFields);
-            if (!receivedFields.isEmpty()) {
+            if(!receivedFields.isEmpty()){
                 message = "Invalid fields found in the data.";
                 response = new ErrorDto("Validation failed", message);
                 return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
             }
 
             // check validity of values of fields.
+
+       */
+        Map<String, String> attributes = variationDto.getAttributes();
+        if (attributes != null) {
+            Category category = variation.getProduct().getCategory();
+            List<String> receivedFields = new ArrayList<>(attributes.keySet());
             List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
 
             for (String receivedField : receivedFieldsCopy) {
@@ -367,6 +396,7 @@ public class ProductVariationService {
         }
         return null;
     }
+
 
     public ResponseEntity<BaseDto> updateProductVariationById(Long id, String email, ProductVariationUpdateDto variationDto) {
         BaseDto response;
@@ -401,7 +431,7 @@ public class ProductVariationService {
         if (variationDto.getAttributes() != null) {
             Map<String, String> newAttributes = variationDto.getAttributes();
             if (!newAttributes.isEmpty()) {
-                Map<String, Object> oldAttributes = variation.getProductAttributes();
+                Map<String, String> oldAttributes = variation.getProductAttributes();
 
                 for (String key : newAttributes.keySet()) {
                     String newValue = newAttributes.get(key);

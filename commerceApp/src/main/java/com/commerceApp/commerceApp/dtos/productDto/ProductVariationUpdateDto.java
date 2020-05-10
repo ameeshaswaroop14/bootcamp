@@ -14,6 +14,7 @@ public class ProductVariationUpdateDto {
     @NotNull
     private Map<String, String> attributes = new LinkedHashMap<>();
 
+
     public Integer getQuantityAvailable() {
         return quantityAvailable;
     }

@@ -1,11 +1,9 @@
 package com.commerceApp.commerceApp.services;
 
-import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldDto;
-import com.commerceApp.commerceApp.repositories.CategoryFieldRepository;
+import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryFieldRepository;
 
-import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;

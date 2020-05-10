@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.repositories;
+package com.commerceApp.commerceApp.repositories.tokenRepos;
 
 import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
 import com.commerceApp.commerceApp.models.User;

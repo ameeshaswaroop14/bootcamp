@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.repositories;
+package com.commerceApp.commerceApp.repositories.userRepos;
 
 import com.commerceApp.commerceApp.models.Customer;
 import org.springframework.data.domain.Pageable;

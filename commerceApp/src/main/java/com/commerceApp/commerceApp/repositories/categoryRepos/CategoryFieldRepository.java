@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.repositories;
+package com.commerceApp.commerceApp.repositories.categoryRepos;
 
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
 import org.springframework.data.domain.Pageable;

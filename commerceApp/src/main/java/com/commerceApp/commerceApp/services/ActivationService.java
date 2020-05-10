@@ -2,7 +2,7 @@ package com.commerceApp.commerceApp.services;
 
 import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.models.tokens.VerificationToken;
-import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;

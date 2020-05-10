@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.repositories;
+package com.commerceApp.commerceApp.repositories.userRepos;
 
 import com.commerceApp.commerceApp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

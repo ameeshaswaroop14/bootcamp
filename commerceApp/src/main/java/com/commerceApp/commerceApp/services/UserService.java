@@ -4,6 +4,7 @@ import com.commerceApp.commerceApp.models.*;
 import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.repositories.*;
+import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

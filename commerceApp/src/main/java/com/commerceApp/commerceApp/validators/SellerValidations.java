@@ -2,7 +2,7 @@ package com.commerceApp.commerceApp.validators;
 
 import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.dtos.registrationDtos.SellerRegistrationDto;
-import com.commerceApp.commerceApp.repositories.SellerRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SellerValidations {

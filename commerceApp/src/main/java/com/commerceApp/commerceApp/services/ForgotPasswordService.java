@@ -3,7 +3,7 @@ package com.commerceApp.commerceApp.services;
 import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
 import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
-import com.commerceApp.commerceApp.repositories.UserRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

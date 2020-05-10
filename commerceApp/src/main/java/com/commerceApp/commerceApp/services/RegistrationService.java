@@ -6,8 +6,8 @@ import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.dtos.registrationDtos.CustomerRegistrationDto;
 import com.commerceApp.commerceApp.dtos.registrationDtos.SellerRegistrationDto;
 import com.commerceApp.commerceApp.exceptions.EmailAlreadyExistsException;
-import com.commerceApp.commerceApp.repositories.CustomerRepository;
-import com.commerceApp.commerceApp.repositories.SellerRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
+import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.repositories.roleRepository;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;

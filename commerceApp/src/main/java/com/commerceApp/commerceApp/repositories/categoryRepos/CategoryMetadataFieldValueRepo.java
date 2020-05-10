@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp.repositories;
+package com.commerceApp.commerceApp.repositories.categoryRepos;
 
 import com.commerceApp.commerceApp.models.category.CategoryMetadataFieldValues;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataFieldValuesId;
@@ -11,11 +11,13 @@ import java.util.List;
 
 @Repository
 public interface CategoryMetadataFieldValueRepo extends CrudRepository<CategoryMetadataFieldValues, CategoryMetadataFieldValuesId> {
-    @Query(value = "select f.name from category_metadata_field f inner join " +
+   @Query(value = "select f.name from category_metadata_field f inner join " +
             "category_metadata_field_values v on " +
             "f.id=v.category_metadata_field_id " +
             "where v.category_id = :c_id", nativeQuery = true)
     List<Object[]> findAllFieldsOfCategoryById(@Param("c_id") Long c_id);
+
+
 
 
     @Query(value = "select v.value from category_metadata_field_values v" +
