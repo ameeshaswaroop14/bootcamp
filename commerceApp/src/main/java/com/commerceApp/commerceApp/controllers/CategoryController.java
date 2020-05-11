@@ -77,7 +77,7 @@ public class CategoryController {
         return categoryService.updateCategory(id, name);
     }
 
-    @ApiOperation(value = "To get all categories for seller", authorizations = { @Authorization(value="Bearer") })
+    @ApiOperation(value = "To get all categories ", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/categories/seller",produces = "application/json")
     public ResponseEntity<BaseDto> getAllCategories() {
         return categoryService.getAllCategoriesForSeller();

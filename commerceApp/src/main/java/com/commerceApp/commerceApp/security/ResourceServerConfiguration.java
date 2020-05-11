@@ -86,7 +86,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/doLogout").hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .antMatchers("categories", "category/{id}").hasAnyRole("ADMIN")
                 .antMatchers("/categories/customer").hasAnyRole("CUSTOMER","ADMIN")
-                .antMatchers("/categories/seller").hasAnyRole("SELLER","ADMIN")
+                .antMatchers("/categories/seller").hasAnyRole("SELLER")
                 .antMatchers("/seller/**").hasAnyRole("SELLER","ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/product/deactivate/{id}").hasAnyRole("ADMIN")

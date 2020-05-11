@@ -41,6 +41,7 @@ public class CustomerService {
     @Autowired
     AddressRepositoryCustom addressRepositoryCustom;
 
+
     public List<AdminCustomerDto> getAllCustomers(String offset, String size, String field) {
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
@@ -108,7 +109,7 @@ public class CustomerService {
         }
         Address savedAddress = addressOptional.get();
         if (savedAddress.getUser().getEmail().equals(email)) {
-            addressRepository.deleteById(id);
+            addressRepositoryCustom.deleteAddressById(id);
             savedAddress.setDeleted(true);
 
 

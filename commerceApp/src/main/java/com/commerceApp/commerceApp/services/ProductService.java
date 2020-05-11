@@ -11,6 +11,7 @@ import com.commerceApp.commerceApp.exceptions.ProductAlreadyExists;
 import com.commerceApp.commerceApp.exceptions.ProductDoesNotExists;
 import com.commerceApp.commerceApp.exceptions.ProductNotActive;
 import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryRepository;
+import com.commerceApp.commerceApp.repositories.productRepos.CustomProductRepo;
 import com.commerceApp.commerceApp.repositories.productRepos.ProductRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
@@ -42,6 +43,8 @@ public class ProductService {
     MailService mailService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    CustomProductRepo customProductRepo;
 
     public String validateNewProduct(String email, ProductSellerDto productDto){
         BaseDto response;
@@ -186,7 +189,7 @@ public class ProductService {
         }
 
 
-        productRepository.deleteById(id);
+        customProductRepo.deleteByProductId(id);
         return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
     public ResponseEntity<ProductCustomerDto> getProductByIdForCustomer(Long id){

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
 
 @Repository
 public class AddressRepositoryCustom {
@@ -28,19 +29,16 @@ public class AddressRepositoryCustom {
         System.out.println("////////////////"+query.getSingleResult());
         return query.getSingleResult();
     }
-
-    public Address deleteAddressById(Long id,String email){
+    @Transactional
+    public void deleteAddressById(Long id){
         CriteriaBuilder criteriaBuilder=entityManager.getCriteriaBuilder();
         CriteriaDelete<Address> criteriaQuery=criteriaBuilder.createCriteriaDelete(Address.class);
         Root root=criteriaQuery.from(Address.class);
         Predicate predicateId = criteriaBuilder.equal(root.get("id"), id);
-        Predicate predicateEmail=criteriaBuilder.equal(root.get("email"),email);
-        Predicate finalPredicate=criteriaBuilder.and(predicateEmail,predicateId);
-        criteriaQuery.where(finalPredicate);
-
-        TypedQuery<Address> query1 = (TypedQuery<Address>) entityManager.createQuery(criteriaQuery);
-        System.out.println("//////////////////////////////////" + query1.getSingleResult());
-        return query1.getSingleResult();
+         entityManager.createQuery(  criteriaQuery.where(predicateId)).executeUpdate();
+       // TypedQuery<Address> query1 = (TypedQuery<Address>) entityManager.createQuery(criteriaQuery).executeUpdate();
+        //System.out.println("//////////////////////////////////" + query1.getSingleResult());
+        //return query1.getSingleResult();
 
 
     }

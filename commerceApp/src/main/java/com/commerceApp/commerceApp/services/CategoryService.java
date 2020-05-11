@@ -402,17 +402,15 @@ public class CategoryService {
 
 
     public void getMinMaxPriceForCategory(Category category, PricePair pair) {
-        // assuming that category already exists
 
-        // if its a leaf category - iterate over the products
         if (category.getSubCategories() == null || category.getSubCategories().isEmpty()) {
 
-            // if category has some products
+
             if (category.getProducts() != null && category.getProducts().isEmpty() == false) {
                 Set<Product> products = category.getProducts();
                 for (Product product : products) {
 
-                    // if product has some variations
+
                     if (product.getVariations() != null && product.getVariations().isEmpty() == false) {
                         Set<ProductVariation> variations = product.getVariations();
 
@@ -431,7 +429,7 @@ public class CategoryService {
                 }
             }
         } else {
-            // now if category is a parent category
+
             Set<Category> subCategories = category.getSubCategories();
             for (Category subCategory : subCategories) {
                 getMinMaxPriceForCategory(subCategory, pair);
