@@ -19,8 +19,8 @@ public interface CategoryRepository extends CrudRepository<Category,Long> {
     List<Category> findAll();
     List<Category> findAll(Pageable pageable);
 
-    @Query(value = "delete from category_metadata_field_values where category_id = :Id", nativeQuery = true)
-    void deleteCategoryById(@Param("Id") Long Id);
+   // @Query(value = "delete from category_metadata_field_values where category_id = :Id", nativeQuery = true)
+    //void deleteCategoryById(@Param("Id") Long Id);
 }
 
 

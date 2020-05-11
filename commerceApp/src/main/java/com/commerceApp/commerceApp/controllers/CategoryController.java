@@ -90,11 +90,15 @@ public class CategoryController {
     }
 
 
-    @ApiOperation(value = "To add metadata fields to category", authorizations = { @Authorization(value="Bearer") })
+    @ApiOperation(value = "To add metadata fields values to category", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/metadata-field-values",produces = "application/json")
     public ResponseEntity<BaseDto> addMetadataFieldValues(@RequestBody CategoryMetadataFieldValuesDto fieldValueDtos) {
         return categoryService.createCategoryMetadataFieldValues(fieldValueDtos);
     }
+    @ApiOperation(value = "To get Filtering Details For Category", authorizations = { @Authorization(value="Bearer") })
+    @GetMapping(value = "/category/filtering-details/{categoryId}",produces = "application/json")
+    public ResponseEntity<BaseDto> getFilteringDetailsForCategory(@PathVariable Long categoryId) {
+        return categoryService.getFilteringDetailsForCategory(categoryId);
 
-
+    }
 }
