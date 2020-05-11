@@ -5,7 +5,7 @@ package com.commerceApp.commerceApp.models;
 import javax.persistence.*;
 @Entity
 
-public class Address {
+public class Address extends AuditInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

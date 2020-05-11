@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "For seller To delete a product by id", authorizations = { @Authorization(value="Bearer") })
-    @DeleteMapping("/seller/product/{id}")
+    @DeleteMapping(value = "/seller/product/{id}",produces = "application/json")
     public ResponseEntity<String> deleteProductById(@PathVariable Long id,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "For seller to get list of products", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/seller/products")
+    @GetMapping(value = "/seller/products",produces = "application/json")
     public ResponseEntity<List> getAllProductsForSeller(@RequestParam(defaultValue = "0") String offset,
                                                         @RequestParam(defaultValue = "10") String size,
                                                         @RequestParam(defaultValue = "id") String sortByField,
@@ -74,7 +74,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "To get all products for admin", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/admin/products")
+    @GetMapping(value = "/admin/products",produces ="application/json" )
     public ResponseEntity<List> listProductsForAdmin(@RequestParam(defaultValue = "0") String offset,
                                                      @RequestParam(defaultValue = "10") String size,
                                                      @RequestParam(defaultValue = "id") String sortByField,
@@ -104,7 +104,7 @@ public class ProductController {
 
 
     @ApiOperation(value = "To create product variation", authorizations = { @Authorization(value="Bearer") })
-    @PostMapping("/seller/product-variations")
+    @PostMapping(value = "/seller/product-variations",produces = "application/json")
     public ResponseEntity<BaseDto> createProductVariation(@RequestBody ProductvariationSellerDto variationDto, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
@@ -112,7 +112,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "To get product variation by id for seller", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/seller/product-variation/{id}")
+    @GetMapping(value = "/seller/product-variation/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> getProductVariationByIdForSeller(@PathVariable Long id, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
@@ -121,7 +121,7 @@ public class ProductController {
 
 
     @ApiOperation(value = "To get all product variations  for seller by id", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/seller/product-variations/{productId}")
+    @GetMapping(value = "/seller/product-variations/{productId}",produces = "application/json")
     public ResponseEntity<BaseDto> getAllProductVariationsByProductIdForSeller(@PathVariable Long productId,
                                                                                @RequestParam(defaultValue = "0") String offset,
                                                                                @RequestParam(defaultValue = "10") String size,
@@ -135,7 +135,7 @@ public class ProductController {
 
 
     @ApiOperation(value = "To update product variation by id", authorizations = { @Authorization(value="Bearer") })
-    @PatchMapping("/seller/product-variation/{variationId}")
+    @PatchMapping(value = "/seller/product-variation/{variationId}",produces = "application/json")
     public ResponseEntity<BaseDto> updateProductVariationById(
             @PathVariable Long variationId,
             @RequestBody ProductVariationUpdateDto variationDto,
@@ -146,7 +146,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "To get similar products by id", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/customer/similar-products/{productId}")
+    @GetMapping(value = "/customer/similar-products/{productId}",produces = "application/json")
     public ResponseEntity<BaseDto> getSimilarProductsByProductIdForCustomer(@PathVariable Long productId,
                                                                             @RequestParam(defaultValue = "0") String offset,
                                                                             @RequestParam(defaultValue = "10") String size,

@@ -24,13 +24,13 @@ public class UserController {
     @Autowired
     UserService userService;
     @ApiOperation("User home")
-    @GetMapping("/user/home")
+    @GetMapping(value = "/user/home",produces = "application/json")
     public ResponseEntity<String> userHome(){
         return new ResponseEntity<>("User Home", HttpStatus.OK);
     }
 
     @ApiOperation("Change password for user")
-    @PutMapping("/change-password")
+    @PutMapping(value = "/change-password",produces = "application/json")
     public ResponseEntity changePassword(@Valid @RequestBody ForgotPassword forgotPassword, HttpServletRequest request){
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();

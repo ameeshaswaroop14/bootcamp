@@ -25,7 +25,7 @@ public class CustomerController {
     UserService userService;
 
     @ApiOperation(value = "To get customer profile", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping(value = "/customer/profile")
+    @GetMapping(value = "/customer/profile",produces = "application/json")
     public CustomerViewProfileDto getProfileDetails(@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();

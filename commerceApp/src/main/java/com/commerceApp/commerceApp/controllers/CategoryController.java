@@ -72,7 +72,7 @@ public class CategoryController {
 
 
     @ApiOperation(value = "To update category by id", authorizations = { @Authorization(value="Bearer") })
-    @PutMapping("/category/{id}")
+    @PutMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> updateCategory(@PathVariable Long id, @RequestParam String name) {
         return categoryService.updateCategory(id, name);
     }

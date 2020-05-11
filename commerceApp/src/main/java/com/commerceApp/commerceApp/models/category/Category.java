@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Table(name = "CATEGORY")
 
-public class Category {
+public class Category extends AuditInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

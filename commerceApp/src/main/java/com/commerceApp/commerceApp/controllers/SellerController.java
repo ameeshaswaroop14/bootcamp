@@ -27,14 +27,14 @@ public class SellerController {
     UserService userService;
 
     @ApiOperation("Seller home")
-    @GetMapping("/seller/home")
+    @GetMapping(value = "/seller/home",produces = "application/json")
     public ResponseEntity getsellerHome() {
         return new ResponseEntity<>("Seller home", HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "To get seller profile", authorizations = { @Authorization(value="Bearer") })
-    @GetMapping("/seller/profile")
+    @GetMapping(value = "/seller/profile",produces = "application/json")
     public SellerViewProfileDto getProfileDetails(@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
@@ -42,7 +42,7 @@ public class SellerController {
     }
 
     @ApiOperation(value = "To update seller profile", authorizations = { @Authorization(value="Bearer") })
-    @PatchMapping("/seller/profile")
+    @PatchMapping(value = "/seller/profile",produces = "application/json")
     public ResponseEntity updateProfileDetails(@RequestBody SellerViewProfileDto profileDto,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
@@ -50,7 +50,7 @@ public class SellerController {
     }
 
     @ApiOperation(value = "To update seller's address", authorizations = { @Authorization(value="Bearer") })
-    @PatchMapping("/seller/addresses/{id}")
+    @PatchMapping(value = "/seller/addresses/{id}",produces = "application/json")
     public ResponseEntity<String> updateAddress(@Valid @RequestBody AddressDto addressDto, @PathVariable Long id,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
