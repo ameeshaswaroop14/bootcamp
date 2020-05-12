@@ -2,6 +2,7 @@ package com.commerceApp.commerceApp.models.order;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 enum FROM_STATUS
 {
@@ -38,7 +39,7 @@ enum TO_STATUS
 
 }@Entity
 @Table(name = "ORDER_STATUS")
-public class OrderStatus  {
+public class OrderStatus implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

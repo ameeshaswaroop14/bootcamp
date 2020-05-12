@@ -3,10 +3,11 @@ package com.commerceApp.commerceApp.models.order;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "ORDER_PRODUCT")
-public class OrderProduct {
+public class OrderProduct implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

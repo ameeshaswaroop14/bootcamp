@@ -4,9 +4,10 @@ import com.commerceApp.commerceApp.models.Customer;
 import com.commerceApp.commerceApp.models.product.Product;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class ProductReview {
+public class ProductReview implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

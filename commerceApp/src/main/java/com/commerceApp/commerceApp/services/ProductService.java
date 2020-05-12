@@ -19,6 +19,7 @@ import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,26 +47,26 @@ public class ProductService {
     @Autowired
     CustomProductRepo customProductRepo;
 
-    public String validateNewProduct(String email, ProductSellerDto productDto){
+    public String validateNewProduct(String email, ProductSellerDto productDto) {
         BaseDto response;
         String message;
 
         Optional<Category> savedCategory = categoryRepository.findById(productDto.getCategoryId());
-        if(!savedCategory.isPresent()){
+        if (!savedCategory.isPresent()) {
             message = "Category does not exist.";
             return message;
         }
         Category category = savedCategory.get();
-        if(!(category.getSubCategories() == null || category.getSubCategories().isEmpty())){
+        if (!(category.getSubCategories() == null || category.getSubCategories().isEmpty())) {
             message = "Category is not a leaf category.";
             return message;
         }
 
         Product savedProduct = productRepository.findByName(productDto.getName());
-        if(savedProduct!=null){
-            if(savedProduct.getCategory().getId().equals(productDto.getCategoryId())){
-                if(savedProduct.getBrand().equalsIgnoreCase(productDto.getBrand())){
-                    if(savedProduct.getSeller().getEmail().equalsIgnoreCase(email)){
+        if (savedProduct != null) {
+            if (savedProduct.getCategory().getId().equals(productDto.getCategoryId())) {
+                if (savedProduct.getBrand().equalsIgnoreCase(productDto.getBrand())) {
+                    if (savedProduct.getSeller().getEmail().equalsIgnoreCase(email)) {
                         message = "Product with similar details already exists.";
                         return message;
                     }
@@ -79,7 +80,7 @@ public class ProductService {
     public ResponseEntity<BaseDto> saveNewProduct(String email, ProductSellerDto productDto) {
         BaseDto response;
         String message = validateNewProduct(email, productDto);
-        if(!message.equalsIgnoreCase("success")){
+        if (!message.equalsIgnoreCase("success")) {
             response = new ErrorDto("Validation failed", message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
@@ -149,6 +150,7 @@ public class ProductService {
         return productSellerDto;
     }
 
+ //   @Cacheable(value = "products", key = "#id", condition = "#id!=null", unless = "#result==null")
     public ResponseEntity<List> getAllProductsForSeller(String offset, String size, String sortByField, String order, Long categoryId, String brand) {
 
         Integer pageNo = Integer.parseInt(offset);
@@ -173,18 +175,19 @@ public class ProductService {
         });
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
+
     public ResponseEntity<String> deleteProductById(Long id, String email) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
-        if(!savedProduct.isPresent()){
+        if (!savedProduct.isPresent()) {
             return new ResponseEntity<>("Product with the given id not found", HttpStatus.NOT_FOUND);
         }
         Product product = savedProduct.get();
-        if(!product.getSeller().getEmail().equalsIgnoreCase(email)){
+        if (!product.getSeller().getEmail().equalsIgnoreCase(email)) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.BAD_REQUEST);
         }
-        if(product.isDeleted()){
+        if (product.isDeleted()) {
             return new ResponseEntity<>("Product does not exist", HttpStatus.NOT_FOUND);
         }
 
@@ -192,46 +195,49 @@ public class ProductService {
         customProductRepo.deleteByProductId(id);
         return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
-    public ResponseEntity<ProductCustomerDto> getProductByIdForCustomer(Long id){
+
+    public ResponseEntity<ProductCustomerDto> getProductByIdForCustomer(Long id) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
-        if(!savedProduct.isPresent()) {
+        if (!savedProduct.isPresent()) {
             throw new ProductDoesNotExists("Product does not exist");
         }
         Product product = savedProduct.get();
 
-        if(product.isDeleted()){
+        if (product.isDeleted()) {
             throw new ProductDoesNotExists("Product does not exist");
 
         }
-        if(!product.isActive()) {
+        if (!product.isActive()) {
             throw new ProductNotActive("Product not active");
         }
         ProductCustomerDto productCustomerDto = toproductCustomerDto(product);
         productCustomerDto.setCategoryDto(toCategoryDto(product.getCategory()));
-        return new ResponseEntity<>(productCustomerDto,HttpStatus.OK);
+        return new ResponseEntity<>(productCustomerDto, HttpStatus.OK);
     }
-    public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(Long id){
+
+    public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(Long id) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
-        if(!savedProduct.isPresent()) {
+        if (!savedProduct.isPresent()) {
             throw new ProductDoesNotExists("Product does not exist");
         }
         Product product = savedProduct.get();
 
-        if(product.isDeleted()){
+        if (product.isDeleted()) {
             throw new ProductDoesNotExists("Product does not exist");
 
         }
-        if(!product.isActive()) {
+        if (!product.isActive()) {
             throw new ProductNotActive("Product not active");
         }
-        ProductAdminDto productAdminDto= toProductAdminDto(product);
+        ProductAdminDto productAdminDto = toProductAdminDto(product);
         productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
-        return new ResponseEntity<>(productAdminDto,HttpStatus.OK);
+        return new ResponseEntity<>(productAdminDto, HttpStatus.OK);
     }
+
     public ResponseEntity<List> getAllProductsForAdmin(Long categoryId, String offset, String size, String sortByField, String order, String brand) {
 
         Integer pageNo = Integer.parseInt(offset);
@@ -256,34 +262,35 @@ public class ProductService {
         });
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
-    public ResponseEntity<BaseDto> validateProductUpdate(Long id, String email, ProductUpdateDto productDto){
+
+    public ResponseEntity<BaseDto> validateProductUpdate(Long id, String email, ProductUpdateDto productDto) {
         BaseDto response;
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
-        if(!savedProduct.isPresent()){
-            message = "Product with id "+id+ " not found";
+        if (!savedProduct.isPresent()) {
+            message = "Product with id " + id + " not found";
             response = new ErrorDto("Validation failed", message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
         }
         Product product = savedProduct.get();
-        if(!product.getSeller().getEmail().equalsIgnoreCase(email)){
+        if (!product.getSeller().getEmail().equalsIgnoreCase(email)) {
             message = "Product with id does not belong to you.";
             response = new ErrorDto("Validation failed", message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
-        if(product.isDeleted()){
+        if (product.isDeleted()) {
             message = "Product does not exist.";
             response = new ErrorDto("Validation failed", message);
             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
         }
 
-        if(productDto.getName() != null){
+        if (productDto.getName() != null) {
             Product duplicateProduct = productRepository.findByName(productDto.getName());
-            if(duplicateProduct!=null){
-                if(duplicateProduct.getCategory().getId().equals(product.getCategory().getId())){
-                    if(duplicateProduct.getBrand().equalsIgnoreCase(product.getBrand())){
-                        if(duplicateProduct.getSeller().getEmail().equalsIgnoreCase(email)){
+            if (duplicateProduct != null) {
+                if (duplicateProduct.getCategory().getId().equals(product.getCategory().getId())) {
+                    if (duplicateProduct.getBrand().equalsIgnoreCase(product.getBrand())) {
+                        if (duplicateProduct.getSeller().getEmail().equalsIgnoreCase(email)) {
                             message = "Product with similar details already exists.";
                             response = new ErrorDto("Validation failed", message);
                             return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
@@ -294,12 +301,13 @@ public class ProductService {
         }
         return null;
     }
+
     public ResponseEntity<BaseDto> updateProductByProductId(Long id, String email, ProductUpdateDto productDto) {
         BaseDto response;
         String message;
 
         ResponseEntity<BaseDto> validationResult = validateProductUpdate(id, email, productDto);
-        if(validationResult != null){
+        if (validationResult != null) {
             return validationResult;
         }
 
@@ -307,26 +315,25 @@ public class ProductService {
         applyProductUpdateDtoToProduct(product, productDto);
         productRepository.save(product);
 
-        response = new ResponseDto<>( "success", null);
+        response = new ResponseDto<>("success", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
     public void applyProductUpdateDtoToProduct(Product product, ProductUpdateDto productDto) {
 
-        if(productDto.getName() != null)
+        if (productDto.getName() != null)
             product.setName(productDto.getName());
 
-        if(productDto.getDescription() != null)
+        if (productDto.getDescription() != null)
             product.setDescription(productDto.getDescription());
 
-        if(productDto.getReturnable() != null)
+        if (productDto.getReturnable() != null)
             product.setReturnable(productDto.getReturnable());
 
-        if(productDto.getCancelleable() != null)
+        if (productDto.getCancelleable() != null)
             product.setCancelleable(productDto.getCancelleable());
 
     }
-
 
 
 }

@@ -3,9 +3,11 @@ package com.commerceApp.commerceApp.models;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 @Entity
 
-public class Address extends AuditInformation {
+public class Address extends AuditInformation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

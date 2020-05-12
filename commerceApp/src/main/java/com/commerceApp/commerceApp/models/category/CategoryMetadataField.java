@@ -5,12 +5,13 @@ import com.commerceApp.commerceApp.models.AuditInformation;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 
-public class CategoryMetadataField extends AuditInformation {
+public class CategoryMetadataField extends AuditInformation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

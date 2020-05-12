@@ -7,12 +7,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "USER_ID")
-public class Seller extends User{
+public class Seller extends User implements Serializable {
 
     private String GST;
     @NotNull

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 @Table(name = "USER")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @ApiModel(description="All details about the user")
-public class User extends AuditInformation {
+public class User extends AuditInformation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

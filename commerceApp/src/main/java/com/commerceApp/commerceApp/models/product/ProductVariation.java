@@ -6,6 +6,7 @@ import com.commerceApp.commerceApp.util.HashMapConverter;
 import com.commerceApp.commerceApp.models.order.OrderProduct;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Entity
 
 
-public class ProductVariation extends AuditInformation {
+public class ProductVariation extends AuditInformation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

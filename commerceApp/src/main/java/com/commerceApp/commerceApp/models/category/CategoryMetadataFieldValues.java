@@ -4,10 +4,11 @@ import com.commerceApp.commerceApp.models.AuditInformation;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 
-public class CategoryMetadataFieldValues extends AuditInformation  {
+public class CategoryMetadataFieldValues extends AuditInformation implements Serializable {
     @EmbeddedId
     private CategoryMetadataFieldValuesId id = new CategoryMetadataFieldValuesId();
 

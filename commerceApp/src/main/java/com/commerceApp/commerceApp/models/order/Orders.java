@@ -3,12 +3,13 @@ package com.commerceApp.commerceApp.models.order;
 import com.commerceApp.commerceApp.models.Customer;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "ORDERS")
-public class Orders {
+public class Orders implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
