@@ -320,7 +320,8 @@ public class CategoryService {
         }
         response = new ResponseDto<>("Success", null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
-    } public ResponseEntity<BaseDto> getFilteringDetailsForCategory(Long categoryId) {
+    }
+    public ResponseEntity<BaseDto> getFilteringDetailsForCategory(Long categoryId) {
         BaseDto response;
 
         Optional<Category> savedCategory = categoryRepository.findById(categoryId);

@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.controllers;
 
+import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValuesDto;
 import com.commerceApp.commerceApp.services.CategoryMetadataFieldService;
 import com.commerceApp.commerceApp.services.CategoryService;
@@ -7,7 +8,10 @@ import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -22,7 +26,7 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-
+    private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
     @ApiOperation(value = "To add metadata fields", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/metadata-fields",produces = "application/json")
     public ResponseEntity<BaseDto> addMetaDataField(@RequestParam String fieldName, WebRequest webRequest) {
@@ -48,10 +52,11 @@ public class CategoryController {
                                                @RequestParam(required = false) Long parentId) {
         return categoryService.createNewCategory(categoryName, parentId);
     }
-
+    @Cacheable(value = "category", key = "#id", condition = "#id!=null", unless = "#result==null")
     @ApiOperation(value = "To get category details by id", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> getCategoryDetails(@PathVariable(name = "id") Long categoryId) {
+        logger.info("*******************************gett",+categoryId);
         return categoryService.getCategory(categoryId);
     }
 

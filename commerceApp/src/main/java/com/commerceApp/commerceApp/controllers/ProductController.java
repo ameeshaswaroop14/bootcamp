@@ -38,6 +38,7 @@ public class ProductController {
         return productService.saveNewProduct(username, productSellerDto);
     }
 
+  //  @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
     @ApiOperation(value = "To get product for seller by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/seller/product/{id}", produces = "application/json")
     public ProductSellerDto getProductForSeller(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
@@ -62,10 +63,9 @@ public class ProductController {
         return productService.deleteProductById(id, email);
     }
 
-    @Cacheable(value = "products", key = "#id", condition = "#id!=null", unless = "#result==null")
     @ApiOperation(value = "For seller to get list of products", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/seller/products", produces = "application/json")
-    public ResponseEntity<List> getAllProductsForSeller(@RequestParam(defaultValue = "0") String offset,
+    public ResponseEntity<BaseDto> getAllProductsForSeller(@RequestParam(defaultValue = "0") String offset,
                                                         @RequestParam(defaultValue = "10") String size,
                                                         @RequestParam(defaultValue = "id") String sortByField,
                                                         @RequestParam(defaultValue = "ascending") String order,

@@ -1,7 +1,9 @@
 package com.commerceApp.commerceApp.repositories.productRepos;
 
 import com.commerceApp.commerceApp.models.product.Product;
-import com.commerceApp.commerceApp.models.product.ProductVariation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -9,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public class CustomProductRepo {
@@ -33,5 +36,19 @@ public class CustomProductRepo {
         Predicate predicate = criteriaBuilder.equal(root.get("id"), id);
         entityManager.createQuery(criteriaDelete.where(predicate)).executeUpdate();
 
+    }/*
+    private RedisTemplate<String,Product> redisTemplate;
+    private HashOperations hashOperations;
+
+    public CustomProductRepo(RedisTemplate<String, Product> redisTemplate, HashOperations hashOperations) {
+        this.redisTemplate = redisTemplate;
+        hashOperations=redisTemplate.opsForHash();
     }
+
+    public List<Product> getAllProducts(Pageable pageable){
+        return hashOperations.entries("Product");
+    }
+
+     */
+
 }

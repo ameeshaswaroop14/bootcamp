@@ -4,6 +4,8 @@ import com.commerceApp.commerceApp.models.product.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -12,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
+     RedisTemplate<String,Object> redisTemp = new RedisTemplate<>();
+      HashOperations hashop = null;
+
     List<Product> findAll();
     List<Product> findAll(Pageable pageable);
 

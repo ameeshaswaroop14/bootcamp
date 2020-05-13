@@ -12,6 +12,7 @@ import com.commerceApp.commerceApp.exceptions.ProductDoesNotExists;
 import com.commerceApp.commerceApp.exceptions.ProductNotActive;
 import com.commerceApp.commerceApp.repositories.categoryRepos.CategoryRepository;
 import com.commerceApp.commerceApp.repositories.productRepos.CustomProductRepo;
+import com.commerceApp.commerceApp.repositories.productRepos.ProductRedisRepo;
 import com.commerceApp.commerceApp.repositories.productRepos.ProductRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
@@ -46,6 +47,8 @@ public class ProductService {
     CategoryService categoryService;
     @Autowired
     CustomProductRepo customProductRepo;
+    @Autowired
+    ProductRedisRepo productRedisRepo;
 
     public String validateNewProduct(String email, ProductSellerDto productDto) {
         BaseDto response;
@@ -150,8 +153,10 @@ public class ProductService {
         return productSellerDto;
     }
 
- //   @Cacheable(value = "products", key = "#id", condition = "#id!=null", unless = "#result==null")
-    public ResponseEntity<List> getAllProductsForSeller(String offset, String size, String sortByField, String order, Long categoryId, String brand) {
+    //cache
+    @Cacheable(value = "productCache", key = "#productId", condition = "#productId!=null", unless = "#result.size()==0")
+    //   @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
+    public ResponseEntity<BaseDto> getAllProductsForSeller(String offset, String size, String sortByField, String order, Long categoryId, String brand) {
 
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
@@ -173,7 +178,8 @@ public class ProductService {
             productSellerDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
             productDtos.add(productSellerDto);
         });
-        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+        BaseDto response=new ResponseDto<>(null,productDtos);
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteProductById(Long id, String email) {
