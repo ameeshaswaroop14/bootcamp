@@ -5,6 +5,7 @@ import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldValues
 import com.commerceApp.commerceApp.services.CategoryMetadataFieldService;
 import com.commerceApp.commerceApp.services.CategoryService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -35,13 +37,13 @@ public class CategoryController {
 
     @ApiOperation(value = "To get all metadata fields", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/metadata-fields",produces = "application/json")
-    public ResponseEntity<List> getAllMetadataFields(@RequestParam(defaultValue = "0") String offset,
+    public ResponseEntity<BaseDto> getAllMetadataFields(@RequestParam(defaultValue = "0") String offset,
                                                      @RequestParam(defaultValue = "10") String size,
                                                      @RequestParam(defaultValue = "id") String sortByField,
                                                      @RequestParam(defaultValue = "ascending") String order,
                                                      @RequestParam(required = false) Long categoryId) {
-
-        return categoryMetadataFieldService.getAllMetadataFields(offset, size, sortByField, order, categoryId);
+        BaseDto response=new ResponseDto<>(null,categoryMetadataFieldService.getAllMetadataFields(offset, size, sortByField, order, categoryId));
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
 
     }
@@ -52,7 +54,7 @@ public class CategoryController {
                                                @RequestParam(required = false) Long parentId) {
         return categoryService.createNewCategory(categoryName, parentId);
     }
-    @Cacheable(value = "category", key = "#id", condition = "#id!=null", unless = "#result==null")
+
     @ApiOperation(value = "To get category details by id", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> getCategoryDetails(@PathVariable(name = "id") Long categoryId) {
@@ -65,8 +67,9 @@ public class CategoryController {
     public ResponseEntity<BaseDto> getAllCategories(@RequestParam(defaultValue = "0") String offset,
                                                     @RequestParam(defaultValue = "10") String size,
                                                     @RequestParam(defaultValue = "id") String sortByField) {
+        BaseDto response=new ResponseDto<>(null,categoryService.getAllCategories(offset, size, sortByField));
+        return new ResponseEntity<>(response,HttpStatus.OK);
 
-        return categoryService.getAllCategories(offset, size, sortByField);
     }
 
     @ApiOperation(value = "To delete category by id", authorizations = { @Authorization(value="Bearer") })
@@ -85,13 +88,15 @@ public class CategoryController {
     @ApiOperation(value = "To get all categories ", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/categories/seller",produces = "application/json")
     public ResponseEntity<BaseDto> getAllCategories() {
-        return categoryService.getAllCategoriesForSeller();
+        BaseDto response = new ResponseDto<>(null, categoryService.getAllCategoriesForSeller());
+        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
     @ApiOperation(value = "To get all categories for customer", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/categories/customer",produces = "application/json")
     public ResponseEntity<BaseDto> getAllCategories(@RequestParam(required = false) Long id) {
-        return categoryService.getAllCategoriesForCustomer(id);
+        return new ResponseEntity<>(categoryService.getAllCategoriesForCustomer(id),HttpStatus.OK);
+
     }
 
 

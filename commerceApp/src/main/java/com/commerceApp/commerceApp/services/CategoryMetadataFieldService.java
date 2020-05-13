@@ -9,6 +9,7 @@ import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,8 +59,8 @@ public class CategoryMetadataFieldService {
         response = new ResponseDto<>(null, null);
         return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
     }
-
-    public ResponseEntity<List> getAllMetadataFields(String offset, String size, String sortByField, String order, Long categoryId) {
+    @Cacheable(value = "allMetadataFieldsCache")
+    public List getAllMetadataFields(String offset, String size, String sortByField, String order, Long categoryId) {
 
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
@@ -74,7 +75,7 @@ public class CategoryMetadataFieldService {
             categoryMetadataFieldDto.setValues(null);
             responseData.add(categoryMetadataFieldDto);
         });
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return responseData;
 
     }
 }

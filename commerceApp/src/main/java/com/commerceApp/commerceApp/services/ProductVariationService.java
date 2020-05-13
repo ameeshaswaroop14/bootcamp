@@ -20,6 +20,7 @@ import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -185,26 +186,26 @@ public class ProductVariationService {
         response = new ResponseDto<ProductvariationSellerDto>(null, variationDto);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
-
-    public ResponseEntity<BaseDto> getAllProductVariationsByProductIdForSeller(String email, Long id, String offset, String size, String sortByField, String order) {
+    @Cacheable(value = "allProductVariationsSellerCache")
+    public BaseDto getAllProductVariationsByProductIdForSeller(String email, Long id, String offset, String size, String sortByField, String order) {
         BaseDto response;
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
         if (!savedProduct.isPresent()) {
             response = new ErrorDto("Validation failed", "Product with id not found");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
         Product product = savedProduct.get();
         if (!product.getSeller().getEmail().equalsIgnoreCase(email)) {
             message = "Product with id  does not belong to you.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
         if (product == null) {
             message = "Product does not exist.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         Integer pageNo = Integer.parseInt(offset);
@@ -224,7 +225,7 @@ public class ProductVariationService {
         });
 
         response = new ResponseDto<>(null, variationDtos);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
     public ProductCustomerDto getProductCustomerViewDto(Product product) {
@@ -263,8 +264,8 @@ public class ProductVariationService {
         return productCustomerViewDtos;
     }
 
-
-    public ResponseEntity<BaseDto> getAllSimilarProductsByProductId(Long id, String offset, String size, String sortByField, String order) {
+    @Cacheable(value = "similarProductCache")
+    public BaseDto getAllSimilarProductsByProductId(Long id, String offset, String size, String sortByField, String order) {
         BaseDto response;
         String message;
 
@@ -272,7 +273,7 @@ public class ProductVariationService {
         if (!savedProduct.isPresent()) {
             message = "Product with id  not found";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
 
         Product product = savedProduct.get();
@@ -280,12 +281,12 @@ public class ProductVariationService {
         if (product.isDeleted()) {
             message = "Product with id " + id + " not found";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
         if (!product.isActive()) {
             message = "Product is inactive.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         Category category = product.getCategory();
@@ -301,11 +302,11 @@ public class ProductVariationService {
         if (similarProducts.isEmpty()) {
             message = "No similar products found.";
             response = new ResponseDto<Set>(message, similarProducts);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+            return response;
         }
 
         response = new ResponseDto<Set>(null, similarProducts);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
     public ResponseEntity<BaseDto> validateProductVariationUpdate(Long id, String email, ProductVariationUpdateDto variationDto) {

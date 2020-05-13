@@ -3,10 +3,12 @@ package com.commerceApp.commerceApp.dtos.productDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductVariationUpdateDto {
+public class ProductVariationUpdateDto implements Serializable {
+    private static final long serialVersionUID=1L;
     private Integer quantityAvailable;
     private Double price;
     private Boolean isActive;

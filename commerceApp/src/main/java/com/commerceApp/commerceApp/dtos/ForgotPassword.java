@@ -4,8 +4,11 @@ import com.commerceApp.commerceApp.validators.PasswordMatches;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-    @PasswordMatches
-    public class ForgotPassword {
+import java.io.Serializable;
+
+@PasswordMatches
+    public class ForgotPassword implements Serializable {
+    private static final long serialVersionUID=1L;
 
         @NotNull
         @NotEmpty

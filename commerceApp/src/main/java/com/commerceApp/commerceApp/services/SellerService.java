@@ -4,8 +4,11 @@ import com.commerceApp.commerceApp.dtos.profileDtos.SellerViewProfileDto;
 import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.dtos.*;
 import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,8 +30,8 @@ public class SellerService {
        ModelMapper modelMapper;
        @Autowired
        MailService mailService;
-
-    public List<AdminSellerDto> getAllSeller(String offset,String size,String field){
+    @Cacheable(value = "allSellersCache")
+    public BaseDto getAllSeller(String offset, String size, String field){
 
         Integer pageNo=Integer.parseInt(offset);
         Integer pageSize=Integer.parseInt(size);
@@ -36,13 +39,15 @@ public class SellerService {
         List<Seller> sellers=sellerRepository.findAll(pageable);
         List<AdminSellerDto> adminSellerDtos=new ArrayList<>();
         sellers.forEach((seller -> adminSellerDtos.add(toadminSellerDto(seller))));
-        return adminSellerDtos;
+        BaseDto response=new ResponseDto<>(null,adminSellerDtos);
+        return response;
 
     }
-    public AdminSellerDto getSellerByEmail(String email){
+    public BaseDto getSellerByEmail(String email){
         Seller seller=sellerRepository.findByEmail(email);
         AdminSellerDto adminSellerDto=toadminSellerDto(seller);
-        return adminSellerDto;
+        BaseDto response=new ResponseDto<>(null,adminSellerDto);
+        return response;
     }
 
 

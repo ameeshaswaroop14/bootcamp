@@ -1,8 +1,10 @@
 package com.commerceApp.commerceApp.dtos.categoryDtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CategoryMetadataFieldValuesDto {
+public class CategoryMetadataFieldValuesDto implements Serializable {
+    private static final long serialVersionUID=1L;
     private Long categoryId;
     private List<CategoryMetadataFieldDto> fieldValues;
 

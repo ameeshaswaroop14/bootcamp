@@ -1,16 +1,19 @@
 package com.commerceApp.commerceApp.dtos.categoryDtos;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public class CategoryFilteringDetailsDto {
+public class CategoryFilteringDetailsDto implements Serializable {
+    private static final long serialVersionUID=1L;
 
     private Map<String, Set<String>> fieldValues;
     private Set<String> brands;
     private Double minPrice;
     private Double maxPrice;
 
-    public CategoryFilteringDetailsDto(){}
+    public CategoryFilteringDetailsDto() {
+    }
 
     public CategoryFilteringDetailsDto(Map<String, Set<String>> fieldValues, Set<String> brands, Double minPrice, Double maxPrice) {
         this.fieldValues = fieldValues;

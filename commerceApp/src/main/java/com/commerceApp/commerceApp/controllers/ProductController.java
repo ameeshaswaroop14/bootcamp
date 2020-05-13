@@ -5,6 +5,7 @@ import com.commerceApp.commerceApp.dtos.productDto.*;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.ProductVariationService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -38,7 +40,7 @@ public class ProductController {
         return productService.saveNewProduct(username, productSellerDto);
     }
 
-  //  @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
+    //  @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
     @ApiOperation(value = "To get product for seller by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/seller/product/{id}", produces = "application/json")
     public ProductSellerDto getProductForSeller(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
@@ -66,14 +68,15 @@ public class ProductController {
     @ApiOperation(value = "For seller to get list of products", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/seller/products", produces = "application/json")
     public ResponseEntity<BaseDto> getAllProductsForSeller(@RequestParam(defaultValue = "0") String offset,
-                                                        @RequestParam(defaultValue = "10") String size,
-                                                        @RequestParam(defaultValue = "id") String sortByField,
-                                                        @RequestParam(defaultValue = "ascending") String order,
-                                                        @RequestParam(required = false) Long categoryId,
-                                                        @RequestParam(required = false) String brand) {
+                                                           @RequestParam(defaultValue = "10") String size,
+                                                           @RequestParam(defaultValue = "id") String sortByField,
+                                                           @RequestParam(defaultValue = "ascending") String order,
+                                                           @RequestParam(required = false) Long categoryId,
+                                                           @RequestParam(required = false) String brand) {
         logger.info("Getting user with ID {}.", categoryId);
         System.out.println("///////////////////" + categoryId);
-        return productService.getAllProductsForSeller(offset, size, sortByField, order, categoryId, brand);
+        BaseDto response = new ResponseDto<>(null, productService.getAllProductsForSeller(offset, size, sortByField, order, categoryId, brand));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ApiOperation(value = "To get product for admin by id", authorizations = {@Authorization(value = "Bearer")})
@@ -84,13 +87,14 @@ public class ProductController {
 
     @ApiOperation(value = "To get all products for admin", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/admin/products", produces = "application/json")
-    public ResponseEntity<List> listProductsForAdmin(@RequestParam(defaultValue = "0") String offset,
-                                                     @RequestParam(defaultValue = "10") String size,
-                                                     @RequestParam(defaultValue = "id") String sortByField,
-                                                     @RequestParam(defaultValue = "ascending") String order,
-                                                     @RequestParam(required = false) Long categoryId,
-                                                     @RequestParam(required = false) String brand) {
-        return productService.getAllProductsForAdmin(categoryId, offset, size, sortByField, order, brand);
+    public ResponseEntity<BaseDto> listProductsForAdmin(@RequestParam(defaultValue = "0") String offset,
+                                                        @RequestParam(defaultValue = "10") String size,
+                                                        @RequestParam(defaultValue = "id") String sortByField,
+                                                        @RequestParam(defaultValue = "ascending") String order,
+                                                        @RequestParam(required = false) Long categoryId,
+                                                        @RequestParam(required = false) String brand) {
+        BaseDto response = new ResponseDto<>(null, productService.getAllProductsForAdmin(categoryId, offset, size, sortByField, order, brand));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ApiOperation(value = "To activate product by id", authorizations = {@Authorization(value = "Bearer")})
@@ -139,7 +143,8 @@ public class ProductController {
                                                                                HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productVariationService.getAllProductVariationsByProductIdForSeller(email, productId, offset, size, sortByField, order);
+        return new ResponseEntity<>(productVariationService.getAllProductVariationsByProductIdForSeller(email, productId, offset, size, sortByField, order), HttpStatus.OK);
+
     }
 
 
@@ -161,8 +166,9 @@ public class ProductController {
                                                                             @RequestParam(defaultValue = "10") String size,
                                                                             @RequestParam(defaultValue = "id") String sortByField,
                                                                             @RequestParam(defaultValue = "ascending") String order) {
+        return new ResponseEntity<>(productVariationService.getAllSimilarProductsByProductId(productId, offset, size, sortByField, order), HttpStatus.OK);
 
-        return productVariationService.getAllSimilarProductsByProductId(productId, offset, size, sortByField, order);
+
     }
 
 

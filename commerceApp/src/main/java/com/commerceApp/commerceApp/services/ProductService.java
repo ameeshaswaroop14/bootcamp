@@ -154,9 +154,9 @@ public class ProductService {
     }
 
     //cache
-    @Cacheable(value = "productCache", key = "#productId", condition = "#productId!=null", unless = "#result.size()==0")
-    //   @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
-    public ResponseEntity<BaseDto> getAllProductsForSeller(String offset, String size, String sortByField, String order, Long categoryId, String brand) {
+    @Cacheable(value = "productCache")
+
+    public List getAllProductsForSeller(String offset, String size, String sortByField, String order, Long categoryId, String brand) {
 
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
@@ -178,8 +178,7 @@ public class ProductService {
             productSellerDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
             productDtos.add(productSellerDto);
         });
-        BaseDto response=new ResponseDto<>(null,productDtos);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return productDtos;
     }
 
     public ResponseEntity<String> deleteProductById(Long id, String email) {
@@ -243,8 +242,8 @@ public class ProductService {
         productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
         return new ResponseEntity<>(productAdminDto, HttpStatus.OK);
     }
-
-    public ResponseEntity<List> getAllProductsForAdmin(Long categoryId, String offset, String size, String sortByField, String order, String brand) {
+    @Cacheable(value = "productsAdminCache")
+    public List getAllProductsForAdmin(Long categoryId, String offset, String size, String sortByField, String order, String brand) {
 
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
@@ -266,7 +265,7 @@ public class ProductService {
             productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
             productDtos.add(productAdminDto);
         });
-        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+        return productDtos;
     }
 
     public ResponseEntity<BaseDto> validateProductUpdate(Long id, String email, ProductUpdateDto productDto) {

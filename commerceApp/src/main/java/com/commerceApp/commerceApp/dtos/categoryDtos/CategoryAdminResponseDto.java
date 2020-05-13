@@ -1,8 +1,10 @@
 package com.commerceApp.commerceApp.dtos.categoryDtos;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class CategoryAdminResponseDto {
+public class CategoryAdminResponseDto implements Serializable {
+    private static final long serialVersionUID=1L;
 
     CategoryDto category;
     Set<CategoryDto> subCategories;

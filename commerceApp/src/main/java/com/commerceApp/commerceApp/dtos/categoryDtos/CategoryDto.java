@@ -3,8 +3,11 @@ package com.commerceApp.commerceApp.dtos.categoryDtos;
 import com.commerceApp.commerceApp.models.AuditInformation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDto  {
+public class CategoryDto implements Serializable {
+    private static final long serialVersionUID=1L;
 
     private Long id;
     private String name;

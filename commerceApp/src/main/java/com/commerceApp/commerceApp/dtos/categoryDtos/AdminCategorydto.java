@@ -4,9 +4,11 @@ import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryDto;
 import com.commerceApp.commerceApp.dtos.categoryDtos.CategoryMetadataFieldDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
 import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AdminCategorydto {
+public class AdminCategorydto implements Serializable {
+    private static final long serialVersionUID=1L;
     CategoryDto category;
     Set<CategoryDto> subCategories;
     Set<CategoryMetadataFieldDto> fieldValues;

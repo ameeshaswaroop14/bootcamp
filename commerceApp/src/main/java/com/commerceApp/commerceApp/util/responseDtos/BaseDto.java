@@ -1,6 +1,9 @@
 package com.commerceApp.commerceApp.util.responseDtos;
 
-public class BaseDto {
+import java.io.Serializable;
+
+public class BaseDto implements Serializable {
+    public static final long serialVersionUID=1L;
     private String message;
 
     public BaseDto(String message) {

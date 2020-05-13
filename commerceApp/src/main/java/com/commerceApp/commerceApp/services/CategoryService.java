@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -167,8 +168,8 @@ public class CategoryService {
         response = new ResponseDto<>(null, categoryAdminResponseDto);
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
-
-    public ResponseEntity<BaseDto> getAllCategories(String offset, String size, String sortByField) {
+    @Cacheable(value = "categoryCache")
+    public List getAllCategories(String offset, String size, String sortByField) {
         Integer pageNo = Integer.parseInt(offset);
         Integer pageSize = Integer.parseInt(size);
 
@@ -179,12 +180,10 @@ public class CategoryService {
         categories.forEach((category) -> {
             categoryDtos.add(toCategoryAdminResponse(category));
         });
-        BaseDto response;
-        response = new ResponseDto<>(null, categoryDtos);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return categoryDtos;
     }
-
-    public ResponseEntity<BaseDto> getAllCategoriesForSeller() {
+    @Cacheable(value = "sellerCategoryCache")
+    public List getAllCategoriesForSeller() {
         BaseDto response;
         List<Category> categories = categoryRepository.findAll();
         List<CategoryAdminResponseDto> categoryDtos = new ArrayList<>();
@@ -192,9 +191,9 @@ public class CategoryService {
         categories.forEach((category) -> {
             categoryDtos.add(toCategoryAdminResponse(category));
         });
+        return categoryDtos;
 
-        response = new ResponseDto<>(null, categoryDtos);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+
     }
 
     public ResponseEntity<BaseDto> deleteCategoryById(Long id) {
@@ -238,7 +237,7 @@ public class CategoryService {
         return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<BaseDto> getAllCategoriesForCustomer(Long id) {
+    public BaseDto getAllCategoriesForCustomer(Long id) {
         BaseDto response;
         if (id == null) {
             List<Category> rootCategories = categoryRepository.findByParentIdIsNull();
@@ -246,13 +245,14 @@ public class CategoryService {
             rootCategories.forEach((e) -> {
                 categoryDtos.add(toCategoryDtoNonRecursive(e));
             });
-            response = new ResponseDto<>("Success", categoryDtos);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+            response=new ResponseDto<>(null,categoryDtos);
+            return response;
         }
         Optional<Category> savedCategory = categoryRepository.findById(id);
         if (!savedCategory.isPresent()) {
             response = new ErrorDto("Not Found", "Category does not exists");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
+
         }
 
         Category category = savedCategory.get();
@@ -263,7 +263,7 @@ public class CategoryService {
             subCategoryDtos.add(toCategoryDtoNonRecursive(e));
         });
         response = new ResponseDto<>("success", subCategoryDtos);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
     public String validateMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {

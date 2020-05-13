@@ -11,11 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
-public class ProductSellerDto  {
+public class ProductSellerDto implements Serializable {
+    private static final long serialVersionUID=1L;
     private Long id;
 
     @NotNull

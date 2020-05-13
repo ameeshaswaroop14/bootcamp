@@ -1,6 +1,9 @@
 package com.commerceApp.commerceApp.dtos.productDto;
 
-public class ProductUpdateDto {
+import java.io.Serializable;
+
+public class ProductUpdateDto implements Serializable {
+    private static final long serialVersionUID=1L;
     private String name;
     private String description;
     private Boolean isReturnable = false;
