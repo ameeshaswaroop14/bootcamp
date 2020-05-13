@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -29,21 +30,23 @@ public class RegistrationController {
     @ApiOperation(value = "To register customer", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/register/customer",produces = "application/json")
     public ResponseEntity<BaseDto> registerCustomer(@Valid @RequestBody CustomerRegistrationDto customerRegistrationDto,@ApiIgnore WebRequest webRequest) {
+        return new ResponseEntity<>(registrationService.registerCustomer(customerRegistrationDto, webRequest),HttpStatus.OK);
 
-        return registrationService.registerCustomer(customerRegistrationDto, webRequest);
     }
 
     @ApiOperation(value = "To activate customer by token", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/activate/customer",produces = "application/json")
     public ResponseEntity<BaseDto> activateCustomer(@RequestParam("token") String token,@ApiIgnore WebRequest webRequest) {
-        return activationService.activateUserByToken(token, webRequest);
+        return new ResponseEntity<>(activationService.activateUserByToken(token,webRequest), HttpStatus.OK);
+
     }
 
 
     @ApiOperation(value = "To register seller", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/register/seller",produces = "application/json")
-    public String registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto) {
-        return registrationService.registerSeller(sellerRegistrationDto);
+    public ResponseEntity<BaseDto> registerSeller(@Valid @RequestBody SellerRegistrationDto sellerRegistrationDto) {
+        return new ResponseEntity<>(registrationService.registerSeller(sellerRegistrationDto),HttpStatus.OK);
+
     }
 
 

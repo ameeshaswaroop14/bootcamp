@@ -10,6 +10,7 @@ import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.SellerRepository;
 import com.commerceApp.commerceApp.repositories.roleRepository;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import com.commerceApp.commerceApp.validators.SellerValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class RegistrationService {
     @Autowired
     roleRepository repository;
 
-    public ResponseEntity<BaseDto> registerCustomer(CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
+    public BaseDto registerCustomer(CustomerRegistrationDto customerRegistrationDto, WebRequest webRequest) {
         Customer customer = customerRepository.findByEmail(customerRegistrationDto.getEmail());
         String message;
 
@@ -72,16 +73,17 @@ public class RegistrationService {
             BaseDto response;
             message = messageSource.getMessage("message.activationtoken", null, locale);
             response = new ResponseDto<>(message, null);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+            return response;
 
         }
     }
     private SellerValidations sellerValidations;
 
-    public String registerSeller(SellerRegistrationDto sellerRegistrationDto){
+    public BaseDto registerSeller(SellerRegistrationDto sellerRegistrationDto){
         String message= sellerValidations.checkIfUnique(sellerRegistrationDto);
         if(!message.equals("unique")){
-            return "Invalid data";
+            BaseDto response =new ErrorDto("Validation failed","Invalid data entered");
+            return response;
         }
         Seller seller=toSeller(sellerRegistrationDto);
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
@@ -90,7 +92,8 @@ public class RegistrationService {
         seller.setRoles(roleSet);
         sellerRepository.save(seller);
         mailService.acknowledgementEmail(seller.getEmail());
-        return  "Account created successfully. It will be activated after verification.";
+        BaseDto response=new ResponseDto<>("Account created successfully. It will be activated after verification.",null);
+        return response;
 
     }
     

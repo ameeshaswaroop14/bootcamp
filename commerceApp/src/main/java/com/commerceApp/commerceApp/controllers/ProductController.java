@@ -37,16 +37,18 @@ public class ProductController {
     public ResponseEntity<BaseDto> createProduct(@RequestBody ProductSellerDto productSellerDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return productService.saveNewProduct(username, productSellerDto);
+        return new ResponseEntity<>(productService.saveNewProduct(username,productSellerDto),HttpStatus.OK);
+
     }
 
     //  @Cacheable(value = "product", key = "#id", condition = "#id!=null", unless = "#result==null")
     @ApiOperation(value = "To get product for seller by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/seller/product/{id}", produces = "application/json")
-    public ProductSellerDto getProductForSeller(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto> getProductForSeller(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productService.getProductByIdForSeller(id, email);
+        return new ResponseEntity<>(productService.getProductByIdForSeller(id,email),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "For seller to update product by id", authorizations = {@Authorization(value = "Bearer")})
@@ -54,15 +56,17 @@ public class ProductController {
     public ResponseEntity<BaseDto> updateProductById(@PathVariable Long productId, @RequestBody ProductUpdateDto productDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productService.updateProductByProductId(productId, email, productDto);
+        return new ResponseEntity<>(productService.updateProductByProductId(productId,email,productDto),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "For seller To delete a product by id", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping(value = "/seller/product/{id}", produces = "application/json")
-    public ResponseEntity<String> deleteProductById(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto> deleteProductById(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productService.deleteProductById(id, email);
+        return new ResponseEntity<>(productService.deleteProductById(id,email),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "For seller to get list of products", authorizations = {@Authorization(value = "Bearer")})
@@ -81,8 +85,9 @@ public class ProductController {
 
     @ApiOperation(value = "To get product for admin by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/admin/product/{productId}")
-    public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(@PathVariable Long productId) {
-        return productService.getProductByIdForAdmin(productId);
+    public ResponseEntity<BaseDto> getProductByIdForAdmin(@PathVariable Long productId) {
+        return new ResponseEntity<>(productService.getProductByIdForAdmin(productId),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get all products for admin", authorizations = {@Authorization(value = "Bearer")})
@@ -99,20 +104,23 @@ public class ProductController {
 
     @ApiOperation(value = "To activate product by id", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping(value = "/product/activate/{id}", produces = "application/json")
-    public ResponseEntity<String> activateProduct(@PathVariable Long id) {
-        return productService.activateProductById(id);
+    public ResponseEntity<BaseDto> activateProduct(@PathVariable Long id) {
+        return new ResponseEntity<>(productService.activateProductById(id),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To deactivate product by id", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping(value = "/product/deactivate/{id}", produces = "application/json")
-    public ResponseEntity<String> deactivateProduct(@PathVariable Long id) {
-        return productService.deactivateproductById(id);
+    public ResponseEntity<BaseDto> deactivateProduct(@PathVariable Long id) {
+        return new ResponseEntity<>(productService.deactivateproductById(id),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get product for customer by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/customer/product/{productId}", produces = "application/json")
-    public ResponseEntity<ProductCustomerDto> getProductForCustomer(@PathVariable Long productId) {
-        return productService.getProductByIdForCustomer(productId);
+    public ResponseEntity<BaseDto> getProductForCustomer(@PathVariable Long productId) {
+        return new ResponseEntity<>(productService.getProductByIdForCustomer(productId),HttpStatus.OK);
+
     }
 
 
@@ -121,7 +129,8 @@ public class ProductController {
     public ResponseEntity<BaseDto> createProductVariation(@RequestBody ProductvariationSellerDto variationDto, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return productVariationService.saveNewProductVariation(username, variationDto);
+        return new ResponseEntity<>(productVariationService.saveNewProductVariation(username,variationDto),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get product variation by id for seller", authorizations = {@Authorization(value = "Bearer")})
@@ -129,7 +138,8 @@ public class ProductController {
     public ResponseEntity<BaseDto> getProductVariationByIdForSeller(@PathVariable Long id, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productVariationService.getProductVariationByIdForSeller(email, id);
+        return new ResponseEntity<>(productVariationService.getProductVariationByIdForSeller(email,id),HttpStatus.OK);
+
     }
 
 
@@ -156,7 +166,8 @@ public class ProductController {
             HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return productVariationService.updateProductVariationById(variationId, email, variationDto);
+        return new ResponseEntity<>(productVariationService.updateProductVariationById(variationId,email,variationDto),HttpStatus.OK);
+        
     }
 
     @ApiOperation(value = "To get similar products by id", authorizations = {@Authorization(value = "Bearer")})

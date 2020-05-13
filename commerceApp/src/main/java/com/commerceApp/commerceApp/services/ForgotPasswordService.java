@@ -4,6 +4,9 @@ import com.commerceApp.commerceApp.models.tokens.ForgotPasswordToken;
 import com.commerceApp.commerceApp.models.User;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,29 +29,29 @@ public class ForgotPasswordService {
     TokenStore tokenStore;
 
 
-    public ResponseEntity <String> initiatePasswordReset(String email, WebRequest request){
+    public BaseDto initiatePasswordReset(String email, WebRequest request){
         String message;
         System.out.println(email);
 
         User user = userRepository.findByEmail(email);
         if(user==null)
-            return new ResponseEntity<>("The given email does not exist",HttpStatus.NOT_FOUND);
+            return new ErrorDto("Not found","Given email does not exist");
 
          if(!user.isActive() || user.isLocked()) {
-            return new ResponseEntity<>("User is either deactivated or locked.", HttpStatus.CONFLICT);
+            return new ErrorDto("Conflict","User is deactivated or locked");
         }
 
         String token =tokenService.createForgotPasswordToken(user);
         mailService.sendForgotPasswordInitiationMail(user, token);
-        return new ResponseEntity<>("An email has been sent to your registered user account", HttpStatus.OK);
+        return new ResponseDto<>("An email has been sent to your email id",null);
     }
 
 
-    public ResponseEntity<String> resetPassword(String token, ForgotPassword password, WebRequest request){
+    public BaseDto resetPassword(String token, ForgotPassword password, WebRequest request){
 
         ForgotPasswordToken forgotPasswordToken = tokenService.getForgotPasswordToken(token);
         if (forgotPasswordToken == null) {
-            return new ResponseEntity<>("Invalid token", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("Invalid token","");
         }
 
         User user = forgotPasswordToken.getUser();
@@ -57,7 +60,7 @@ public class ForgotPasswordService {
 
             String appUrl = request.getContextPath();
             tokenService.deleteForgotToken(token);
-            return new ResponseEntity<>("Token Expired", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("token expired","");
         }
 
         user.setPassword(password.getPassword());
@@ -66,7 +69,7 @@ public class ForgotPasswordService {
 
         logoutUser(user.getEmail(), request);
         mailService.sendPasswordResetConfirmationMail(user.getEmail());
-        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        return new ResponseDto<>("Password Changed",null);
     }
 
     public void logoutUser(String email, WebRequest request){

@@ -80,12 +80,13 @@ public class ProductService {
         return message;
     }
 
-    public ResponseEntity<BaseDto> saveNewProduct(String email, ProductSellerDto productDto) {
+    public BaseDto saveNewProduct(String email, ProductSellerDto productDto) {
         BaseDto response;
         String message = validateNewProduct(email, productDto);
         if (!message.equalsIgnoreCase("success")) {
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
+
         }
 
         Category category = categoryRepository.findById(productDto.getCategoryId()).get();
@@ -99,41 +100,41 @@ public class ProductService {
         mailService.sendProductCreationMail(email, product);
 
         response = new ResponseDto<>(null, "Success");
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+        return response;
     }
 
 
-    public ResponseEntity<String> activateProductById(Long id) {
+    public BaseDto activateProductById(Long id) {
         Optional<Product> savedproduct = productRepository.findById(id);
         if (!savedproduct.isPresent())
-            return new ResponseEntity<>("Product not present", HttpStatus.NOT_FOUND);
+            return new ErrorDto("not found","Product with the given id does not exist");
         Product product = savedproduct.get();
         if (product.isActive())
-            return new ResponseEntity<>("Product already activated", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("","Product already active");
         product.setActive(true);
         String email = product.getSeller().getEmail();
         mailService.sendProductActivationMail(email);
         productRepository.save(product);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseDto<>("activated",null);
 
     }
 
-    public ResponseEntity<String> deactivateproductById(Long id) {
+    public BaseDto deactivateproductById(Long id) {
         Optional<Product> savedProduct = productRepository.findById(id);
         if (!savedProduct.isPresent())
-            return new ResponseEntity<>("Invalid operation", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("Not found","Product does not exist");
         Product product = savedProduct.get();
         if (!product.isActive())
-            return new ResponseEntity<>("Already inactive", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("Bad Request","Product already inactive");
         product.setActive(false);
         String email = product.getSeller().getEmail();
         mailService.sendProductDeactivationMail(email, product);
         productRepository.save(product);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseDto<>("Deactivated",null);
 
     }
 
-    public ProductSellerDto getProductByIdForSeller(Long id, String email) {
+    public BaseDto getProductByIdForSeller(Long id, String email) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
@@ -150,7 +151,8 @@ public class ProductService {
 
         ProductSellerDto productSellerDto = toProductSellerDto(product);
         productSellerDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
-        return productSellerDto;
+        BaseDto response=new ResponseDto<>(null,productSellerDto);
+        return response;
     }
 
     //cache
@@ -181,27 +183,27 @@ public class ProductService {
         return productDtos;
     }
 
-    public ResponseEntity<String> deleteProductById(Long id, String email) {
+    public BaseDto deleteProductById(Long id, String email) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
         if (!savedProduct.isPresent()) {
-            return new ResponseEntity<>("Product with the given id not found", HttpStatus.NOT_FOUND);
+            return new ErrorDto("Not found",null);
         }
         Product product = savedProduct.get();
         if (!product.getSeller().getEmail().equalsIgnoreCase(email)) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.BAD_REQUEST);
+            return new ErrorDto("Unauthorized",null);
         }
         if (product.isDeleted()) {
-            return new ResponseEntity<>("Product does not exist", HttpStatus.NOT_FOUND);
+            return new ErrorDto("product is already deleted",null);
         }
 
 
         customProductRepo.deleteByProductId(id);
-        return new ResponseEntity<>("deleted", HttpStatus.OK);
+        return new ResponseDto<>("Deleted",null);
     }
 
-    public ResponseEntity<ProductCustomerDto> getProductByIdForCustomer(Long id) {
+    public BaseDto getProductByIdForCustomer(Long id) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
@@ -219,10 +221,10 @@ public class ProductService {
         }
         ProductCustomerDto productCustomerDto = toproductCustomerDto(product);
         productCustomerDto.setCategoryDto(toCategoryDto(product.getCategory()));
-        return new ResponseEntity<>(productCustomerDto, HttpStatus.OK);
+        return new ResponseDto<>(null,productCustomerDto);
     }
 
-    public ResponseEntity<ProductAdminDto> getProductByIdForAdmin(Long id) {
+    public BaseDto getProductByIdForAdmin(Long id) {
         String message;
 
         Optional<Product> savedProduct = productRepository.findById(id);
@@ -240,7 +242,7 @@ public class ProductService {
         }
         ProductAdminDto productAdminDto = toProductAdminDto(product);
         productAdminDto.setCategoryDto(EntityDtoMapping.toCategoryDto(product.getCategory()));
-        return new ResponseEntity<>(productAdminDto, HttpStatus.OK);
+        return new ResponseDto<>(null,productAdminDto);
     }
     @Cacheable(value = "productsAdminCache")
     public List getAllProductsForAdmin(Long categoryId, String offset, String size, String sortByField, String order, String brand) {
@@ -307,13 +309,14 @@ public class ProductService {
         return null;
     }
 
-    public ResponseEntity<BaseDto> updateProductByProductId(Long id, String email, ProductUpdateDto productDto) {
+    public BaseDto updateProductByProductId(Long id, String email, ProductUpdateDto productDto) {
         BaseDto response;
         String message;
 
         ResponseEntity<BaseDto> validationResult = validateProductUpdate(id, email, productDto);
         if (validationResult != null) {
-            return validationResult;
+            return new ResponseDto<>(null,validationResult);
+
         }
 
         Product product = productRepository.findById(id).get();
@@ -321,7 +324,7 @@ public class ProductService {
         productRepository.save(product);
 
         response = new ResponseDto<>("success", null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
     public void applyProductUpdateDtoToProduct(Product product, ProductUpdateDto productDto) {

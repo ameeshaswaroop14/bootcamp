@@ -32,7 +32,8 @@ public class CategoryController {
     @ApiOperation(value = "To add metadata fields", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/metadata-fields",produces = "application/json")
     public ResponseEntity<BaseDto> addMetaDataField(@RequestParam String fieldName, WebRequest webRequest) {
-        return categoryMetadataFieldService.addNewMetadataField(fieldName, webRequest);
+        return new ResponseEntity<>(categoryMetadataFieldService.addNewMetadataField(fieldName, webRequest),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get all metadata fields", authorizations = { @Authorization(value="Bearer") })
@@ -52,14 +53,16 @@ public class CategoryController {
     @PostMapping(value = "/categories",produces = "application/json")
     public ResponseEntity<BaseDto> addCategory(@RequestParam String categoryName,
                                                @RequestParam(required = false) Long parentId) {
-        return categoryService.createNewCategory(categoryName, parentId);
+        return new ResponseEntity<>(categoryService.createNewCategory(categoryName, parentId),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get category details by id", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> getCategoryDetails(@PathVariable(name = "id") Long categoryId) {
-        logger.info("*******************************gett",+categoryId);
-        return categoryService.getCategory(categoryId);
+
+        return new ResponseEntity<>(categoryService.getCategory(categoryId),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get all categories", authorizations = { @Authorization(value="Bearer") })
@@ -75,14 +78,16 @@ public class CategoryController {
     @ApiOperation(value = "To delete category by id", authorizations = { @Authorization(value="Bearer") })
     @DeleteMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> deleteCategory(@PathVariable Long id) {
-        return categoryService.deleteCategoryById(id);
+        return new ResponseEntity<>(categoryService.deleteCategoryById(id),HttpStatus.OK);
+
     }
 
 
     @ApiOperation(value = "To update category by id", authorizations = { @Authorization(value="Bearer") })
     @PutMapping(value = "/category/{id}",produces = "application/json")
     public ResponseEntity<BaseDto> updateCategory(@PathVariable Long id, @RequestParam String name) {
-        return categoryService.updateCategory(id, name);
+        return new ResponseEntity<>(categoryService.updateCategory(id, name),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get all categories ", authorizations = { @Authorization(value="Bearer") })
@@ -103,12 +108,14 @@ public class CategoryController {
     @ApiOperation(value = "To add metadata fields values to category", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/metadata-field-values",produces = "application/json")
     public ResponseEntity<BaseDto> addMetadataFieldValues(@RequestBody CategoryMetadataFieldValuesDto fieldValueDtos) {
-        return categoryService.createCategoryMetadataFieldValues(fieldValueDtos);
+        return new ResponseEntity<>(categoryService.createCategoryMetadataFieldValues(fieldValueDtos),HttpStatus.OK);
+
     }
     @ApiOperation(value = "To get Filtering Details For Category", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/category/filtering-details/{categoryId}",produces = "application/json")
     public ResponseEntity<BaseDto> getFilteringDetailsForCategory(@PathVariable Long categoryId) {
-        return categoryService.getFilteringDetailsForCategory(categoryId);
+        return new ResponseEntity<>(categoryService.getFilteringDetailsForCategory(categoryId),HttpStatus.OK);
+
 
     }
 }

@@ -12,6 +12,7 @@ import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import com.commerceApp.commerceApp.util.EntityDtoMapping;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,51 +87,53 @@ public class CustomerService {
 
     }
 
-    public Set getCustomerAddresses(String email) {
+    public BaseDto getCustomerAddresses(String email) {
         Customer customer = customCustomerRepo.findByEmail(email);
         Set<AddressDto> addressDtos = new HashSet<>();
         Set<Address> addresses = customer.getAddresses();
 
         addresses.forEach(
                 (a) -> addressDtos.add(toAddressDto(a))
-        );
-        return addressDtos;
+        ); BaseDto response=new ResponseDto<>(null,addressDtos);
+        return response;
 
     }
 
-    public ResponseEntity<String> addNewAddress(String email, AddressDto addressDto) {
+    public BaseDto addNewAddress(String email, AddressDto addressDto) {
         Customer customer = customCustomerRepo.findByEmail(email);
         Address newAddress =EntityDtoMapping.toAddress(addressDto);
         customer.addAddress(newAddress);
         customerRepository.save(customer);
         String message = "Address added successfully";
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseDto<>(message,null);
     }
 
-    public ResponseEntity<String> deleteAddress(String email, Long id) {
+    public BaseDto deleteAddress(String email, Long id) {
         Optional<Address> addressOptional = addressRepository.findById(id);
         if (!addressOptional.isPresent()) {
-            return new ResponseEntity<>("No address found with the given id", HttpStatus.NOT_FOUND);
+            return new ErrorDto("Not found","No address found with the given id");
+
         }
         Address savedAddress = addressOptional.get();
         if (savedAddress.getUser().getEmail().equals(email)) {
             addressRepositoryCustom.deleteAddressById(id);
             savedAddress.setDeleted(true);
 
+            return new ResponseDto<>("Address deleted",null);
 
-            return new ResponseEntity<>("Address successfully deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Invalid Operation", HttpStatus.BAD_REQUEST);
+        return new ErrorDto("Bad request","Address does not belong to you");
+
     }
 
-    public ResponseEntity<String> updateCustomerAddress(String username, AddressDto addressDto, Long id) {
+    public BaseDto updateCustomerAddress(String username, AddressDto addressDto, Long id) {
         Optional<Address> address = Optional.ofNullable(addressRepositoryCustom.findAdressById(id));
         if (!address.isPresent())
-            return new ResponseEntity<>("Address not found",HttpStatus.NOT_FOUND);
+            return new ErrorDto("Address Not found","");
         Address savedAddress = address.get();
         User user = userRepository.findByEmail(username);
         if (!savedAddress.getUser().getEmail().equals(username))
-            return new ResponseEntity<>("Address not found",HttpStatus.BAD_REQUEST);
+            return new ErrorDto("Invalid operation","Address does not belong to you");
         if (addressDto.getCity() != null)
             savedAddress.setCity(addressDto.getCity());
         if (addressDto.getState() != null)
@@ -144,7 +147,7 @@ public class CustomerService {
         if (addressDto.getAddressLine() != null)
             savedAddress.setLabel(addressDto.getAddressLine());
         addressRepository.save(savedAddress);
-         return new ResponseEntity<>("Success",HttpStatus.OK);
+         return new ResponseDto<>("updated",null);
     }
 
 

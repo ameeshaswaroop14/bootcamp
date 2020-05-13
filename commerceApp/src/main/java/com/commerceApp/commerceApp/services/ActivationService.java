@@ -29,7 +29,7 @@ public class ActivationService {
 
 
     @ApiOperation("Service to activate user by token")
-    public ResponseEntity<BaseDto> activateUserByToken(String token, WebRequest request) {
+    public BaseDto activateUserByToken(String token, WebRequest request) {
         String message;
         String error;
         BaseDto response;
@@ -38,7 +38,7 @@ public class ActivationService {
             error=messageSource.getMessage("message.invalidoperation",null,request.getLocale());
             message=messageSource.getMessage("message.usernotfoundwiththegiventoken",null,request.getLocale());
             response = new ErrorDto(error,message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         // if token is expired
@@ -52,13 +52,13 @@ public class ActivationService {
             tokenService.deleteVerificationToken(token);
             mailService.sendActivationLinkMail(appUrl, user, "Account Activation Link", request.getLocale());
 
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         if (user.isActive()) {
             message = messageSource.getMessage("message.accountactive",null,request.getLocale());
             response = new ResponseDto<>(null, message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+            return response;
         }
 
         user.setActive(true);
@@ -66,7 +66,7 @@ public class ActivationService {
         tokenService.deleteVerificationToken(token);
         message = messageSource.getMessage("message.accountactivated",null,request.getLocale());
         response = new ResponseDto<>(null, message);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
 

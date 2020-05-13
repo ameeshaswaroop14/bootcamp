@@ -87,12 +87,12 @@ public class CategoryService {
         return "valid";
     }
 
-    public ResponseEntity<BaseDto> createNewCategory(String categoryName, Long parentId) {
+    public BaseDto createNewCategory(String categoryName, Long parentId) {
         String message = validateNewCategory(categoryName, parentId);
         BaseDto response;
         if (!message.equals("valid")) {
             response = new ErrorDto("Validation failed", "Try again");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         Category category = new Category(categoryName);
@@ -104,7 +104,7 @@ public class CategoryService {
             Optional<Category> parentCategory = categoryRepository.findById(parentId);
             if (!parentCategory.isPresent()) {
                 response = new ErrorDto("Validation Failed", "Parent Category Id does not exists");
-                return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
+                return response;
             } else {
                 parent = parentCategory.get();
                 category.setParentCategory(parent);
@@ -113,7 +113,7 @@ public class CategoryService {
             }
         }
         response = new ResponseDto<>("Success", null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+        return response;
 
     }
 
@@ -155,18 +155,18 @@ public class CategoryService {
         return categoryAdminResponseDto;
     }
 
-    public ResponseEntity<BaseDto> getCategory(Long categoryId) {
+    public BaseDto getCategory(Long categoryId) {
         BaseDto response;
         Optional<Category> pre = categoryRepository.findById(categoryId);
         if (!pre.isPresent()) {
             response = new ErrorDto("Not found", "Category with the given id does not exist");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
 
         CategoryAdminResponseDto categoryAdminResponseDto = toCategoryAdminResponse(pre.get());
 
         response = new ResponseDto<>(null, categoryAdminResponseDto);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return  response;
     }
     @Cacheable(value = "categoryCache")
     public List getAllCategories(String offset, String size, String sortByField) {
@@ -196,37 +196,38 @@ public class CategoryService {
 
     }
 
-    public ResponseEntity<BaseDto> deleteCategoryById(Long id) {
+    public BaseDto deleteCategoryById(Long id) {
         BaseDto response;
         Optional<Category> savedCategory = categoryRepository.findById(id);
         if (!savedCategory.isPresent()) {
             response = new ErrorDto("Not found", "Category does not exist");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
+
         }
 
         Category category = savedCategory.get();
 
         if (!category.getProducts().isEmpty()) {
             response = new ErrorDto("Validation failed", "This category is associated with other products");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
+            return response;
         }
 
         if (!category.getSubCategories().isEmpty()) {
             response = new ErrorDto("Validation failed", "This category has child categories associated");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
+            return response;
         }
         categoryRepositoryCustom.deleteCategoryById(id);
 
         response = new ResponseDto<>("Successfully deleted", null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
-    public ResponseEntity<BaseDto> updateCategory(Long id, String name) {
+    public BaseDto updateCategory(Long id, String name) {
         BaseDto response;
         Optional<Category> savedCategory = categoryRepository.findById(id);
         if (!savedCategory.isPresent()) {
             response = new ErrorDto("Not found", "Category does not exists");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
 
         Category category = savedCategory.get();
@@ -234,7 +235,7 @@ public class CategoryService {
         categoryRepository.save(category);
 
         response = new ResponseDto<>("Successfully updated", null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
 
     public BaseDto getAllCategoriesForCustomer(Long id) {
@@ -291,7 +292,7 @@ public class CategoryService {
         return message;
     }
 
-    public ResponseEntity<BaseDto> createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {
+    public BaseDto createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {
        /* String message = validateMetadataFieldValues(categoryMetadataFieldValuesDto);
         BaseDto response;
         if (!message.equalsIgnoreCase("success")) {
@@ -319,15 +320,15 @@ public class CategoryService {
 
         }
         response = new ResponseDto<>("Success", null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+        return response;
     }
-    public ResponseEntity<BaseDto> getFilteringDetailsForCategory(Long categoryId) {
+    public BaseDto getFilteringDetailsForCategory(Long categoryId) {
         BaseDto response;
 
         Optional<Category> savedCategory = categoryRepository.findById(categoryId);
         if (!savedCategory.isPresent()) {
             response = new ErrorDto("Not Found", "Category with id " + categoryId + " does not exist.");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
 
         Category category = savedCategory.get();
@@ -352,7 +353,7 @@ public class CategoryService {
         filterDto.setFieldValues(fieldValueMap);
 
         response = new ResponseDto<CategoryFilteringDetailsDto>(null, filterDto);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
 
     }
     public Set<String> getAllBrandsForCategory(Long categoryId) {

@@ -71,7 +71,7 @@ public class SellerService {
     }
 
 
-    public ResponseEntity<String> updateUserProfile(String email, SellerViewProfileDto profileDto) {
+    public BaseDto updateUserProfile(String email, SellerViewProfileDto profileDto) {
         Seller savedSeller = sellerRepository.findByEmail(email);
 
         if(profileDto.getFirstName() != null)
@@ -97,7 +97,7 @@ public class SellerService {
 
         sellerRepository.save(savedSeller);
 
-        return new ResponseEntity("Your profile has been updated", HttpStatus.OK);
+        return new ResponseDto<>("Your profile has been updated", null);
     }
 
 

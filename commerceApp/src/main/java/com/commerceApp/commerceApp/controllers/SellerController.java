@@ -46,7 +46,8 @@ public class SellerController {
     public ResponseEntity updateProfileDetails(@RequestBody SellerViewProfileDto profileDto,@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return sellerService.updateUserProfile(username, profileDto);
+        return new ResponseEntity(sellerService.updateUserProfile(username,profileDto),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To update seller's address", authorizations = { @Authorization(value="Bearer") })

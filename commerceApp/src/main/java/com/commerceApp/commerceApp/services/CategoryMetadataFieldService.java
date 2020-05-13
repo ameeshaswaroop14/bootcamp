@@ -42,22 +42,22 @@ public class CategoryMetadataFieldService {
         return modelMapper.map(field, CategoryMetadataFieldDto.class);
     }
 
-    public ResponseEntity<BaseDto> addNewMetadataField(String fieldName, WebRequest webRequest) {
+    public BaseDto addNewMetadataField(String fieldName, WebRequest webRequest) {
         CategoryMetadataField savedField = categoryFieldRepository.findByName(fieldName);
         BaseDto response;
         if(savedField!=null){
             String error=messageSource.getMessage("message.addnewnetadatafield",null,webRequest.getLocale());
             String message=messageSource.getMessage("message.fieldalreadyexists",null,webRequest.getLocale());
             response = new ErrorDto(error,message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.CONFLICT);
+            return response;
         }
 
         savedField = new CategoryMetadataField();
         savedField.setName(fieldName);
         categoryFieldRepository.save(savedField);
 
-        response = new ResponseDto<>(null, null);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+        response = new ResponseDto<>("Metadata field added", null);
+        return response;
     }
     @Cacheable(value = "allMetadataFieldsCache")
     public List getAllMetadataFields(String offset, String size, String sortByField, String order, Long categoryId) {

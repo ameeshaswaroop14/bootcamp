@@ -53,14 +53,14 @@ public class ProductVariationService {
     @Autowired
     CurrentUserService currentUserService;
 
-    public ResponseEntity<BaseDto> saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
+    public BaseDto saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
 
         BaseDto response;
         String message = validateNewProductVariation(email, variationDto);
 
         if (!message.equalsIgnoreCase("success")) {
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         // now we can save the product variation.
@@ -69,7 +69,7 @@ public class ProductVariationService {
 
         message = "success";
         response = new ResponseDto<>(null, message);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.CREATED);
+        return response;
     }
 
     public String validateNewProductVariation(String email, ProductvariationSellerDto variationDto) {
@@ -157,25 +157,25 @@ public class ProductVariationService {
 
 
 
-    public ResponseEntity<BaseDto> getProductVariationByIdForSeller(String email, Long id) {
+    public BaseDto getProductVariationByIdForSeller(String email, Long id) {
         BaseDto response;
         String message;
 
         Optional<ProductVariation> savedVariation = productVariationRepository.findById(id);
         if (!savedVariation.isPresent()) {
             response = new ErrorDto("Validation failed", "Product variation with id " + id + " not found");
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
         ProductVariation variation = savedVariation.get();
         if (!variation.getProduct().getSeller().getEmail().equalsIgnoreCase(email)) {
             message = "Product variation with id " + id + " does not belong to you.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
         if (variation.isDeleted()) {
             message = "Product Variation does not exist.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         ProductvariationSellerDto variationDto = toProductVariationSellerDto(variation);
@@ -184,7 +184,7 @@ public class ProductVariationService {
         variationDto.setProductDto(productDto);
 
         response = new ResponseDto<ProductvariationSellerDto>(null, variationDto);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
     }
     @Cacheable(value = "allProductVariationsSellerCache")
     public BaseDto getAllProductVariationsByProductIdForSeller(String email, Long id, String offset, String size, String sortByField, String order) {
@@ -309,7 +309,7 @@ public class ProductVariationService {
         return response;
     }
 
-    public ResponseEntity<BaseDto> validateProductVariationUpdate(Long id, String email, ProductVariationUpdateDto variationDto) {
+    public BaseDto validateProductVariationUpdate(Long id, String email, ProductVariationUpdateDto variationDto) {
         BaseDto response;
         String message;
 
@@ -317,7 +317,7 @@ public class ProductVariationService {
         if (!savedVariation.isPresent()) {
             message = "Product variation with id " + id + " not found";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
 
         ProductVariation variation = savedVariation.get();
@@ -325,28 +325,28 @@ public class ProductVariationService {
         if (variation.isDeleted()) {
             message = "Product variation does not exist.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.NOT_FOUND);
+            return response;
         }
         if (!variation.getProduct().isActive()) {
             message = "Parent product is inactive.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
         if (!variation.getProduct().getSeller().getEmail().equalsIgnoreCase(email)) {
             message = "Product variation does not belong to you.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
 
         }
         if (variationDto.getQuantityAvailable() != null && variationDto.getQuantityAvailable() <= 0) {
             message = "Quantity should be greater than 0.";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
         if (variationDto.getPrice() != null && variationDto.getPrice() <= 0) {
             message = "Price should be greater than 0";
             response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
       /*  // check if all the fields are actually related to the product category.
@@ -390,7 +390,7 @@ public class ProductVariationService {
                 if (!Sets.difference(receivedValueSet, actualValueSet).isEmpty()) {
                     message = "Invalid value found for field " + receivedField;
                     response = new ErrorDto("Validation failed", message);
-                    return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
+                    return response;
                 }
             }
 
@@ -399,13 +399,13 @@ public class ProductVariationService {
     }
 
 
-    public ResponseEntity<BaseDto> updateProductVariationById(Long id, String email, ProductVariationUpdateDto variationDto) {
+    public BaseDto updateProductVariationById(Long id, String email, ProductVariationUpdateDto variationDto) {
         BaseDto response;
         String message;
 
-        ResponseEntity<BaseDto> validationResponse = validateProductVariationUpdate(id, email, variationDto);
+        BaseDto validationResponse = validateProductVariationUpdate(id, email, variationDto);
         if (validationResponse != null)
-            return validationResponse;
+            return new ResponseDto<>(null,validationResponse);
 
         ProductVariation variation = productVariationRepository.findById(id).get();
 
@@ -414,7 +414,7 @@ public class ProductVariationService {
 
         message = "success";
         response = new ResponseDto<>(null, message);
-        return new ResponseEntity<BaseDto>(response, HttpStatus.OK);
+        return response;
 
     }
 

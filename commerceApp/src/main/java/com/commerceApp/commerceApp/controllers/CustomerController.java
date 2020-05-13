@@ -4,10 +4,12 @@ import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.UserService;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -35,18 +37,19 @@ public class CustomerController {
     @ApiOperation(value = "To get customer's address", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/customer/addresses",produces = "application/json")
 
-    public Set<AddressDto> getCustomerAddresses(@ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto>getCustomerAddresses(@ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return customerService.getCustomerAddresses(username);
+        return new ResponseEntity<>(customerService.getCustomerAddresses(username),HttpStatus.OK);
     }
 
     @ApiOperation(value = "To add customer's address", authorizations = { @Authorization(value="Bearer") })
     @PostMapping(value = "/customer/addresses",produces = "application/json")
-    public ResponseEntity addNewAddress(@Valid @RequestBody AddressDto addressDto, HttpServletRequest request) {
+    public ResponseEntity<BaseDto> addNewAddress(@Valid @RequestBody AddressDto addressDto, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return customerService.addNewAddress(username, addressDto);
+        return new ResponseEntity<>(customerService.addNewAddress(username,addressDto),HttpStatus.OK);
+
     }
 
 
@@ -60,10 +63,11 @@ public class CustomerController {
 
     @ApiOperation(value = "To delete customer's address", authorizations = { @Authorization(value="Bearer") })
     @DeleteMapping(value = "/customer/addresses/{id}",produces = "application/json")
-    public ResponseEntity<String> deleteAddressById(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto> deleteAddressById(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return customerService.deleteAddress(username, id);
+        return new ResponseEntity<>(customerService.deleteAddress(username,id),HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To update customer's address", authorizations = { @Authorization(value="Bearer") })
