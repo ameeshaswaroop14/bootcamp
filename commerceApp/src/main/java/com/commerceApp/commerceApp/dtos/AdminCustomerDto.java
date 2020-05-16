@@ -1,6 +1,9 @@
 package com.commerceApp.commerceApp.dtos;
 
-public class AdminCustomerDto {
+import java.io.Serializable;
+
+public class AdminCustomerDto implements Serializable {
+    private static final long serialVersionUID=1L;
     private Long id;
     private String firstName;
     private String middleName;
