@@ -2,10 +2,12 @@ package com.commerceApp.commerceApp.models;
 
 
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
+@Audited
 @Entity
 public class UserAttempts
 {

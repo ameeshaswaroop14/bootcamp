@@ -1,6 +1,8 @@
 package com.commerceApp.commerceApp.models.order;
 
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -37,7 +39,9 @@ enum TO_STATUS
 
     REFUND_COMPLETED,
 
-}@Entity
+}
+@Audited
+@Entity
 @Table(name = "ORDER_STATUS")
 public class OrderStatus implements Serializable {
     @Id

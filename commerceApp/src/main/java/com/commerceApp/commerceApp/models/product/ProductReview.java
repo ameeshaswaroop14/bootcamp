@@ -2,10 +2,11 @@ package com.commerceApp.commerceApp.models.product;
 
 import com.commerceApp.commerceApp.models.Customer;
 import com.commerceApp.commerceApp.models.product.Product;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
+@Audited
 @Entity
 public class ProductReview implements Serializable {
 

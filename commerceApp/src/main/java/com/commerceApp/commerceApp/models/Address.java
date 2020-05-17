@@ -2,9 +2,11 @@ package com.commerceApp.commerceApp.models;
 
 
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import java.io.Serializable;
-
+@Audited
 @Entity
 
 public class Address extends AuditInformation implements Serializable {

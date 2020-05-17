@@ -1,12 +1,13 @@
 package com.commerceApp.commerceApp.models.order;
 
 import com.commerceApp.commerceApp.models.Customer;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
+@Audited
 @Entity
 @Table(name = "ORDERS")
 public class Orders implements Serializable {

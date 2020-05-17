@@ -2,6 +2,7 @@ package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.validators.ValidEmail;
 import io.swagger.annotations.ApiModel;
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 @Table(name = "USER")
+@Audited
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @ApiModel(description="All details about the user")

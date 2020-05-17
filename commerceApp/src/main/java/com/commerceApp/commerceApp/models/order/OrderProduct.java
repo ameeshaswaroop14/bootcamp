@@ -1,10 +1,11 @@
 package com.commerceApp.commerceApp.models.order;
 
 import com.commerceApp.commerceApp.models.product.ProductVariation;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
+@Audited
 @Entity
 @Table(name = "ORDER_PRODUCT")
 public class OrderProduct implements Serializable {

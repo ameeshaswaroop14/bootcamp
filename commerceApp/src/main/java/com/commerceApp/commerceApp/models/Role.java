@@ -1,12 +1,13 @@
 package com.commerceApp.commerceApp.models;
 
+import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Audited
 @Entity
 public class Role implements GrantedAuthority {
 

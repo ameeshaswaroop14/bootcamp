@@ -2,6 +2,7 @@ package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.validators.ValidGst;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -10,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
+@Audited
 @Entity
 @PrimaryKeyJoinColumn(name = "USER_ID")
 public class Seller extends User implements Serializable {

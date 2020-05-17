@@ -2,7 +2,11 @@ package com.commerceApp.commerceApp.controllers;
 
 import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
+import com.commerceApp.commerceApp.models.Customer;
+import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
+import com.commerceApp.commerceApp.services.CurrentUserService;
 import com.commerceApp.commerceApp.services.CustomerService;
+import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.UserService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import io.swagger.annotations.Api;
@@ -12,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Set;
 @Api(value = "CustomerController", description = "REST APIs related to customer")
@@ -25,6 +31,13 @@ public class CustomerController {
     CustomerService customerService;
     @Autowired
     UserService userService;
+    @Autowired
+    ImageService imageService;
+    @Autowired
+    CurrentUserService currentUserService;
+    @Autowired
+    CustomerRepository customerRepository;
+
 
     @ApiOperation(value = "To get customer profile", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/customer/profile",produces = "application/json")
@@ -33,6 +46,23 @@ public class CustomerController {
         String username = principal.getName();
         return customerService.getUserProfile(username);
     }
+    @ApiOperation(value = "to upload a pic for currently logged in customer")
+    @PostMapping("/customer/uploadProfilePic")
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws IOException
+    {
+        String username = currentUserService.getUser();
+        Customer customer = customerRepository.findByEmail(username);
+        return imageService.uploadSingleImage(file,customer);
+    }
+    @ApiOperation(value = "to view currently logged in customer's profile image")
+    @GetMapping("/customer/viewProfileImage")
+    public ResponseEntity<Object> viewProfileImage(HttpServletRequest request) throws IOException {
+        String username = currentUserService.getUser();
+        Customer customer = customerRepository.findByEmail(username);
+        String filename = customer.getId().toString()+"_";
+        return imageService.downloadImage(filename,request);
+    }
+
 
     @ApiOperation(value = "To get customer's address", authorizations = { @Authorization(value="Bearer") })
     @GetMapping(value = "/customer/addresses",produces = "application/json")

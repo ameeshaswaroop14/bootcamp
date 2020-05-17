@@ -2,13 +2,14 @@ package com.commerceApp.commerceApp.models.category;
 
 
 import com.commerceApp.commerceApp.models.AuditInformation;
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
+@Audited
 @Entity
 
 public class CategoryMetadataField extends AuditInformation implements Serializable {

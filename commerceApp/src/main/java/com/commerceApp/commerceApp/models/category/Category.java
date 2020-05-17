@@ -3,6 +3,7 @@ package com.commerceApp.commerceApp.models.category;
 
 import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.product.Product;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
+@Audited
 @Entity
 
 @Table(name = "CATEGORY")

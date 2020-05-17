@@ -1,10 +1,11 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.ProductVariation;
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-
+@Audited
 @Entity
 @Table(name = "CART")
 

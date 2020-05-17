@@ -1,13 +1,14 @@
 package com.commerceApp.commerceApp.models;
 
 import com.commerceApp.commerceApp.models.product.ProductReview;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Audited
 @Entity
 @PrimaryKeyJoinColumn(name = "USER_ID")
 public class Customer extends User implements Serializable {

@@ -4,13 +4,14 @@ package com.commerceApp.commerceApp.models.product;
 import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.util.HashMapConverter;
 import com.commerceApp.commerceApp.models.order.OrderProduct;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-
+@Audited
 @Entity
 
 

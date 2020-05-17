@@ -3,6 +3,7 @@ package com.commerceApp.commerceApp.models.product;
 import com.commerceApp.commerceApp.models.AuditInformation;
 import com.commerceApp.commerceApp.models.Seller;
 import com.commerceApp.commerceApp.models.category.Category;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
-
+@Audited
 @Entity
 
 public class Product extends AuditInformation implements Serializable {

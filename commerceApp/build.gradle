@@ -93,6 +93,10 @@ test {
    //mongo
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.2.6.RELEASE'
+    //envers
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-envers
+    compile group: 'org.hibernate', name: 'hibernate-envers', version: '5.4.12.Final'
+
 
 
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'

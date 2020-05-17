@@ -1,8 +1,10 @@
 package com.commerceApp.commerceApp.models.category;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-
+@Audited
 @Embeddable
 public class CategoryMetadataFieldValuesId implements Serializable {
 
