@@ -30,7 +30,7 @@ public class PasswordExpirationScheduler {
                         .toLocalDate();
 
                 if (currentDate.equals(updatedDate.plusDays(10))) {
-                    user.setExpired(true);
+                   // user.setExpired(true);
                     System.out.println(updatedDate);
                     String subject = "Reminder of password expiration";
                     String text = "Hi, \\n As per terms your password has expired";

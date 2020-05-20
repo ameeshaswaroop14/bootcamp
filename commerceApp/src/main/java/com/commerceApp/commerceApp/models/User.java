@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 @Table(name = "USER")
@@ -37,9 +38,15 @@ public class User extends AuditInformation implements Serializable {
     private boolean isExpired = false;
     private boolean isLocked = false;
     private boolean accountNotLocked=true;
+    private Date passwordUpdatedDate;
+    @Column(name = "PasswordUpdationDate")
+    public Date getPasswordUpdatedDate() {
+        return passwordUpdatedDate;
+    }
 
-
-
+    public void setPasswordUpdatedDate(Date passwordUpdatedDate) {
+        this.passwordUpdatedDate = passwordUpdatedDate;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

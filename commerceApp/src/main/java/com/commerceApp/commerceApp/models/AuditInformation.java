@@ -32,15 +32,8 @@ public class AuditInformation {
     @LastModifiedBy
     private String modifiedBy;
 
-    private Date passwordUpdatedDate;
-    @Column(name = "PasswordUpdationDate")
-    public Date getPasswordUpdatedDate() {
-        return passwordUpdatedDate;
-    }
 
-    public void setPasswordUpdatedDate(Date passwordUpdatedDate) {
-        this.passwordUpdatedDate = passwordUpdatedDate;
-    }
+
 
     public ZonedDateTime getCreationTime() {
         return creationTime;
