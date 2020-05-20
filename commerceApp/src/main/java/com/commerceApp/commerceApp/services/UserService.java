@@ -137,6 +137,7 @@ public class UserService {
     public ResponseEntity<String> changePassword(String email, ForgotPassword passwords){
         User user = userRepository.findByEmail(email);
         user.setPassword(passwordEncoder.encode(passwords.getPassword()));
+        user.setPasswordUpdatedDate(new Date());
         userRepository.save(user);
         mailService.sendPasswordResetConfirmationMail(email);
         return new ResponseEntity<>("Password Changed", HttpStatus.OK);

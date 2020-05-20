@@ -4,7 +4,7 @@ import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.profileDtos.CustomerViewProfileDto;
 import com.commerceApp.commerceApp.models.Customer;
 import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
-import com.commerceApp.commerceApp.services.CurrentUserService;
+//import com.commerceApp.commerceApp.services.CurrentUserService;
 import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.UserService;
@@ -33,8 +33,8 @@ public class CustomerController {
     UserService userService;
     @Autowired
     ImageService imageService;
-    @Autowired
-    CurrentUserService currentUserService;
+ //   @Autowired
+   // CurrentUserService currentUserService;
     @Autowired
     CustomerRepository customerRepository;
 
@@ -46,6 +46,7 @@ public class CustomerController {
         String username = principal.getName();
         return customerService.getUserProfile(username);
     }
+    /*
     @ApiOperation(value = "to upload a pic for currently logged in customer")
     @PostMapping("/customer/uploadProfilePic")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws IOException
@@ -62,6 +63,8 @@ public class CustomerController {
         String filename = customer.getId().toString()+"_";
         return imageService.downloadImage(filename,request);
     }
+
+     */
 
 
     @ApiOperation(value = "To get customer's address", authorizations = { @Authorization(value="Bearer") })

@@ -50,8 +50,8 @@ public class ProductVariationService {
     CustomCategoryMetadataFieldValueRepo customCategoryMetadataFieldValueRepo;
     @Autowired
     SellerRepository sellerRepository;
-    @Autowired
-    CurrentUserService currentUserService;
+ //   @Autowired
+   // CurrentUserService currentUserService;
 
     public BaseDto saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
 

@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class CategoryMetadataFieldValues extends AuditInformation implements Serializable {
     @EmbeddedId
     private CategoryMetadataFieldValuesId id = new CategoryMetadataFieldValuesId();
+    private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("categoryId")

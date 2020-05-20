@@ -16,6 +16,7 @@ public class CategoryMetadataField extends AuditInformation implements Serializa
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private static final long serialVersionUID = 1L;
     private String name;
     @OneToMany(mappedBy = "categoryMetadataField", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CategoryMetadataFieldValues> fieldValues;

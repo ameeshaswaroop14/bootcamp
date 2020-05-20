@@ -17,3 +17,4 @@ public class AuditRevisionListener implements RevisionListener {
         audit.setUsername(currentUserService.getUser());
     }
 }
+
