@@ -23,24 +23,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories
 @ComponentScan({"com.commerceApp.commerceApp.repositories"})
-@ComponentScan(basePackages={"com.commerceApp.commerceApp"})
+//@ComponentScan(basePackages={"com.commerceApp.commerceApp"})
 
 public class PersistenceConfig {
 
     @Autowired
     UserRepository userRepository;
 
-   @Bean
+    @Bean
     AuditorAware<String> auditorProvider() {
-      return new AuditorAwareImpl();
+        return new AuditorAwareImpl();
     }
-
 
 
     @Bean
     DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {
         return new AuditingDateTimeProvider(dateTimeService);
     }
+
     @Bean
     DateTimeService currentTimeDateTimeService() {
         return new CurrentTimeDateTimeService();

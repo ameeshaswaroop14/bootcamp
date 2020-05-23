@@ -12,9 +12,12 @@ import com.commerceApp.commerceApp.models.*;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.dtos.*;
 import com.commerceApp.commerceApp.models.product.Product;
+import com.commerceApp.commerceApp.models.product.ProductReview;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
+
+import java.util.Optional;
 
 public class EntityDtoMapping {
 
@@ -114,17 +117,23 @@ public class EntityDtoMapping {
             return null;
         return modelMapper.map(variation, ProductvariationSellerDto.class);
     }
-
-  /*  public static AuditInfoResponseDto toAuditInfoResponseDto(AuditInformation auditInformation){
-        AuditInfoResponseDto auditInfoResponseDto=modelMapper.map(auditInformation,AuditInfoResponseDto.class);
-        return auditInfoResponseDto;
+    public static ReviewDto toReviewDto(ProductReview productReview){
+        return modelMapper.map(productReview,ReviewDto.class);
     }
-    public static AuditInformation toAuditInfoEntity(AuditInfoResponseDto auditInfoResponseDto){
-        AuditInformation auditInformation=modelMapper.map(auditInfoResponseDto,AuditInformation.class);
-        return auditInformation;
+    public static ProductReview toProductReview(ReviewDto reviewDto){
+        return modelMapper.map(reviewDto,ProductReview.class);
+    }
+    public static CartDto toCartDto(Cart cart){
+        return modelMapper.map(cart,CartDto.class);
+    }
+    public static Cart toCart(CartDto cartDto){
+        return modelMapper.map(cartDto,Cart.class);
+    }
+    public static ResponseCartDto toResponseCartDto(Cart cart){
+        return modelMapper.map(cart,ResponseCartDto.class);
     }
 
-   */
+
 
 
 

@@ -17,12 +17,13 @@ import org.slf4j.LoggerFactory;
 @SpringBootApplication
 @EnableAsync
 @EnableCaching
-public class commerceApp {
-    public static final Logger logger = LoggerFactory.getLogger(commerceApp.class);
+public class CommerceApp {
+    public static final Logger logger = LoggerFactory.getLogger(CommerceApp.class);
 
 
-    public static void main(String[] args) {
-        SpringApplication.run(commerceApp.class, args);
+    public static void main(String[] args)
+    {
+        SpringApplication.run(CommerceApp.class, args);
     }
 
 

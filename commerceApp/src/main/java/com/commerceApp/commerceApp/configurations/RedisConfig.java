@@ -1,4 +1,4 @@
-package com.commerceApp.commerceApp;
+package com.commerceApp.commerceApp.configurations;
 
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
