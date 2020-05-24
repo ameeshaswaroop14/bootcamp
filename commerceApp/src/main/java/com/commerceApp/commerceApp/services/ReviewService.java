@@ -79,11 +79,8 @@ public class ReviewService {
 
     }
 
-    public BaseDto getProductReviewByCustomer(Long id, String username) {
-        Optional<Product> savedProduct = productRepository.findById(id);
-        if (!savedProduct.isPresent()) {
-            throw new ProductDoesNotExists("Not found");
-        }
+    public BaseDto getProductReviewByCustomer( String username) {
+
         Customer customer=customerRepository.findByEmail(username);
         List<ProductReview> productReview = customReviewRepository.findByCustomerId(customer.getId());
         if (productReview == null)

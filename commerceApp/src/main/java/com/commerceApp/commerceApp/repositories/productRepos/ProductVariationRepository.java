@@ -11,8 +11,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductVariationRepository extends CrudRepository<ProductVariation,Long> {
-    List<ProductVariation> findAll();
+public interface ProductVariationRepository extends CrudRepository<ProductVariation, Long> {
+   List <ProductVariation> findAll();
     List<ProductVariation> findAll(Pageable pageable);
 
     List<ProductVariation> findByProductId(Long id);
@@ -23,5 +23,5 @@ public interface ProductVariationRepository extends CrudRepository<ProductVariat
     @Query(value = "delete from product_variation where product_id = :p_id", nativeQuery = true)
     void deleteByProductId(@Param("p_id") Long p_id);
 
-    Optional<ProductVariation> findById(Long id);
+
 }

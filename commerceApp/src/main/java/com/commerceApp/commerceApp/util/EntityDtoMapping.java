@@ -17,6 +17,7 @@ import com.commerceApp.commerceApp.models.product.ProductVariation;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 
+import java.util.List;
 import java.util.Optional;
 
 public class EntityDtoMapping {

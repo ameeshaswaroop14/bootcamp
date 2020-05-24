@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface ProductReviewRepository extends CrudRepository<ProductReview, Long> {
     List<ProductReview> findByProductId(Long productId);
+  //  List<ProductReview> findByCustomer(Long customerId);
 
   // @Query(value = "select review from product_review where customer_user_id= : p_id", nativeQuery = true)
     //List<ProductReview> findByCustomerId(@Param("p_id") Long p_id);

@@ -40,10 +40,10 @@ public class ProductReviewController {
 
     @ApiOperation(value = "To get product review By customer id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/product-review-customer/{id}", produces = "application/json")
-    public ResponseEntity<BaseDto> getProductReviewByCustomer(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
+    public ResponseEntity<BaseDto> getProductReviewByCustomer( @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(reviewService.getProductReviewByCustomer(id, email), HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.getProductReviewByCustomer( email), HttpStatus.OK);
 
     }
 

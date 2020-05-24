@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
 @Repository
 public class CustomCartRepository {
@@ -19,7 +20,7 @@ public class CustomCartRepository {
     public CustomCartRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    public Cart findCartByUserId(Long id) {
+    public List<Cart > findCartByUserId(Long id) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Cart> criteriaQuery = criteriaBuilder.createQuery(Cart.class);
         Root root = criteriaQuery.from(Cart.class);
@@ -28,7 +29,7 @@ public class CustomCartRepository {
         criteriaQuery.where(idPredicate);
         TypedQuery<Cart> query = entityManager.createQuery(criteriaQuery);
         System.out.println("////////////////" + query.getSingleResult());
-        return query.getSingleResult();
+        return query.getResultList();
     }
 
 }

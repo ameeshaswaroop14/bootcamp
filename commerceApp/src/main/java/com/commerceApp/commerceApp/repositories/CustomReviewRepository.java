@@ -21,14 +21,12 @@ public class CustomReviewRepository {
     public CustomReviewRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    public List<ProductReview >findByCustomerId(Long customer_user_id) {
+    public List<ProductReview>findByCustomerId(Long customer_user_id) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductReview> criteriaQuery = criteriaBuilder.createQuery(ProductReview.class);
         Root root = criteriaQuery.from(ProductReview.class);
-        Predicate idPredicate = criteriaBuilder.equal(root.get("customer"), customer_user_id);
+        Predicate idPredicate = criteriaBuilder.equal(root.get("author"), customer_user_id);
 
-
-        //TypedQuery<ProductReview> query = entityManager.createQuery(criteriaQuery);
         return entityManager.createQuery(criteriaQuery.where(idPredicate)).getResultList();
     }
 }
