@@ -47,5 +47,13 @@ public class CartController {
         return new ResponseEntity<>(cartService.updateCart(updateCardDto, email), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "To remove from cart", authorizations = {@Authorization(value = "Bearer")})
+    @DeleteMapping(value = "/cart/{id}", produces = "application/json")
+    public ResponseEntity<BaseDto> updateCart(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String email = principal.getName();
+        return new ResponseEntity<>(cartService.removeFromCart(id, email), HttpStatus.OK);
+    }
+
 
 }

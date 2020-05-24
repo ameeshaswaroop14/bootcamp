@@ -1,5 +1,6 @@
 package com.commerceApp.commerceApp.models;
 
+import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,6 +22,15 @@ public class Cart {
     private Integer quantity;
     @Column(name = "IS_WISHLIST_ITEM")
     private Boolean is_wishlist_item;
+    private Boolean isDeleted;
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
 
     @OneToOne
     @JoinColumn(name = "PRODUCT_VARIATION_ID")

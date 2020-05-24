@@ -82,6 +82,16 @@ public class CartService {
 
 
         return new ResponseDto<>("Updated", null);
+    }
+    public BaseDto removeFromCart(Long id,String username){
+        Optional<Cart>cart=cartRepository.findById(id);
+        if(cart==null)
+            return new ErrorDto("Invalid operation","Given card id does not exist");
+
+        Cart savedCart=cart.get();
+        savedCart.setDeleted(true);
+        cartRepository.delete(savedCart);
+        return new ResponseDto<>("Deleted",null);
 
     }
 
