@@ -56,15 +56,14 @@ public class CartService {
 
     public BaseDto viewCart(String username) {
         Customer customer=customerRepository.findByEmail(username);
+      //  List<Cart>carts=cartRepository.findAll();
         List<Cart> carts=  cartRepository.findCartByUserId(customer.getId());
 
-        List<CartDto>cartDtos=new ArrayList<>();
-        carts.forEach(cart -> {
-            CartDto cartDto=toCartDto(cart);
-            cartDtos.add(cartDto);
-        });
+        List<CartDto> cartDtoList = new ArrayList<>();
+        carts.forEach(carts1 -> cartDtoList.add(new CartDto(
+                carts1.getUser().getId(),carts1.getQuantity(),carts1.getProductVariation().getId())));
 
-        return new ResponseDto<>(null,cartDtos);
+        return new ResponseDto<>(null,cartDtoList);
 
     }
 }

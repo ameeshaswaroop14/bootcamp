@@ -7,6 +7,12 @@ public class CartDto {
     private Integer quantity;
     private Long productVarId;
 
+    public CartDto(Long id, Integer quantity, Long productVarId) {
+        this.id = id;
+        this.quantity = quantity;
+        this.productVarId = productVarId;
+    }
+
     public Long getProductVarId() {
         return productVarId;
     }
