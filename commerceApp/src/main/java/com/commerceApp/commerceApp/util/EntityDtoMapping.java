@@ -130,6 +130,9 @@ public class EntityDtoMapping {
     public static Cart toCart(CartDto cartDto){
         return modelMapper.map(cartDto,Cart.class);
     }
+    public static Cart toCart(UpdateCardDto updateCardDto){
+        return modelMapper.map(updateCardDto,Cart.class);
+    }
     public static ResponseCartDto toResponseCartDto(Cart cart){
         return modelMapper.map(cart,ResponseCartDto.class);
     }
