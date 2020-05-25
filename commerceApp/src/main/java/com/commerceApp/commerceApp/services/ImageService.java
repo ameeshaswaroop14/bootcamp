@@ -1,6 +1,7 @@
 package com.commerceApp.commerceApp.services;
 
 import com.commerceApp.commerceApp.models.Customer;
+import com.commerceApp.commerceApp.models.product.ProductVariation;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,15 @@ public class ImageService {
         String fileBasePath = firstPath + "/src/main/resources/users/";
         return getImage(fileBasePath, fileName, request);
     }
+    public ResponseEntity downloadProductVariationImage(String fileName,HttpServletRequest request) throws IOException{
+        String fileBasePath=firstPath+"/src/main/resources/productVariation/";
+        return getImage(fileBasePath,fileName,request);
+    }
+    public ResponseEntity downloadImageOfProductVariation(String fileName, HttpServletRequest request) throws IOException {
+        String fileBasePath = firstPath + "/src/main/resources/productVariation/";
+        return getImage(fileBasePath,fileName,request);
+    }
+
     public ResponseEntity<Object> uploadSingleImage(MultipartFile file, Customer customer) throws IOException {
         File convertfile = new File(firstPath + "/src/main/resources/users/images" + file.getOriginalFilename());
         convertfile.createNewFile();
@@ -46,7 +56,77 @@ public class ImageService {
         changeFileName(customer,ext,path);
         return new ResponseEntity<>("file added", HttpStatus.OK);
     }
-    public void changeFileName(Customer customer, Optional<String> ext, Path path) throws IOException {
+
+
+    public ResponseEntity<Object> uploadSingleImageForProductVariation(MultipartFile file, Long varId) throws IOException {
+        File convertfile = new File(firstPath + "/src/main/resources/productVariation/images" + file.getOriginalFilename());
+        convertfile.createNewFile();
+        String fileBasePath = firstPath + "/src/main/resources/productVariation/";
+        Path path = Paths.get(fileBasePath + convertfile.getName());
+        FileOutputStream fout = new FileOutputStream(convertfile);
+        System.out.println(convertfile.getAbsolutePath());
+        fout.write(file.getBytes());
+        fout.close();
+        Optional<String> ext = getExtensionByStringHandling(convertfile.getName());
+        int count = 0;
+        File dir = new File(fileBasePath);
+        if (ext.isPresent()) {
+            if (dir.isDirectory()) {
+                File[] files = dir.listFiles();
+                for (File file1 : files) {
+                    String value = varId.toString();
+                    if (file1.getName().startsWith(value)) {
+                        count++;
+                        System.out.println(count);
+                    }
+                }
+                String value1 = varId.toString();
+                value1 = value1 + "_" + count;
+                Files.move(path, path.resolveSibling(value1 + "." + ext.get()));
+            }
+        } else {
+            throw new RuntimeException();
+        }
+        return new ResponseEntity<>("file added", HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<Object> uploadMultipleFiles(MultipartFile[] files,ProductVariation productVariation) throws IOException {
+
+        for (MultipartFile multipartFile : files) {
+            File convertfile = new File(firstPath+"/src/main/resources/productVariation/images" + multipartFile.getOriginalFilename());
+            convertfile.createNewFile();
+            String fileBasePath = firstPath + "/src/main/resources/productVariation/";
+            Path path = Paths.get(fileBasePath + convertfile.getName());
+            FileOutputStream fout = new FileOutputStream(convertfile);
+            System.out.println(convertfile.getAbsolutePath());
+            fout.write(multipartFile.getBytes());
+            fout.close();
+            Optional<String> ext = getExtensionByStringHandling(convertfile.getName());
+            int count = 0;
+            File dir = new File(fileBasePath);
+            if (ext.isPresent()) {
+                if (dir.isDirectory()) {
+                    File[] files1 = dir.listFiles();
+                    for (File file1 : files1) {
+                        String value = productVariation.getId().toString();
+                        if (file1.getName().startsWith(value)) {
+                            count++;
+                            System.out.println(count);
+                        }
+                    }
+                    String value1 = productVariation.getId().toString();
+                    value1 = value1 + "_" + count;
+                    Files.move(path, path.resolveSibling(value1 + "." + ext.get()));
+                }
+            } else {
+                throw new RuntimeException();
+            }
+        }
+        return new ResponseEntity<>("file added", HttpStatus.OK);
+    }
+
+    public void changeFileName(Customer customer,Optional<String> ext,Path path) throws IOException {
         String fileBasePath = firstPath + "/src/main/resources/users/";
         File dir = new File(fileBasePath);
         if (ext.isPresent())
@@ -70,6 +150,7 @@ public class ImageService {
         }
 
     }
+
     public ResponseEntity getImage(String fileBasePath, String fileName, HttpServletRequest request
     ) throws IOException {
         File dir = new File(fileBasePath);

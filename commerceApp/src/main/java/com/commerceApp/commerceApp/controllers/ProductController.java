@@ -2,6 +2,10 @@ package com.commerceApp.commerceApp.controllers;
 
 import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.dtos.productDto.*;
+import com.commerceApp.commerceApp.models.Customer;
+import com.commerceApp.commerceApp.models.product.ProductVariation;
+import com.commerceApp.commerceApp.repositories.productRepos.ProductVariationRepository;
+import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.ProductVariationService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
@@ -16,11 +20,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Api(value = "ProductController", description = "REST APIs related to Product")
 @RestController
@@ -30,6 +37,10 @@ public class ProductController {
     ProductService productService;
     @Autowired
     ProductVariationService productVariationService;
+    @Autowired
+    ImageService imageService;
+    @Autowired
+    ProductVariationRepository productVariationRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @ApiOperation(value = "To create product", authorizations = {@Authorization(value = "Bearer")})
@@ -37,7 +48,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> createProduct(@RequestBody ProductSellerDto productSellerDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return new ResponseEntity<>(productService.saveNewProduct(username,productSellerDto),HttpStatus.OK);
+        return new ResponseEntity<>(productService.saveNewProduct(username, productSellerDto), HttpStatus.OK);
 
     }
 
@@ -47,7 +58,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> getProductForSeller(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(productService.getProductByIdForSeller(id,email),HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductByIdForSeller(id, email), HttpStatus.OK);
 
     }
 
@@ -56,7 +67,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> updateProductById(@PathVariable Long productId, @RequestBody ProductUpdateDto productDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(productService.updateProductByProductId(productId,email,productDto),HttpStatus.OK);
+        return new ResponseEntity<>(productService.updateProductByProductId(productId, email, productDto), HttpStatus.OK);
 
     }
 
@@ -65,7 +76,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> deleteProductById(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(productService.deleteProductById(id,email),HttpStatus.OK);
+        return new ResponseEntity<>(productService.deleteProductById(id, email), HttpStatus.OK);
 
     }
 
@@ -86,7 +97,7 @@ public class ProductController {
     @ApiOperation(value = "To get product for admin by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/admin/product/{productId}")
     public ResponseEntity<BaseDto> getProductByIdForAdmin(@PathVariable Long productId) {
-        return new ResponseEntity<>(productService.getProductByIdForAdmin(productId),HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductByIdForAdmin(productId), HttpStatus.OK);
 
     }
 
@@ -105,21 +116,21 @@ public class ProductController {
     @ApiOperation(value = "To activate product by id", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping(value = "/product/activate/{id}", produces = "application/json")
     public ResponseEntity<BaseDto> activateProduct(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.activateProductById(id),HttpStatus.OK);
+        return new ResponseEntity<>(productService.activateProductById(id), HttpStatus.OK);
 
     }
 
     @ApiOperation(value = "To deactivate product by id", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping(value = "/product/deactivate/{id}", produces = "application/json")
     public ResponseEntity<BaseDto> deactivateProduct(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.deactivateproductById(id),HttpStatus.OK);
+        return new ResponseEntity<>(productService.deactivateproductById(id), HttpStatus.OK);
 
     }
 
     @ApiOperation(value = "To get product for customer by id", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/customer/product/{productId}", produces = "application/json")
     public ResponseEntity<BaseDto> getProductForCustomer(@PathVariable Long productId) {
-        return new ResponseEntity<>(productService.getProductByIdForCustomer(productId),HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductByIdForCustomer(productId), HttpStatus.OK);
 
     }
 
@@ -129,7 +140,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> createProductVariation(@RequestBody ProductvariationSellerDto variationDto, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String username = principal.getName();
-        return new ResponseEntity<>(productVariationService.saveNewProductVariation(username,variationDto),HttpStatus.OK);
+        return new ResponseEntity<>(productVariationService.saveNewProductVariation(username, variationDto), HttpStatus.OK);
 
     }
 
@@ -138,7 +149,7 @@ public class ProductController {
     public ResponseEntity<BaseDto> getProductVariationByIdForSeller(@PathVariable Long id, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(productVariationService.getProductVariationByIdForSeller(email,id),HttpStatus.OK);
+        return new ResponseEntity<>(productVariationService.getProductVariationByIdForSeller(email, id), HttpStatus.OK);
 
     }
 
@@ -166,8 +177,8 @@ public class ProductController {
             HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(productVariationService.updateProductVariationById(variationId,email,variationDto),HttpStatus.OK);
-        
+        return new ResponseEntity<>(productVariationService.updateProductVariationById(variationId, email, variationDto), HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "To get similar products by id", authorizations = {@Authorization(value = "Bearer")})
@@ -181,6 +192,22 @@ public class ProductController {
 
 
     }
+
+    @ApiOperation(value = "To upload single image of product variation", authorizations = {@Authorization(value = "Bearer")})
+    @PostMapping("/productVariation/uploadPic")
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
+
+        return imageService.uploadSingleImageForProductVariation(file, varId);
+    }
+    @ApiOperation(value = "To get productVariation pic", authorizations = {@Authorization(value = "Bearer")})
+    @GetMapping("/productVariation/viewVariationPic")
+    public ResponseEntity<Object> viewProfileImage(HttpServletRequest request,@RequestParam("varId")Long varId) throws IOException {
+        String filename = varId.toString()+"_";
+        return imageService.downloadImageOfProductVariation(filename,request);
+    }
+
+
+
 
 
 }
