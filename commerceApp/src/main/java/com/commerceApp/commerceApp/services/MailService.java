@@ -1,7 +1,10 @@
 package com.commerceApp.commerceApp.services;
 
+import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.models.product.Product;
 import com.commerceApp.commerceApp.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,9 +20,10 @@ public class MailService {
     JavaMailSender javaMailSender;
     @Autowired
     TokenService tokenService;
+    private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
 
-    public void sendEmail(String email, String subject,String text){
+    public void sendEmail(String email, String subject, String text) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
         mailMessage.setSubject(subject);
@@ -27,6 +31,7 @@ public class MailService {
 
         javaMailSender.send(mailMessage);
     }
+
     public void sendActivationLinkMail(String appUrl, User user, String subject, Locale locale) {
 
         String token = tokenService.createVerficationToken(user);
@@ -37,22 +42,26 @@ public class MailService {
         String message = "please activate your account \r\n" + confirmationUrl;
         sendEmail(email, subject, message);
     }
-    public void sendForgotPasswordInitiationMail(User user, String token){
+
+    public void sendForgotPasswordInitiationMail(User user, String token) {
 
         String email = user.getEmail();
         String subject = "Password Reset Link";
         String passwordResetUrl = "http://localhost:8080" + "/reset-password?token=" + token;
         String emailMessage = "please click on this link to reset your password";
         String emailBody = emailMessage + "\r\n" + passwordResetUrl;
-        System.out.println(passwordResetUrl);
+        logger.info(passwordResetUrl);
+
 
         sendEmail(email, subject, emailBody);
     }
+
     public void sendPasswordResetConfirmationMail(String email) {
         String subject = "Password Reset Successfully";
         String message = "the password for your account has been reset successfully";
         sendEmail(email, subject, message);
     }
+
     public void sendProductCreationMail(String email, Product product) {
         String subject = "Product created";
         String content = "A product with following details has been created - \n" +
@@ -62,6 +71,7 @@ public class MailService {
                 "description - " + product.getDescription();
         sendEmail(email, subject, content);
     }
+
     public void sendProductActivationMail(String email) {
 
         sendEmail(email, "Product Activation", "Product activation successfully done");
@@ -77,10 +87,10 @@ public class MailService {
         sendEmail(email, subject, content);
     }
 
-    public void acknowledgementEmail(String email){
-        String subject="Registration confirmation";
-        String text="Your account is awaited for confirmation";
-        sendEmail(email,subject,text);
+    public void acknowledgementEmail(String email) {
+        String subject = "Registration confirmation";
+        String text = "Your account is awaited for confirmation";
+        sendEmail(email, subject, text);
     }
 
     public void sendAccountLockingMail(String email) {
@@ -88,7 +98,6 @@ public class MailService {
         String message = "your account has been locked due to multiple unsuccessful login attempts.";
         sendEmail(email, subject, message);
     }
-
 
 
 }

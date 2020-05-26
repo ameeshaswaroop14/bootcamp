@@ -1,7 +1,6 @@
 package com.commerceApp.commerceApp.services;
 
 
-//import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.dtos.categoryDtos.*;
 import com.commerceApp.commerceApp.models.category.Category;
 import com.commerceApp.commerceApp.models.category.CategoryMetadataField;
@@ -280,12 +279,8 @@ public class CategoryService {
             if (!field.isPresent()) {
                 message = "Field does not exist";
                 return message;
-            }/*
-            if (preValues.getValues().isEmpty()) {
-                message = "No field values provided to insert for field id ";
-                return message;
             }
-            */
+
 
         }
         message = "success";
@@ -293,14 +288,6 @@ public class CategoryService {
     }
 
     public BaseDto createCategoryMetadataFieldValues(CategoryMetadataFieldValuesDto categoryMetadataFieldValuesDto) {
-       /* String message = validateMetadataFieldValues(categoryMetadataFieldValuesDto);
-        BaseDto response;
-        if (!message.equalsIgnoreCase("success")) {
-            response = new ErrorDto("Validation failed", message);
-            return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        */
 
 
         BaseDto response;
@@ -375,7 +362,7 @@ public class CategoryService {
     }
     public void getAllFieldValuePairsForCategory(Category category, Map<String, String> fieldValueMap) {
 
-        // assume that the category exists. check before calling the method.
+        // assume that the category exists.
 
         if (category.getSubCategories() != null && !category.getSubCategories().isEmpty()) {
 

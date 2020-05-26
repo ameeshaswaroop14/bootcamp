@@ -1,7 +1,10 @@
 package com.commerceApp.commerceApp.services;
 
+import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.models.Customer;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +32,7 @@ public class ImageService {
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
 
     public ResponseEntity downloadImage(String fileName, HttpServletRequest request) throws IOException {
@@ -112,7 +116,9 @@ public class ImageService {
                         String value = productVariation.getId().toString();
                         if (file1.getName().startsWith(value)) {
                             count++;
-                            System.out.println(count);
+                            logger.info(String.valueOf(count));
+
+
                         }
                     }
                     String value1 = productVariation.getId().toString();
@@ -131,7 +137,8 @@ public class ImageService {
         File dir = new File(fileBasePath);
         if (ext.isPresent())
         {
-            System.out.println(ext.get());
+
+            logger.info(ext.get());
             if (dir.isDirectory()) {
                 File[] files = dir.listFiles();
                 for (File file1 : files) {
