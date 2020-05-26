@@ -196,13 +196,13 @@ public class ProductController {
 
     @ApiOperation(value = "To upload single image of product variation", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/productVariation/uploadPic")
-    public ObjectDto uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
 
         return imageService.uploadSingleImageForProductVariation(file, varId);
     }
     @ApiOperation(value = "To get productVariation pic", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/productVariation/viewVariationPic")
-    public ObjectDto viewProfileImage(HttpServletRequest request, @RequestParam("varId")Long varId) throws IOException {
+    public ResponseEntity<Object> viewProfileImage(HttpServletRequest request,@RequestParam("varId")Long varId) throws IOException {
         String filename = varId.toString()+"_";
         return imageService.downloadImageOfProductVariation(filename,request);
     }

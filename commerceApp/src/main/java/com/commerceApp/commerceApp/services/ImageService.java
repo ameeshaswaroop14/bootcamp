@@ -3,7 +3,9 @@ package com.commerceApp.commerceApp.services;
 import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.models.Customer;
 import com.commerceApp.commerceApp.models.product.ProductVariation;
+import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ObjectDto;
+import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -27,28 +29,27 @@ import java.util.Optional;
 
 @Service
 public class ImageService {
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
     String firstPath = System.getProperty("user.dir");
     public Optional<String> getExtensionByStringHandling(String filename) {
         return Optional.ofNullable(filename)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
-    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
 
 
-    public ObjectDto downloadImage(String fileName, HttpServletRequest request) throws IOException {
+    public ResponseEntity downloadImage(String fileName, HttpServletRequest request) throws IOException {
         String fileBasePath = firstPath + "/src/main/resources/users/";
-        return new ObjectDto("Image",getImage(fileBasePath,fileName,request));
+        return getImage(fileBasePath,fileName,request);
 
     }
 
-    public ObjectDto downloadImageOfProductVariation(String fileName, HttpServletRequest request) throws IOException {
+    public ResponseEntity downloadImageOfProductVariation(String fileName, HttpServletRequest request) throws IOException {
         String fileBasePath = firstPath + "/src/main/resources/productVariation/";
-        return new ObjectDto("Image",getImage(fileBasePath,fileName,request));
-
+        return getImage(fileBasePath,fileName,request);
     }
 
-    public ObjectDto uploadSingleImage(MultipartFile file, Customer customer) throws IOException {
+    public ResponseEntity<Object> uploadSingleImage(MultipartFile file, Customer customer) throws IOException {
         File convertfile = new File(firstPath + "/src/main/resources/users/images" + file.getOriginalFilename());
         convertfile.createNewFile();
         String fileBasePath = firstPath + "/src/main/resources/users/";
@@ -58,18 +59,18 @@ public class ImageService {
         fout.close();
         Optional<String> ext = getExtensionByStringHandling(convertfile.getName());
         changeFileName(customer,ext,path);
-
-        return new ObjectDto("File added",null);
+        return new ResponseEntity<>("file added", HttpStatus.OK);
     }
 
 
-    public ObjectDto uploadSingleImageForProductVariation(MultipartFile file, Long varId) throws IOException {
+    public ResponseEntity<Object> uploadSingleImageForProductVariation(MultipartFile file, Long varId) throws IOException {
         File convertfile = new File(firstPath + "/src/main/resources/productVariation/images" + file.getOriginalFilename());
         convertfile.createNewFile();
         String fileBasePath = firstPath + "/src/main/resources/productVariation/";
         Path path = Paths.get(fileBasePath + convertfile.getName());
         FileOutputStream fout = new FileOutputStream(convertfile);
-        System.out.println(convertfile.getAbsolutePath());
+        logger.info(convertfile.getAbsolutePath());
+
         fout.write(file.getBytes());
         fout.close();
         Optional<String> ext = getExtensionByStringHandling(convertfile.getName());
@@ -93,9 +94,8 @@ public class ImageService {
         } else {
             throw new RuntimeException();
         }
-        return new ObjectDto("File added", null);
+        return new ResponseEntity<>("file added", HttpStatus.OK);
     }
-
 
 
 
@@ -104,8 +104,8 @@ public class ImageService {
         File dir = new File(fileBasePath);
         if (ext.isPresent())
         {
-
             logger.info(ext.get());
+
             if (dir.isDirectory()) {
                 File[] files = dir.listFiles();
                 for (File file1 : files) {
@@ -144,7 +144,8 @@ public class ImageService {
                 }
             }
         }
-        System.out.println(contentType);
+        logger.info(contentType);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
