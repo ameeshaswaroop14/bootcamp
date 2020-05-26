@@ -9,6 +9,7 @@ import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.ProductVariationService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ObjectDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -195,13 +196,13 @@ public class ProductController {
 
     @ApiOperation(value = "To upload single image of product variation", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/productVariation/uploadPic")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
+    public ObjectDto uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
 
         return imageService.uploadSingleImageForProductVariation(file, varId);
     }
     @ApiOperation(value = "To get productVariation pic", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/productVariation/viewVariationPic")
-    public ResponseEntity<Object> viewProfileImage(HttpServletRequest request,@RequestParam("varId")Long varId) throws IOException {
+    public ObjectDto viewProfileImage(HttpServletRequest request, @RequestParam("varId")Long varId) throws IOException {
         String filename = varId.toString()+"_";
         return imageService.downloadImageOfProductVariation(filename,request);
     }

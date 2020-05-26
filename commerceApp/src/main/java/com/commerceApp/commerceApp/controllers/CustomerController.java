@@ -10,6 +10,7 @@ import com.commerceApp.commerceApp.services.CustomerService;
 import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.UserService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
+import com.commerceApp.commerceApp.util.responseDtos.ObjectDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -24,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Set;
 
 @Api(value = "CustomerController", description = "REST APIs related to customer")
 @RestController
@@ -51,16 +51,17 @@ public class CustomerController {
 
     @ApiOperation(value = "To upload customer pic", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/customer/uploadProfilePic")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws IOException
+    public ObjectDto uploadFile(@RequestParam("file") MultipartFile file) throws IOException
     {
         String username = currentUserService.getUser();
         Customer customer = customerRepository.findByEmail(username);
         return imageService.uploadSingleImage(file,customer);
+
     }
 
     @ApiOperation(value = "To get customer pic", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/customer/viewProfileImage")
-    public ResponseEntity<Object> viewProfileImage(HttpServletRequest request) throws IOException {
+    public ObjectDto viewProfileImage(HttpServletRequest request) throws IOException {
         String username = currentUserService.getUser();
         Customer customer = customerRepository.findByEmail(username);
         String filename = customer.getId().toString()+"_";
