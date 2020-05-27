@@ -1,15 +1,11 @@
 package com.commerceApp.commerceApp.controllers;
 
-import com.commerceApp.commerceApp.bootloader.Bootstrap;
 import com.commerceApp.commerceApp.dtos.productDto.*;
-import com.commerceApp.commerceApp.models.Customer;
-import com.commerceApp.commerceApp.models.product.ProductVariation;
 import com.commerceApp.commerceApp.repositories.productRepos.ProductVariationRepository;
 import com.commerceApp.commerceApp.services.ImageService;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.ProductVariationService;
 import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
-import com.commerceApp.commerceApp.util.responseDtos.ObjectDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,9 +13,9 @@ import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -28,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Api(value = "ProductController", description = "REST APIs related to Product")
 @RestController
@@ -43,7 +38,7 @@ public class ProductController {
     @Autowired
     ProductVariationRepository productVariationRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-
+    Model model;
     @ApiOperation(value = "To create product", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping(value = "/seller/products", produces = "application/json")
     public ResponseEntity<BaseDto> createProduct(@RequestBody ProductSellerDto productSellerDto, @ApiIgnore HttpServletRequest request) {
@@ -90,7 +85,7 @@ public class ProductController {
                                                            @RequestParam(required = false) Long categoryId,
                                                            @RequestParam(required = false) String brand) {
         logger.info("Getting user with ID {}.", categoryId);
-        System.out.println("///////////////////" + categoryId);
+
         BaseDto response = new ResponseDto<>(null, productService.getAllProductsForSeller(offset, size, sortByField, order, categoryId, brand));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -101,15 +96,15 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProductByIdForAdmin(productId), HttpStatus.OK);
 
     }
-
     @ApiOperation(value = "To get all products for admin", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/admin/products", produces = "application/json")
-    public ResponseEntity<BaseDto> listProductsForAdmin(@RequestParam(defaultValue = "0") String offset,
+    public ResponseEntity<BaseDto> listProductsForAdmin(@ModelAttribute("products") List< String > products, Model model,@RequestParam(defaultValue = "0") String offset,
                                                         @RequestParam(defaultValue = "10") String size,
                                                         @RequestParam(defaultValue = "id") String sortByField,
                                                         @RequestParam(defaultValue = "ascending") String order,
                                                         @RequestParam(required = false) Long categoryId,
                                                         @RequestParam(required = false) String brand) {
+        model.addAttribute("products",productService.getAllProductsForAdmin(categoryId, offset, size, sortByField, order, brand));
         BaseDto response = new ResponseDto<>(null, productService.getAllProductsForAdmin(categoryId, offset, size, sortByField, order, brand));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -196,7 +191,7 @@ public class ProductController {
 
     @ApiOperation(value = "To upload single image of product variation", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/productVariation/uploadPic")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
+    public BaseDto uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("varId") Long varId) throws IOException {
 
         return imageService.uploadSingleImageForProductVariation(file, varId);
     }

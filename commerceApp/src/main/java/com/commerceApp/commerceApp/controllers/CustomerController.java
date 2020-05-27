@@ -50,7 +50,7 @@ public class CustomerController {
 
     @ApiOperation(value = "To upload customer pic", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping(value = "/customer/uploadProfilePic",produces = "application/json")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) throws IOException
+    public BaseDto uploadFile(@RequestParam("file") MultipartFile file) throws IOException
     {
         String username = currentUserService.getUser();
         Customer customer = customerRepository.findByEmail(username);
@@ -66,9 +66,6 @@ public class CustomerController {
         return  imageService.downloadImage(filename,request);
 
     }
-
-
-
 
     @ApiOperation(value = "To get customer's address", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping(value = "/customer/addresses", produces = "application/json")

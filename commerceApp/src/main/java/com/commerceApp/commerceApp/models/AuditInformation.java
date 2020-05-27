@@ -15,6 +15,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class AuditInformation {
 
+
     @Column(name = "created_date", updatable = false)
     @CreatedDate
     private ZonedDateTime creationTime;

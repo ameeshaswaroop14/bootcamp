@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+</head>
+
+<body>
+
+<h2>List of Users</h2>
+<table>
+    <thead>
+    <tr>
+        <td><b>Id</b></td>
+        <td><b>FirstName</b></td>
+        <td><b>LastName</b></td>
+        <td><b>Email</b></td>
+
+
+    </tr>
+    </thead>
+    <tr th:each="user:${user}">
+        <td th:text="${user.id}">id</td>
+        <td th:text="${user.firstName}">firstName</td>
+        <td th:text="${user.lastName}">lastName</td>
+        <td th:text="${user.email}">email</td>
+
+    </tr>
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>customer</title>
+</head>
+
+<body>
+
+<h2>List of customers</h2>
+<table>
+    <thead>
+    <tr>
+        <td><b>Contact</b></td>
+
+    </tr>
+    </thead>
+    <tr th:each="customer:${customer}">
+        <td th:text="${customer.contact}">contact</td>
+
+    </tr>
+</table>
+
+
+</body>
+</html>

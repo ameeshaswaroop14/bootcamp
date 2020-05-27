@@ -49,7 +49,7 @@ public class ImageService {
         return getImage(fileBasePath,fileName,request);
     }
 
-    public ResponseEntity<Object> uploadSingleImage(MultipartFile file, Customer customer) throws IOException {
+    public BaseDto uploadSingleImage(MultipartFile file, Customer customer) throws IOException {
         File convertfile = new File(firstPath + "/src/main/resources/users/images" + file.getOriginalFilename());
         convertfile.createNewFile();
         String fileBasePath = firstPath + "/src/main/resources/users/";
@@ -59,11 +59,12 @@ public class ImageService {
         fout.close();
         Optional<String> ext = getExtensionByStringHandling(convertfile.getName());
         changeFileName(customer,ext,path);
-        return new ResponseEntity<>("file added", HttpStatus.OK);
+        return new BaseDto("File added");
+       // return new ResponseEntity<>("file added", HttpStatus.OK);
     }
 
 
-    public ResponseEntity<Object> uploadSingleImageForProductVariation(MultipartFile file, Long varId) throws IOException {
+    public BaseDto uploadSingleImageForProductVariation(MultipartFile file, Long varId) throws IOException {
         File convertfile = new File(firstPath + "/src/main/resources/productVariation/images" + file.getOriginalFilename());
         convertfile.createNewFile();
         String fileBasePath = firstPath + "/src/main/resources/productVariation/";
@@ -94,7 +95,8 @@ public class ImageService {
         } else {
             throw new RuntimeException();
         }
-        return new ResponseEntity<>("file added", HttpStatus.OK);
+       // return new ResponseEntity<>("file added", HttpStatus.OK);
+        return new BaseDto("File added");
     }
 
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Access logs</title>
+</head>
+
+<body>
+
+<h2>List of logs</h2>
+<table>
+    <thead>
+    <tr>
+        <td><b>Username</b></td>
+        <td><b>Path</b></td>
+        <td><b>Date</b></td>
+
+    </tr>
+    </thead>
+    <tr th:each="log:${log}">
+        <td th:text="${log.username}">username</td>
+        <td th:text="${log.path}">path</td>
+        <td th:text="${log.date}">date</td>
+
+    </tr>
+</table>
+
+
+</body>
+</html>

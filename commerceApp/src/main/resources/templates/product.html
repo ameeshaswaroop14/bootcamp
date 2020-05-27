@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+</head>
+
+<body>
+
+<h2>List of Products</h2>
+<table>
+    <thead>
+    <tr>
+        <td><b>Id</b></td>
+        <td><b>Name</b></td>
+        <td><b>Description</b></td>
+        <td><b>Brand</b></td>
+
+
+    </tr>
+    </thead>
+    <tr th:each="product:${product}">
+        <td th:text="${product.id}">id</td>
+        <td th:text="${product.name}">name</td>
+        <td th:text="${product.description}">description</td>
+        <td th:text="${product.brand}">brand</td>
+
+    </tr>
+</table>
+
+
+</body>
+</html>

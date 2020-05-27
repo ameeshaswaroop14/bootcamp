@@ -13,57 +13,7 @@ repositories {
 }
 
 dependencies {
-   /* implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'mysql:mysql-connector-java'
-    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
-    //For password validation
-    compile group: 'org.passay', name: 'passay', version: '1.0'
-    compile group: 'com.google.guava', name: 'guava', version: 'r05'
 
-    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.5.RELEASE'
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.0.Final'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
-    // for swagger
-    //
-   compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-
-//	for jackson and swagger
-  //  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0.rc1'
-    //compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.2'
-    //compile 'io.springfox:springfox-swagger-ui:2.4.0'
-    //compile 'io.springfox:springfox-swagger2:2.4.0'
-    //test
-    compile group: 'org.springframework.plugin', name:'spring-plugin-core', version:'1.2.0.RELEASE'
-    //t2
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-   // compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    //for jackson and swagger
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0.rc1'
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.2'
-    compile 'io.springfox:springfox-swagger-ui:2.4.0'
-    compile 'io.springfox:springfox-swagger2:2.4.0'
-
-
-
-//	for patch request purpose.
-    compile group: 'com.github.java-json-tools', name: 'json-patch', version: '1.12'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation 'org.springframework.security:spring-security-test'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-    */
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -106,6 +56,13 @@ test {
 
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    //thymeleaf
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.2.6.RELEASE'
+    compile group: 'org.webjars', name: 'bootstrap', version: '4.0.0-2'
+
+
+
 
 
 

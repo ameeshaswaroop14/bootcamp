@@ -154,6 +154,10 @@ public class UserService {
         }
         return username;
     }
+    public List getAllUsers(){
+        List<User>users=userRepository.findAll();
+        return users;
+    }
 
 
 
