@@ -33,6 +33,30 @@
     </tr>
 </table>
 
+<h2>List of Products sorted by name</h2>
+<table class="table table-striped">
+    <thead>
+    <tr>
+
+        <th style="width: 40px;">Id</th>
+        <th style="width: 100px;">Name</th>
+        <th style="width: 120px;">Description</th>
+
+        <th>Brand</th>
+
+    </tr>
+    </thead>
+    <tr th:each="product:${product}">
+    <tr th:each="product, stat : ${#lists.sort(product, byName)}">
+        <td th:text="${product.id}">id</td>
+        <td th:text="${product.name}">name</td>
+        <td th:text="${product.description}">description</td>
+        <td th:text="${product.brand}">brand</td>
+
+    </tr>
+</table>
+
+
 
 </body>
 </html>

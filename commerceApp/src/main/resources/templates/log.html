@@ -11,7 +11,8 @@
 <body>
 
 <h2>List of logs</h2>
-<table  class="table table-striped">
+<table  class="table table-hover table-dark">
+
     <thead>
     <tr>
 
@@ -30,6 +31,29 @@
 
     </tr>
 </table>
+<h2>List of logs sorted by date</h2>
+<table  class="table table-hover table-dark">
+
+    <thead>
+    <tr>
+
+        <th style="width: 40px;">Username</th>
+        <th style="width: 100px;">Path</th>
+        <th style="width: 120px;">Date</th>
+
+
+
+    </tr>
+    </thead>
+    <tr th:each="log:${log}">
+    <tr th:each="log, stat : ${#lists.sort(log, byDate)}">
+        <td th:text="${log.username}">username</td>
+        <td th:text="${log.path}">path</td>
+        <td th:text="${log.date}">date</td>
+
+    </tr>
+</table>
+
 
 
 </body>

@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -42,21 +44,27 @@ public class ModelController {
       return "customer";
     }
     @RequestMapping(value = "/user/all", method = RequestMethod.GET)
-    public String getAllUsers(Model model){
-        List<User>users=userService.getAllUsers();
+    public String getAllUsers(Model model,@RequestParam(defaultValue = "0")String offset,@RequestParam(defaultValue = "3") String size,
+                              @RequestParam(defaultValue = "id") String sortByField,
+                              @RequestParam(defaultValue = "descending") String order){
+        List<User>users=userService.getAllUsers(offset, size, sortByField, order);
+        model.addAttribute("byEmail", Comparator.comparing(User::getEmail));
         model.addAttribute("user",users);
+
         return "user";
     }
     @RequestMapping(value = "/product/all", method = RequestMethod.GET)
     public String getAllProducts(Model model){
         List<Product>products=productRepository.findAll();
         model.addAttribute("product",products);
+        model.addAttribute("byName",Comparator.comparing(Product::getName));
         return "product";
     }
     @RequestMapping(value = "/log/all", method = RequestMethod.GET)
     public String getAllLogs(Model model){
        List<MongoInfo>mongoInfos=mongoRepository.findAll();
        model.addAttribute("log",mongoInfos);
+       model.addAttribute("byDate",Comparator.comparing(MongoInfo::getDate));
        return "log";
     }
 

@@ -6,6 +6,9 @@ import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.repositories.*;
 import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -154,8 +157,12 @@ public class UserService {
         }
         return username;
     }
-    public List getAllUsers(){
-        List<User>users=userRepository.findAll();
+    public List getAllUsers( String offset, String size, String sortByField, String order){
+        Integer pageNo = Integer.parseInt(offset);
+        Integer pageSize = Integer.parseInt(size);
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortByField).ascending());
+        List<User>users=userRepository.findAll(pageable);
         return users;
     }
 
