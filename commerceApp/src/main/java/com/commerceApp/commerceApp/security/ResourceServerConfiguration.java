@@ -68,6 +68,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/customer/all").permitAll()
                 .antMatchers("/user/all").permitAll()
                 .antMatchers("/product/all").permitAll()

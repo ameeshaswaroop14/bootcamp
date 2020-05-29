@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Users</title>
+    <title>Products</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/starter-template/">
@@ -38,26 +38,7 @@
     </tr>
 </table>
 
-<h2>List of Users sorted by email filtered by id</h2>
-<table class="table table-hover table-dark">
-    <tr>
 
-        <th style="width: 15px;">Id</th>
-        <th style="width: 100px;">FirstName</th>
-
-        <th style="width: 120px;">LastName</th>
-
-        <th>Email</th>
-
-    </tr>
-    <tr th:each="user, stat : ${#lists.sort(user, byEmail)}">
-    <tr th:each="user,rowStat : ${user.?[id == 3]}">
-        <td th:text="${user.id}">id</td>
-        <td th:text="${user.firstName}">firstName</td>
-        <td th:text="${user.lastName}">lastName</td>
-        <td th:text="${user.email}">email</td>
-    </tr>
-</table>
 
 
 </body>

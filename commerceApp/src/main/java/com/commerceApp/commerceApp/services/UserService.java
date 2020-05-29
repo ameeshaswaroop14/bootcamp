@@ -4,6 +4,7 @@ import com.commerceApp.commerceApp.models.*;
 import com.commerceApp.commerceApp.dtos.AddressDto;
 import com.commerceApp.commerceApp.dtos.ForgotPassword;
 import com.commerceApp.commerceApp.repositories.*;
+import com.commerceApp.commerceApp.repositories.userRepos.CustomUserRepo;
 import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +17,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
 @Transactional
 @Service
 public class UserService {
@@ -26,13 +31,16 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     MailService mailService;
-    @Autowired AddressRepository addressRepository;
+    @Autowired
+    AddressRepository addressRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     ForgotPasswordService forgotPasswordService;
     @Autowired
     AddressRepositoryCustom addressRepositoryCustom;
+    @Autowired
+    CustomUserRepo customUserRepo;
 
 
     public String activateUserById(Long id, WebRequest request) {
@@ -101,43 +109,40 @@ public class UserService {
     }
 
 
-
-
-
-    public ResponseEntity<String>updateAddressById(String email, Long addressId, AddressDto addressDto) {
+    public ResponseEntity<String> updateAddressById(String email, Long addressId, AddressDto addressDto) {
         Optional<Address> address = Optional.ofNullable(addressRepositoryCustom.findAdressById(addressId));
         User user = userRepository.findByEmail(email);
 
-        if(!address.isPresent()){
+        if (!address.isPresent()) {
             return new ResponseEntity<>("No address found with the given id;", HttpStatus.NOT_FOUND);
         }
         Address savedAddress = address.get();
-        if(!savedAddress.getUser().getEmail().equals(email)){
+        if (!savedAddress.getUser().getEmail().equals(email)) {
             return new ResponseEntity<>("Invalid Operation", HttpStatus.CONFLICT);
         }
 
-        if(addressDto.getAddressLine() != null)
+        if (addressDto.getAddressLine() != null)
             savedAddress.setAddressLine(addressDto.getAddressLine());
 
-        if(addressDto.getCity() != null)
+        if (addressDto.getCity() != null)
             savedAddress.setCity(addressDto.getCity());
 
-        if(addressDto.getState() != null)
+        if (addressDto.getState() != null)
             savedAddress.setState(addressDto.getState());
 
-        if(addressDto.getCountry() != null)
+        if (addressDto.getCountry() != null)
             savedAddress.setCountry(addressDto.getCountry());
 
-        if(addressDto.getZipCode() != null)
+        if (addressDto.getZipCode() != null)
             savedAddress.setZipCode(addressDto.getZipCode());
 
-        if(addressDto.getLabel() != null)
+        if (addressDto.getLabel() != null)
             savedAddress.setLabel(addressDto.getLabel());
 
         return new ResponseEntity<>("Address Updated", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> changePassword(String email, ForgotPassword passwords){
+    public ResponseEntity<String> changePassword(String email, ForgotPassword passwords) {
         User user = userRepository.findByEmail(email);
         user.setPassword(passwordEncoder.encode(passwords.getPassword()));
         user.setPasswordUpdatedDate(new Date());
@@ -145,33 +150,70 @@ public class UserService {
         mailService.sendPasswordResetConfirmationMail(email);
         return new ResponseEntity<>("Password Changed", HttpStatus.OK);
     }
-  public String getCurrentLoggedInUser()
-    {
+
+    public String getCurrentLoggedInUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        }
-        else {
+            username = ((UserDetails) principal).getUsername();
+        } else {
             username = principal.toString();
         }
         return username;
     }
-    public List getAllUsers( String offset, String size, String sortByField, String order){
-        Integer pageNo = Integer.parseInt(offset);
-        Integer pageSize = Integer.parseInt(size);
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortByField).ascending());
-        List<User>users=userRepository.findAll(pageable);
+
+    public List getAllUsers(Optional<String>offset,Optional<String >size, Optional<String>sortByField,Optional<String> order) {
+        String getOffset=offset.get();
+        String getSize=size.get();
+        String getSortBy=sortByField.get();
+        String getOrder=order.get();
+        Integer pageNo = Integer.parseInt(getOffset);
+        Integer pageSize = Integer.parseInt(getSize);
+
+        if (getOrder.equalsIgnoreCase("Des")) {
+
+            Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc(getSortBy)));
+            List<User> users = userRepository.findAll(pageable);
+            return users;
+
+        }
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc(getSortBy)));
+        List<User> users = userRepository.findAll(pageable);
         return users;
+
+    }
+
+    public List getAllUsers(Optional<String> searchType, Optional<String> search) {
+
+        String type=searchType.get();
+        String searchParam=search.get();
+        if (type.equalsIgnoreCase("email"))
+            return customUserRepo.findByEmail(searchParam);
+
+        else if (type.equalsIgnoreCase("firstName"))
+            return customUserRepo.findByFirstName(searchParam);
+        else
+            return customUserRepo.findById(Long.valueOf(searchParam));
+
+    }
+    public List getAllUser(){
+
+       return userRepository.findAll();
     }
 
 
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
