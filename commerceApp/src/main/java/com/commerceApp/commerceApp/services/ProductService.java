@@ -342,6 +342,48 @@ public class ProductService {
             product.setCancelleable(productDto.getCancelleable());
 
     }
+    public List getAllProducts(Optional<String>offset,Optional<String >size, Optional<String>sortByField,Optional<String> order) {
+        String getOffset=offset.get();
+        String getSize=size.get();
+        String getSortBy=sortByField.get();
+        String getOrder=order.get();
+        Integer pageNo = Integer.parseInt(getOffset);
+        Integer pageSize = Integer.parseInt(getSize);
+
+        if (getOrder.equalsIgnoreCase("Des")) {
+
+            Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc(getSortBy)));
+            List<Product> products =productRepository.findAll(pageable);
+            return products;
+
+        }
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc(getSortBy)));
+        List<Product> products =productRepository.findAll(pageable);
+        return products;
+
+    }
+
+    public List getAllProducts(Optional<String> searchType, Optional<String> search) {
+
+        String type=searchType.get();
+        String searchParam=search.get();
+        if (type.equalsIgnoreCase("name"))
+            return customProductRepo.findByName(searchParam);
+
+        else if (type.equalsIgnoreCase("brand"))
+            return customProductRepo.findByBrand(searchParam);
+        else if (type.equalsIgnoreCase("description"))
+            return customProductRepo.findByDescription(searchParam);
+        else
+            return customProductRepo.findById(Long.valueOf(searchParam));
+
+    }
+    public List getAllProducts(){
+
+        return productRepository.findAll();
+    }
+
+
 
 
 }

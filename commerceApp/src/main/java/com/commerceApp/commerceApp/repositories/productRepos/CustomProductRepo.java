@@ -36,19 +36,39 @@ public class CustomProductRepo {
         Predicate predicate = criteriaBuilder.equal(root.get("id"), id);
         entityManager.createQuery(criteriaDelete.where(predicate)).executeUpdate();
 
-    }/*
-    private RedisTemplate<String,Product> redisTemplate;
-    private HashOperations hashOperations;
+    }
+    public List<Product> findById(Long id){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root root = criteriaQuery.from(Product.class);
+        Predicate idPredicate = criteriaBuilder.equal(root.get("id"), id);
 
-    public CustomProductRepo(RedisTemplate<String, Product> redisTemplate, HashOperations hashOperations) {
-        this.redisTemplate = redisTemplate;
-        hashOperations=redisTemplate.opsForHash();
+        return entityManager.createQuery(criteriaQuery.where(idPredicate)).getResultList();
+    }
+    public List<Product> findByName(String name){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root root = criteriaQuery.from(Product.class);
+        Predicate idPredicate = criteriaBuilder.equal(root.get("name"), name);
+
+        return entityManager.createQuery(criteriaQuery.where(idPredicate)).getResultList();
+    }
+    public List<Product> findByDescription(String description){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root root = criteriaQuery.from(Product.class);
+        Predicate idPredicate = criteriaBuilder.equal(root.get("description"), description);
+
+        return entityManager.createQuery(criteriaQuery.where(idPredicate)).getResultList();
+    }
+    public List<Product> findByBrand(String brand){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root root = criteriaQuery.from(Product.class);
+        Predicate idPredicate = criteriaBuilder.equal(root.get("brand"), brand);
+
+        return entityManager.createQuery(criteriaQuery.where(idPredicate)).getResultList();
     }
 
-    public List<Product> getAllProducts(Pageable pageable){
-        return hashOperations.entries("Product");
-    }
-
-     */
 
 }

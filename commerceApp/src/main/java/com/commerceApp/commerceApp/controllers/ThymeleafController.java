@@ -49,12 +49,23 @@ public class ThymeleafController {
     UserRepository userRepository;
 
 
-    @RequestMapping(value = "/product/all", method = RequestMethod.GET)
-    public String getAllProducts(Model model) {
-        List<Product> products = productRepository.findAll();
-        model.addAttribute("product", products);
-        model.addAttribute("byName", Comparator.comparing(Product::getName));
+
+    @RequestMapping(path = {"/product","/product/{offset}/{size}/{sortByField}/{order}", "/product/{searchType}/{search}"}, method = RequestMethod.GET)
+    public String getAllProducts(@PathVariable("offset") Optional<String> offset,
+                                 @PathVariable("size") Optional<String> size,
+                                 @PathVariable("sortByField") Optional<String> sortByField, @PathVariable("order") Optional<String> order,
+                                 @PathVariable("searchType") Optional<String> searchType,
+                                 @PathVariable("search") Optional<String> search,Model model) {
+
+        if (offset.isPresent() && size.isPresent() && sortByField.isPresent() && order.isPresent())
+            model.addAttribute("product",productService.getAllProducts(offset, size, sortByField, order));
+        else if (search.isPresent() && searchType.isPresent())
+            model.addAttribute("product",productService.getAllProducts(searchType, search));
+        else
+            model.addAttribute("product",productService.getAllProducts());
         return "product";
+
+
     }
 
     @RequestMapping(value = "/log/all", method = RequestMethod.GET)
