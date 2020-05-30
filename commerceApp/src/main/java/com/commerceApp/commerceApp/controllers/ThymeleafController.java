@@ -9,6 +9,7 @@ import com.commerceApp.commerceApp.repositories.AuditRevisionEntityRepo;
 import com.commerceApp.commerceApp.repositories.productRepos.ProductRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.CustomerRepository;
 import com.commerceApp.commerceApp.repositories.userRepos.UserRepository;
+import com.commerceApp.commerceApp.services.LogService;
 import com.commerceApp.commerceApp.services.ProductService;
 import com.commerceApp.commerceApp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,7 @@ public class ThymeleafController {
     @Autowired
     AuditRevisionEntityRepo auditRevisionEntityRepo;
     @Autowired
-    MongoRepository mongoRepository;
-    @Autowired
-    UserRepository userRepository;
+    LogService logService;
 
 
 
@@ -68,12 +67,15 @@ public class ThymeleafController {
 
     }
 
-    @RequestMapping(value = "/log/all", method = RequestMethod.GET)
-    public String getAllLogs(Model model) {
-        List<MongoInfo> mongoInfos = mongoRepository.findAll();
-        model.addAttribute("log", mongoInfos);
-        model.addAttribute("byDate", Comparator.comparing(MongoInfo::getDate));
-        return "log";
+    @RequestMapping(path = {"/log","/log/{searchType}/{search}"},method = RequestMethod.GET)
+    public String getAllLogs(@PathVariable("searchType")Optional<String>searchType,
+                             @PathVariable("search")Optional<String>search,
+                             Model model) {
+       if (searchType.isPresent()&& search.isPresent())
+           model.addAttribute("log",logService.getAllLogs(searchType, search));
+       else
+           model.addAttribute("log",logService.getAllLogs());
+       return "log";
     }
 
     @RequestMapping(path = {"/user","/user/{offset}/{size}/{sortByField}/{order}", "/user/{searchType}/{search}"}, method = RequestMethod.GET)
