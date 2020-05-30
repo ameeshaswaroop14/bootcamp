@@ -65,7 +65,7 @@ public class ThymeleafController {
         return "log";
     }
 
-    @RequestMapping(path = {"/user", "/user/{offset}/{size}/{sortByField}/{order}", "/user/{offset}/{size}/{sortByField}/{order}/{searchType}/{search}"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/user","/user/{offset}/{size}/{sortByField}/{order}", "/user/{searchType}/{search}"}, method = RequestMethod.GET)
     public String customersPage(@PathVariable("offset") Optional<String> offset,
                                 @PathVariable("size") Optional<String> size,
                                 @PathVariable("sortByField") Optional<String> sortByField, @PathVariable("order") Optional<String> order,
@@ -77,10 +77,11 @@ public class ThymeleafController {
         if (offset.isPresent() && size.isPresent() && sortByField.isPresent() && order.isPresent())
 
             model.addAttribute("user", userService.getAllUsers(offset, size, sortByField, order));
-        if (search.isPresent() && searchType.isPresent())
-
+        else if (search.isPresent() && searchType.isPresent())
             model.addAttribute("user", userService.getAllUsers(searchType, search));
-        model.addAttribute("user",userService.getAllUser());
+        else
+            model.addAttribute("user",userService.getAllUser());
+
         return "user";
     }
 

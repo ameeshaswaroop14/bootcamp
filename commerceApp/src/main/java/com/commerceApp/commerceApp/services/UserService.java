@@ -171,7 +171,7 @@ public class UserService {
         Integer pageNo = Integer.parseInt(getOffset);
         Integer pageSize = Integer.parseInt(getSize);
 
-        if (getOrder.equalsIgnoreCase("Des")) {
+        if (getOrder.equalsIgnoreCase("des")) {
 
             Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.desc(getSortBy)));
             List<User> users = userRepository.findAll(pageable);
@@ -193,8 +193,10 @@ public class UserService {
 
         else if (type.equalsIgnoreCase("firstName"))
             return customUserRepo.findByFirstName(searchParam);
-        else
+        else if (type.equalsIgnoreCase("id"))
             return customUserRepo.findById(Long.valueOf(searchParam));
+        else
+            return customUserRepo.findByLastName(searchParam);
 
     }
     public List getAllUser(){
