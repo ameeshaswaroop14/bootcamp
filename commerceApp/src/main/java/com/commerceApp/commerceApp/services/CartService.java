@@ -18,9 +18,12 @@ import com.commerceApp.commerceApp.util.responseDtos.BaseDto;
 import com.commerceApp.commerceApp.util.responseDtos.ErrorDto;
 import com.commerceApp.commerceApp.util.responseDtos.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequest;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +38,18 @@ public class CartService {
     CustomerRepository customerRepository;
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    MessageSource messageSource;
 
 
-    public BaseDto addToCart(CartDto cartDto, String username) {
+    public BaseDto addToCart(CartDto cartDto, String username, HttpServletRequest request) {
+        String message;
+        String error;
         ProductVariation product = productVariationRepository.findById(cartDto.getProductVarId()).get();
-        if (product == null)
-            return new ErrorDto("Not found", null);
+        if (product == null) {
+            error = messageSource.getMessage("message.notfound", null, request.getLocale());
+            return new ErrorDto(error, null);
+        }
 
         Cart cart = toCart(cartDto);
         Customer customer = customerRepository.findByEmail(username);
@@ -50,7 +59,8 @@ public class CartService {
         cart.setQuantity(cartDto.getQuantity());
         cart.setUser(customer);
         cartRepository.save(cart);
-        return new ResponseDto<>("Added", null);
+        message = messageSource.getMessage("message.added", null, request.getLocale());
+        return new ResponseDto<>(message, null);
     }
 
     public BaseDto viewCart(String username) {
@@ -65,16 +75,23 @@ public class CartService {
         return new ResponseDto<>(null, cartDtoList);
 
     }
-    public BaseDto updateCart(UpdateCardDto updateCardDto,String username){
-        Optional<Cart> cart=cartRepository.findById(updateCardDto.getCartId());
-        if (cart==null)
-            return new ErrorDto("Invalid operation","Given card id does not exist");
+
+    public BaseDto updateCart(UpdateCardDto updateCardDto, String username, HttpServletRequest request) {
+        String message;
+        String error;
+        Optional<Cart> cart = cartRepository.findById(updateCardDto.getCartId());
+        if (cart == null) {
+            error = messageSource.getMessage("message.notValid", null, request.getLocale());
+            message=messageSource.getMessage("message.cardIdNotFound",null,request.getLocale());
+            return new ErrorDto(error, message);
+        }
         ProductVariation product = productVariationRepository.findById(updateCardDto.getProductVarId()).get();
-        if (product==null)
-            return new ErrorDto("Not found",null);
+        if (product == null){
+            error=messageSource.getMessage("message.notfound",null,request.getLocale());
+            return new ErrorDto(error, null);}
         Customer customer = customerRepository.findByEmail(username);
-        Cart savedCart=cart.get();
-        savedCart=toCart(updateCardDto);
+        Cart savedCart = cart.get();
+        savedCart = toCart(updateCardDto);
         savedCart.setQuantity(updateCardDto.getQuantity());
         savedCart.setProductVariation(product);
         savedCart.setUser(customer);
@@ -83,15 +100,21 @@ public class CartService {
 
         return new ResponseDto<>("Updated", null);
     }
-    public BaseDto removeFromCart(Long id,String username){
-        Optional<Cart>cart=cartRepository.findById(id);
-        if(cart==null)
-            return new ErrorDto("Invalid operation","Given card id does not exist");
 
-        Cart savedCart=cart.get();
+    public BaseDto removeFromCart(Long id, String username,HttpServletRequest request) {
+        String error;
+        String message;
+        Optional<Cart> cart = cartRepository.findById(id);
+        if (cart == null) {
+            error=messageSource.getMessage("message.notValid",null,request.getLocale());
+            message=messageSource.getMessage("message.cardIdNotFound",null,request.getLocale());
+            return new ErrorDto(error, message);
+        }
+
+        Cart savedCart = cart.get();
         savedCart.setDeleted(true);
         cartRepository.delete(savedCart);
-        return new ResponseDto<>("Deleted",null);
+        return new ResponseDto<>("Deleted", null);
 
     }
 

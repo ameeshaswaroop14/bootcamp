@@ -28,7 +28,7 @@ public class CartController {
     public ResponseEntity<BaseDto> addTocart(CartDto cartDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(cartService.addToCart(cartDto, email), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.addToCart(cartDto, email,request), HttpStatus.OK);
     }
 
     @ApiOperation(value = "view cart", authorizations = {@Authorization(value = "Bearer")})
@@ -44,7 +44,7 @@ public class CartController {
     public ResponseEntity<BaseDto> updateCart(UpdateCardDto updateCardDto, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(cartService.updateCart(updateCardDto, email), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.updateCart(updateCardDto, email,request), HttpStatus.OK);
     }
 
     @ApiOperation(value = "To remove from cart", authorizations = {@Authorization(value = "Bearer")})
@@ -52,7 +52,7 @@ public class CartController {
     public ResponseEntity<BaseDto> updateCart(@PathVariable Long id, @ApiIgnore HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         String email = principal.getName();
-        return new ResponseEntity<>(cartService.removeFromCart(id, email), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.removeFromCart(id, email,request), HttpStatus.OK);
     }
 
 

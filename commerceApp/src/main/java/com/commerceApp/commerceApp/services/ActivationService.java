@@ -28,7 +28,7 @@ public class ActivationService {
     MessageSource messageSource;
 
 
-    @ApiOperation("Service to activate user by token")
+
     public BaseDto activateUserByToken(String token, WebRequest request) {
         String message;
         String error;

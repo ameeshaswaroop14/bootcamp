@@ -67,11 +67,16 @@ public class ThymeleafController {
 
     }
 
-    @RequestMapping(path = {"/log","/log/{searchType}/{search}"},method = RequestMethod.GET)
-    public String getAllLogs(@PathVariable("searchType")Optional<String>searchType,
-                             @PathVariable("search")Optional<String>search,
-                             Model model) {
-       if (searchType.isPresent()&& search.isPresent())
+    @RequestMapping(path = {"/log","/log/{offset}/{size}/{sortByField}/{order}","/log/{searchType}/{search}"},method = RequestMethod.GET)
+    public String getAllLogs(@PathVariable("offset") Optional<String> offset,
+                             @PathVariable("size") Optional<String> size,
+                             @PathVariable("sortByField") Optional<String> sortByField, @PathVariable("order") Optional<String> order,
+                             @PathVariable("searchType") Optional<String> searchType,
+                             @PathVariable("search") Optional<String> search,Model model) {
+        if (offset.isPresent() && size.isPresent() && sortByField.isPresent() && order.isPresent())
+
+            model.addAttribute("user", logService.getAllLogs(offset, size, sortByField, order));
+       else if (searchType.isPresent()&& search.isPresent())
            model.addAttribute("log",logService.getAllLogs(searchType, search));
        else
            model.addAttribute("log",logService.getAllLogs());
