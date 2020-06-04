@@ -50,8 +50,8 @@ public class ProductVariationService {
     CustomCategoryMetadataFieldValueRepo customCategoryMetadataFieldValueRepo;
     @Autowired
     SellerRepository sellerRepository;
- //   @Autowired
-   // CurrentUserService currentUserService;
+    //   @Autowired
+    // CurrentUserService currentUserService;
 
     public BaseDto saveNewProductVariation(String email, ProductvariationSellerDto variationDto) {
 
@@ -108,7 +108,6 @@ public class ProductVariationService {
             return message;
         }
         /*
-
         // check if all the fields are actually related to the product category.
        List<String> receivedFields = new ArrayList<>(attributes.keySet());
         List<String> actualFields = new ArrayList<>();
@@ -116,22 +115,17 @@ public class ProductVariationService {
                 .forEach((categoryMetadataField) -> {
                     actualFields.add(categoryMetadataField[0].toString());
                 //});
-
         if (receivedFields.size() < actualFields.size()) {
             message = "Please provide all the fields related to the product category.";
             return message;
         }
-
         receivedFields.removeAll(actualFields);
         if (!receivedFields.isEmpty()) {
             message = "Invalid fields found in the data.";
             return message;
         }
-
         // check validity of values of fields.
         List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
-
-
        */
 
         List<String> receivedFieldsCopy = new ArrayList<>(attributes.keySet());
@@ -359,16 +353,13 @@ public class ProductVariationService {
                     .forEach((e)->{
                         actualFields.add(e[0].toString());
                     });
-
             receivedFields.removeAll(actualFields);
             if(!receivedFields.isEmpty()){
                 message = "Invalid fields found in the data.";
                 response = new ErrorDto("Validation failed", message);
                 return new ResponseEntity<BaseDto>(response, HttpStatus.BAD_REQUEST);
             }
-
             // check validity of values of fields.
-
        */
         Map<String, String> attributes = variationDto.getAttributes();
         if (attributes != null) {
@@ -444,4 +435,3 @@ public class ProductVariationService {
 
 
 }
-

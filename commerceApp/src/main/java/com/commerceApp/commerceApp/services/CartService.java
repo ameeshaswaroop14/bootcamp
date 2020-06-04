@@ -85,16 +85,15 @@ public class CartService {
             message=messageSource.getMessage("message.cardIdNotFound",null,request.getLocale());
             return new ErrorDto(error, message);
         }
-        ProductVariation product = productVariationRepository.findById(updateCardDto.getProductVarId()).get();
-        if (product == null){
-            error=messageSource.getMessage("message.notfound",null,request.getLocale());
-            return new ErrorDto(error, null);}
+    //    ProductVariation product = productVariationRepository.findById(updateCardDto.getProductVarId()).get();
+     //   if (product == null){
+      //      error=messageSource.getMessage("message.notfound",null,request.getLocale());
+      //      return new ErrorDto(error, null);}
         Customer customer = customerRepository.findByEmail(username);
         Cart savedCart = cart.get();
         savedCart = toCart(updateCardDto);
         savedCart.setQuantity(updateCardDto.getQuantity());
-        savedCart.setProductVariation(product);
-        savedCart.setUser(customer);
+
         cartRepository.save(savedCart);
 
 
